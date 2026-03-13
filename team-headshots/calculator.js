@@ -1,38 +1,27 @@
 /**
  * San Diego Professional Headshots — Team Headshot Pricing Calculator
- * Version 1.0
- * 
- * CONFIGURATION: Update these values as needed
+ * Version 1.1
  */
 var SDPH_CONFIG = {
-  formspreeURL: 'https://formspree.io/f/xnjgzvpn',  // Replace with your Formspree endpoint
+  formspreeURL: 'https://formspree.io/f/xnjgzvpn',
   onsiteFee: 299,
   groupRate: 250,
   baseRate: 200,
   retainer: 500
 };
 
-/**
- * ========================================
- * CALCULATOR CORE
- * ========================================
- */
 (function() {
 
-  // Element references
   var mS = document.getElementById('sdph-ms');
   var mN = document.getElementById('sdph-mn');
   var gS = document.getElementById('sdph-gs');
   var gN = document.getElementById('sdph-gn');
-  var loc = document.getElementById('sdph-location');
 
-  // Bail if elements not found
-  if (!mS || !mN || !gS || !gN || !loc) {
+  if (!mS || !mN || !gS || !gN) {
     console.warn('SDPH Calculator: Required elements not found.');
     return;
   }
 
-  // Non-linear slider: 0-500 maps to 3-50, 500-1000 maps to 50-200
   function sliderToMembers(s) {
     s = +s;
     return s <= 500
@@ -47,7 +36,6 @@ var SDPH_CONFIG = {
       : Math.round(500 + ((m - 50) / 150) * 500);
   }
 
-  // Per-person rate tiers
   function getRate(n) {
     if (n >= 80) return 90;
     if (n >= 70) return 95;
@@ -70,11 +58,11 @@ var SDPH_CONFIG = {
     return '$' + n.toLocaleString('en-US');
   }
 
-  // Get current calculator data
   function getData() {
+    var locEl = document.getElementById('sdph-location');
     var m = Math.max(3, Math.min(200, parseInt(mN.value) || 3));
     var g = Math.max(0, Math.min(10, parseInt(gN.value) || 0));
-    var on = document.getElementById('sdph-location').value === 'onsite';
+    var on = locEl.value === 'onsite';
     var r = getRate(m);
     var ht = m * r;
     var osFee = on ? SDPH_CONFIG.onsiteFee : 0;
@@ -102,7 +90,6 @@ var SDPH_CONFIG = {
     };
   }
 
-  // Update display
   function calc() {
     var d = getData();
     mN.value = d.m;
@@ -114,13 +101,21 @@ var SDPH_CONFIG = {
     document.getElementById('o-r').textContent = '$' + d.r.toFixed(2);
     document.getElementById('o-h').textContent = fmt(d.ht);
 
-    document.getElementById('o-ol').style.setProperty('display', d.on ? 'flex' : 'none', 'important');
+    // On-site fee: show/hide using inline !important to beat Squarespace CSS
+    var olEl = document.getElementById('o-ol');
+    if (d.on) {
+      olEl.style.setProperty('display', 'flex', 'important');
+    } else {
+      olEl.style.setProperty('display', 'none', 'important');
+    }
 
+    // Group portraits: show/hide
+    var glEl = document.getElementById('o-gl');
     if (d.g > 0) {
-      document.getElementById('o-gl').style.setProperty('display', 'flex', 'important');
+      glEl.style.setProperty('display', 'flex', 'important');
       document.getElementById('o-g').textContent = fmt(d.gt);
     } else {
-      document.getElementById('o-gl').style.setProperty('display', 'none', 'important');
+      glEl.style.setProperty('display', 'none', 'important');
     }
 
     document.getElementById('o-t').textContent = fmt(d.st);
@@ -135,24 +130,24 @@ var SDPH_CONFIG = {
     document.getElementById('o-tt').textContent = 'Estimated session time: ' + d.ts;
   }
 
-  // Slider and input events
+  // Slider events
   mS.addEventListener('input', function() { mN.value = sliderToMembers(mS.value); calc(); });
   mN.addEventListener('input', function() { mS.value = membersToSlider(mN.value); calc(); });
   mN.addEventListener('blur', function() { mS.value = membersToSlider(mN.value); calc(); });
   gS.addEventListener('input', function() { gN.value = gS.value; calc(); });
   gN.addEventListener('input', calc);
   gN.addEventListener('blur', calc);
+
+  // Location dropdown - fresh reference, both change and input events
   document.getElementById('sdph-location').addEventListener('change', calc);
-document.getElementById('sdph-location').addEventListener('input', calc);
+  document.getElementById('sdph-location').addEventListener('input', calc);
 
   // Initial calculation
   calc();
 
 
   /**
-   * ========================================
    * MODAL / FORM
-   * ========================================
    */
   var ov = document.getElementById('sdph-ov');
   var fv = document.getElementById('sdph-fv');
@@ -199,9 +194,7 @@ document.getElementById('sdph-location').addEventListener('input', calc);
 
 
   /**
-   * ========================================
-   * FORM SUBMISSION (Formspree)
-   * ========================================
+   * FORM SUBMISSION
    */
   sendBtn.addEventListener('click', function() {
     var fn = document.getElementById('sf-fn').value.trim();
@@ -230,7 +223,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       venue: document.getElementById('sf-vn').value.trim(),
       details: document.getElementById('sf-det').value.trim(),
       referral_source: document.getElementById('sf-src').value,
-      // Calculator data
       session_location: d.loc,
       team_members: d.m,
       per_person_rate: '$' + d.r.toFixed(2),
@@ -253,9 +245,8 @@ document.getElementById('sdph-location').addEventListener('input', calc);
         sv.classList.remove('hidden');
         scr.scrollTop = 0;
 
-        /**
-         * GOOGLE ADS CONVERSION TRACKING
-         * Uncomment and replace with your conversion ID and label:
+        /* GOOGLE ADS CONVERSION TRACKING
+         * Uncomment and replace with your IDs:
          *
          * if (typeof gtag === 'function') {
          *   gtag('event', 'conversion', {
@@ -266,7 +257,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
          * }
          */
 
-        // Reset form
         document.getElementById('sf-fn').value = '';
         document.getElementById('sf-ln').value = '';
         document.getElementById('sf-co').value = '';
@@ -295,9 +285,7 @@ document.getElementById('sdph-location').addEventListener('input', calc);
 
 
   /**
-   * ========================================
    * PRINT ESTIMATE
-   * ========================================
    */
   var CL = function(t) { return '</' + t + '>'; };
 
@@ -312,17 +300,14 @@ document.getElementById('sdph-location').addEventListener('input', calc);
     h.push('<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}body{background:#fff}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}' + CL('style') + CL('head') + '<body>');
     h.push('<div style="max-width:700px;margin:0 auto;padding:28px 30px">');
 
-    // Header
     h.push('<div style="background:#0A3258;border-radius:8px 8px 0 0;padding:26px 32px;display:flex;justify-content:space-between;align-items:flex-start">');
     h.push('<div><div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:400;color:#fff;text-transform:uppercase">SAN DIEGO PROFESSIONAL HEADSHOTS' + CL('div'));
     h.push('<div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:4px">INDIVIDUALS | TEAMS | EVENTS' + CL('div') + CL('div'));
     h.push('<div style="text-align:right;font-size:12px;color:rgba(255,255,255,.85);line-height:1.7">7950 Silverton Ave, Suite 107<br>San Diego, CA 92126<br>(619) 618-8003<br>info@sandiegoprofessionalheadshots.com' + CL('div') + CL('div'));
 
-    // Body
     h.push('<div style="border:1px solid #e2e2e2;border-top:none;border-radius:0 0 8px 8px;padding:28px 32px">');
     h.push('<div style="display:flex;justify-content:space-between;margin-bottom:22px"><div style="font-size:22px;font-weight:700">Session Estimate' + CL('div') + '<div style="font-size:12px;color:#888">' + today + CL('div') + CL('div'));
 
-    // Details card
     h.push('<div style="background:#f8f9fa;border-radius:6px;padding:14px 18px;margin-bottom:22px">');
     var ds = [['Session Location', d.loc], ['Team Members', '' + d.m], ['Group Portraits', '' + d.g]];
     for (var i = 0; i < ds.length; i++) {
@@ -330,7 +315,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
     }
     h.push(CL('div'));
 
-    // Pricing table
     h.push('<table style="width:100%;border-collapse:collapse;margin-bottom:8px">');
     var pr = [['Team Members', '' + d.m], ['Per Person Rate', '$' + d.r.toFixed(2)], ['Headshots Total', fmt(d.ht)]];
     if (d.g > 0) pr.push(['Group Portraits (' + d.g + ')', fmt(d.gt)]);
@@ -340,7 +324,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
     }
     h.push('<tr><td style="padding:14px 18px;font-size:16px;font-weight:700;border-top:2px solid #0A3258">Session Total' + CL('td') + '<td style="padding:14px 18px;font-size:20px;font-weight:700;color:#0A3258;text-align:right;border-top:2px solid #0A3258">' + fmt(d.st) + CL('td') + CL('tr') + CL('table'));
 
-    // Savings badge
     if (d.pct > 0) {
       h.push('<div style="display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;margin-top:12px">Volume discount: ' + d.pct + '% off base rate' + CL('div'));
     }
@@ -348,13 +331,11 @@ document.getElementById('sdph-location').addEventListener('input', calc);
     h.push('<div style="font-size:12px;color:#777;margin-top:8px">Estimated session time: ' + d.ts + CL('div'));
     h.push('<hr style="border:none;border-top:1px solid #e8e8e8;margin:22px 0">');
 
-    // Ready to book
     h.push('<div style="font-size:15px;font-weight:700;margin-bottom:10px">Ready to Book?' + CL('div'));
     h.push('<div style="font-size:13px;color:#555;line-height:1.6">Contact us to confirm your session date and details. We will coordinate all logistics so your team can focus on what matters.' + CL('div'));
     h.push('<div style="margin-top:12px;font-size:13px"><span style="color:#0A3258;font-weight:600">(619) 618-8003' + CL('span') + ' <span style="color:#ccc">|' + CL('span') + ' <span style="color:#0A3258;font-weight:600">info@sandiegoprofessionalheadshots.com' + CL('span') + CL('div'));
     h.push('<div style="margin-top:8px;font-size:13px;color:#0A3258;font-weight:600">www.sandiegoprofessionalheadshots.com' + CL('div'));
 
-    // Disclaimer
     h.push('<div style="margin-top:22px;font-size:10px;color:#999;line-height:1.5">Pricing shown is an estimate. Per-person rates reflect projected volume and may adjust if headcount changes. Final invoicing reflects actual services. A $' + SDPH_CONFIG.retainer + ' non-refundable retainer and signed photography agreement are required.' + CL('div'));
 
     h.push(CL('div') + CL('div') + CL('body') + CL('html'));
@@ -367,9 +348,7 @@ document.getElementById('sdph-location').addEventListener('input', calc);
 
 
   /**
-   * ========================================
-   * PDF DOWNLOAD (jsPDF — loaded on demand)
-   * ========================================
+   * PDF DOWNLOAD
    */
   document.getElementById('sdph-dl-btn').addEventListener('click', function() {
 
@@ -378,19 +357,10 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       var JP = window.jspdf.jsPDF;
       var doc = new JP({ unit: 'mm', format: 'letter' });
       var W = 215.9, M = 25, CW = W - M * 2, y = 0, rX = W - M;
-
-      // Colors
-      var nv = [6, 36, 68];
-      var dk = [26, 26, 26];
-      var gr = [85, 85, 85];
-      var lg = [136, 136, 136];
-      var gn = [46, 125, 50];
-      var bg = [248, 249, 250];
-      var ln = [232, 232, 232];
-
+      var nv = [6, 36, 68], dk = [26, 26, 26], gr = [85, 85, 85], lg = [136, 136, 136];
+      var gn = [46, 125, 50], bg = [248, 249, 250], ln = [232, 232, 232];
       var today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-      // Header bar
       doc.setFillColor(nv[0], nv[1], nv[2]);
       doc.rect(0, 0, W, 38, 'F');
       doc.setFont('helvetica', 'normal');
@@ -406,7 +376,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       doc.text('(619) 618-8003', rX, 22, { align: 'right' });
       doc.text('info@sandiegoprofessionalheadshots.com', rX, 27, { align: 'right' });
 
-      // Title
       y = 48;
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
@@ -418,7 +387,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       doc.text(today, rX, y, { align: 'right' });
       y += 12;
 
-      // Details card
       doc.setFillColor(bg[0], bg[1], bg[2]);
       doc.roundedRect(M, y - 4, CW, 26, 3, 3, 'F');
       var dr = [['Session Location', d.loc], ['Team Members', '' + d.m], ['Group Portraits', '' + d.g]];
@@ -434,7 +402,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       }
       y += 30;
 
-      // Pricing rows
       var pr = [['Team Members', '' + d.m], ['Per Person Rate', '$' + d.r.toFixed(2)], ['Headshots Total', fmt(d.ht)]];
       if (d.g > 0) pr.push(['Group Portraits (' + d.g + ')', fmt(d.gt)]);
       if (d.on) pr.push(['On-Site Setup Fee', '$' + SDPH_CONFIG.onsiteFee]);
@@ -452,7 +419,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       }
       y += pr.length * 10 + 4;
 
-      // Total
       doc.setDrawColor(nv[0], nv[1], nv[2]);
       doc.setLineWidth(0.8);
       doc.line(M, y, W - M, y);
@@ -466,7 +432,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       doc.text(fmt(d.st), W - M - 6, y, { align: 'right' });
       y += 10;
 
-      // Savings
       if (d.pct > 0) {
         doc.setFillColor(232, 245, 233);
         doc.roundedRect(M, y - 4, 68, 7, 3, 3, 'F');
@@ -477,20 +442,17 @@ document.getElementById('sdph-location').addEventListener('input', calc);
         y += 10;
       }
 
-      // Session time
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(lg[0], lg[1], lg[2]);
       doc.text('Estimated session time: ' + d.ts, M, y);
       y += 12;
 
-      // Divider
       doc.setDrawColor(ln[0], ln[1], ln[2]);
       doc.setLineWidth(0.3);
       doc.line(M, y, W - M, y);
       y += 10;
 
-      // Ready to book
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(12);
       doc.setTextColor(dk[0], dk[1], dk[2]);
@@ -503,7 +465,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       doc.text(bt, M, y);
       y += bt.length * 5 + 6;
 
-      // Contact info
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.setTextColor(nv[0], nv[1], nv[2]);
@@ -514,7 +475,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       doc.text('www.sandiegoprofessionalheadshots.com', M, y);
       y += 14;
 
-      // Disclaimer
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
@@ -524,7 +484,6 @@ document.getElementById('sdph-location').addEventListener('input', calc);
       doc.save('Team-Headshot-Estimate.pdf');
     }
 
-    // Load jsPDF on demand
     if (window.jspdf) {
       buildPDF();
     } else {
