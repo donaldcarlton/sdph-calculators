@@ -114,13 +114,13 @@ var SDPH_CONFIG = {
     document.getElementById('o-r').textContent = '$' + d.r.toFixed(2);
     document.getElementById('o-h').textContent = fmt(d.ht);
 
-    document.getElementById('o-ol').classList[d.on ? 'remove' : 'add']('line-hidden');
+    document.getElementById('o-ol').style.display = d.on ? 'flex' : 'none';
 
-    if (d.g > 0) {
-      document.getElementById('o-gl').classList.remove('line-hidden');
+   if (d.g > 0) {
+      document.getElementById('o-gl').style.display = 'flex';
       document.getElementById('o-g').textContent = fmt(d.gt);
     } else {
-      document.getElementById('o-gl').classList.add('line-hidden');
+      document.getElementById('o-gl').style.display = 'none';
     }
 
     document.getElementById('o-t').textContent = fmt(d.st);
