@@ -116,7 +116,7 @@ var SDPH_CONFIG = {
 
     document.getElementById('o-ol').style.setProperty('display', d.on ? 'flex' : 'none', 'important');
 
-   if (d.g > 0) {
+    if (d.g > 0) {
       document.getElementById('o-gl').style.setProperty('display', 'flex', 'important');
       document.getElementById('o-g').textContent = fmt(d.gt);
     } else {
