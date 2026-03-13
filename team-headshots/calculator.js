@@ -74,7 +74,7 @@ var SDPH_CONFIG = {
   function getData() {
     var m = Math.max(3, Math.min(200, parseInt(mN.value) || 3));
     var g = Math.max(0, Math.min(10, parseInt(gN.value) || 0));
-    var on = loc.value === 'onsite';
+    var on = document.getElementById('sdph-location').value === 'onsite';
     var r = getRate(m);
     var ht = m * r;
     var osFee = on ? SDPH_CONFIG.onsiteFee : 0;
@@ -142,7 +142,8 @@ var SDPH_CONFIG = {
   gS.addEventListener('input', function() { gN.value = gS.value; calc(); });
   gN.addEventListener('input', calc);
   gN.addEventListener('blur', calc);
-  loc.addEventListener('change', calc);
+  document.getElementById('sdph-location').addEventListener('change', calc);
+document.getElementById('sdph-location').addEventListener('input', calc);
 
   // Initial calculation
   calc();
