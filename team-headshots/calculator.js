@@ -1,6 +1,6 @@
 /**
  * San Diego Professional Headshots — Team Headshot Pricing Calculator
- * Version 1.1
+ * Version 2.0 — Dynamic rendering approach
  */
 var SDPH_CONFIG = {
   formspreeURL: 'https://formspree.io/f/xnjgzvpn',
@@ -16,8 +16,9 @@ var SDPH_CONFIG = {
   var mN = document.getElementById('sdph-mn');
   var gS = document.getElementById('sdph-gs');
   var gN = document.getElementById('sdph-gn');
+  var pricingBody = document.getElementById('sdph-pricing-body');
 
-  if (!mS || !mN || !gS || !gN) {
+  if (!mS || !mN || !gS || !gN || !pricingBody) {
     console.warn('SDPH Calculator: Required elements not found.');
     return;
   }
@@ -62,7 +63,7 @@ var SDPH_CONFIG = {
     var locEl = document.getElementById('sdph-location');
     var m = Math.max(3, Math.min(200, parseInt(mN.value) || 3));
     var g = Math.max(0, Math.min(10, parseInt(gN.value) || 0));
-    var on = locEl.value === 'onsite';
+    var on = locEl ? locEl.value === 'onsite' : true;
     var r = getRate(m);
     var ht = m * r;
     var osFee = on ? SDPH_CONFIG.onsiteFee : 0;
@@ -90,6 +91,33 @@ var SDPH_CONFIG = {
     };
   }
 
+  // Build pricing HTML dynamically — no show/hide needed
+  function buildPricingHTML(d) {
+    var lines = '';
+
+    lines += '<div class="pricing-line"><span class="ll">Team Members</span><span class="lv">' + d.m + '</span></div>';
+    lines += '<div class="pricing-line"><span class="ll">Per Person Rate</span><span class="lv">$' + d.r.toFixed(2) + '</span></div>';
+    lines += '<div class="pricing-line"><span class="ll">Headshots Total</span><span class="lv">' + fmt(d.ht) + '</span></div>';
+
+    if (d.on) {
+      lines += '<div class="pricing-line"><span class="ll">On-Site Setup Fee</span><span class="lv">$' + SDPH_CONFIG.onsiteFee + '</span></div>';
+    }
+
+    if (d.g > 0) {
+      lines += '<div class="pricing-line"><span class="ll">Group Portraits</span><span class="lv">' + fmt(d.gt) + '</span></div>';
+    }
+
+    lines += '<div class="pricing-line hl"><span class="ll">Session Total</span><span class="lv">' + fmt(d.st) + '</span></div>';
+
+    if (d.pct > 0) {
+      lines += '<div class="sav"><span>Volume discount: ' + d.pct + '% off base rate</span></div>';
+    }
+
+    lines += '<div class="stm"><span>Estimated session time: ' + d.ts + '</span></div>';
+
+    return lines;
+  }
+
   function calc() {
     var d = getData();
     mN.value = d.m;
@@ -97,40 +125,11 @@ var SDPH_CONFIG = {
     gN.value = d.g;
     gS.value = d.g;
 
-    document.getElementById('o-m').textContent = d.m;
-    document.getElementById('o-r').textContent = '$' + d.r.toFixed(2);
-    document.getElementById('o-h').textContent = fmt(d.ht);
-
-    // On-site fee: show/hide using inline !important to beat Squarespace CSS
-    var olEl = document.getElementById('o-ol');
-    if (d.on) {
-      olEl.style.setProperty('display', 'flex', 'important');
-    } else {
-      olEl.style.setProperty('display', 'none', 'important');
-    }
-
-    // Group portraits: show/hide
-    var glEl = document.getElementById('o-gl');
-    if (d.g > 0) {
-      glEl.style.setProperty('display', 'flex', 'important');
-      document.getElementById('o-g').textContent = fmt(d.gt);
-    } else {
-      glEl.style.setProperty('display', 'none', 'important');
-    }
-
-    document.getElementById('o-t').textContent = fmt(d.st);
-
-    if (d.pct > 0) {
-      document.getElementById('o-sb').classList.remove('hidden');
-      document.getElementById('o-st').textContent = 'Volume discount: ' + d.pct + '% off base rate';
-    } else {
-      document.getElementById('o-sb').classList.add('hidden');
-    }
-
-    document.getElementById('o-tt').textContent = 'Estimated session time: ' + d.ts;
+    // Rebuild entire pricing body
+    pricingBody.innerHTML = buildPricingHTML(d);
   }
 
-  // Slider events
+  // Events
   mS.addEventListener('input', function() { mN.value = sliderToMembers(mS.value); calc(); });
   mN.addEventListener('input', function() { mS.value = membersToSlider(mN.value); calc(); });
   mN.addEventListener('blur', function() { mS.value = membersToSlider(mN.value); calc(); });
@@ -138,11 +137,12 @@ var SDPH_CONFIG = {
   gN.addEventListener('input', calc);
   gN.addEventListener('blur', calc);
 
-  // Location dropdown - fresh reference, both change and input events
-  document.getElementById('sdph-location').addEventListener('change', calc);
-  document.getElementById('sdph-location').addEventListener('input', calc);
+  var locEl = document.getElementById('sdph-location');
+  if (locEl) {
+    locEl.addEventListener('change', calc);
+    locEl.addEventListener('input', calc);
+  }
 
-  // Initial calculation
   calc();
 
 
