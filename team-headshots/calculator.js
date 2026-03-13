@@ -5,7 +5,7 @@
  * CONFIGURATION: Update these values as needed
  */
 var SDPH_CONFIG = {
-  formspreeURL: 'https://formspree.io/f/YOUR_FORM_ID',  // Replace with your Formspree endpoint
+  formspreeURL: 'https://formspree.io/f/xnjgzvpn',  // Replace with your Formspree endpoint
   onsiteFee: 299,
   groupRate: 250,
   baseRate: 200,
