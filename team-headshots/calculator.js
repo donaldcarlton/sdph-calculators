@@ -73,6 +73,7 @@ var SDPH_CONFIG = {
     if (m <= 4) { mins = m * 15; }
     else if (m <= 12) { mins = 60; }
     else { mins = m * 5; }
+    mins += g * 10;
     var ts;
     if (mins < 60) {
       ts = "~" + mins + " minutes";
