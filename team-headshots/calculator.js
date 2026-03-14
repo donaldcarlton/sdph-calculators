@@ -173,6 +173,26 @@ var SDPH_CONFIG = {
   var err = document.getElementById("sdph-err");
   var sendBtn = document.getElementById("sdph-send");
 
+  /* Prevent mobile browsers from zooming on input focus */
+  var vpOriginal = "";
+  function lockViewport() {
+    var tag = document.querySelector("meta[name=viewport]");
+    if (!tag) {
+      tag = document.createElement("meta");
+      tag.name = "viewport";
+      tag.content = "width=device-width, initial-scale=1";
+      document.head.appendChild(tag);
+    }
+    vpOriginal = tag.getAttribute("content") || "";
+    tag.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no");
+  }
+  function unlockViewport() {
+    var tag = document.querySelector("meta[name=viewport]");
+    if (tag && vpOriginal) {
+      tag.setAttribute("content", vpOriginal);
+    }
+  }
+
   function openModal() {
     var d = getData();
     var sum = document.getElementById("sdph-sum");
@@ -194,6 +214,7 @@ var SDPH_CONFIG = {
     err.classList.add("hidden");
     sendBtn.disabled = false;
     sendBtn.textContent = "Send";
+    lockViewport();
     ov.classList.add("active");
     document.body.style.overflow = "hidden";
     document.body.classList.add("sdph-modal-open");
@@ -204,6 +225,7 @@ var SDPH_CONFIG = {
     ov.classList.remove("active");
     document.body.style.overflow = "";
     document.body.classList.remove("sdph-modal-open");
+    unlockViewport();
   }
 
   document.getElementById("sdph-cta").addEventListener("click", openModal);
