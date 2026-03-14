@@ -219,8 +219,7 @@ var SDPH_CONFIG = {
     var fn = document.getElementById("sf-fn").value.trim();
     var ln = document.getElementById("sf-ln").value.trim();
     var em = document.getElementById("sf-em").value.trim();
-    var ok = document.getElementById("sf-ok").checked;
-    if (!fn || !ln || !em || !ok) {
+    if (!fn || !ln || !em) {
       err.classList.remove("hidden");
       return;
     }
@@ -277,7 +276,6 @@ var SDPH_CONFIG = {
         document.getElementById("sf-src").value = "";
         document.getElementById("sf-src-detail").value = "";
         document.getElementById("sf-src-detail-wrap").style.display = "none";
-        document.getElementById("sf-ok").checked = false;
       } else {
         err.textContent = "Something went wrong. Please try again or contact us directly.";
         err.classList.remove("hidden");
