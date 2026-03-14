@@ -3,7 +3,7 @@
  * Version 2.1
  */
 var SDPH_CONFIG = {
-  formspreeURL: "https://formspree.io/f/xnjgzvpn",
+  webhookURL: "https://hooks.zapier.com/hooks/catch/26507972/uxj26ex/",
   onsiteFee: 299,
   groupRate: 250,
   baseRate: 200,
@@ -255,9 +255,9 @@ var SDPH_CONFIG = {
       session_total: fmt(d.st),
       estimated_time: d.ts
     };
-    fetch(SDPH_CONFIG.formspreeURL, {
+    fetch(SDPH_CONFIG.webhookURL, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
     .then(function(res) {
