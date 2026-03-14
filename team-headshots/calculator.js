@@ -1,6 +1,6 @@
 /**
  * San Diego Professional Headshots - Team Headshot Pricing Calculator
- * Version 2.0
+ * Version 2.1
  */
 var SDPH_CONFIG = {
   formspreeURL: 'https://formspree.io/f/xnjgzvpn',
@@ -89,20 +89,20 @@ var SDPH_CONFIG = {
 
   function buildPricingHTML(d) {
     var lines = '';
-    lines += '<div class="pricing-line"><span class="ll">Team Members</span><span class="lv">' + d.m + '</span></div>';
-    lines += '<div class="pricing-line"><span class="ll">Per Person Rate</span><span class="lv">$' + d.r.toFixed(2) + '</span></div>';
-    lines += '<div class="pricing-line"><span class="ll">Headshots Total</span><span class="lv">' + fmt(d.ht) + '</span></div>';
+    lines += '<div class="pricing-line"><span class="ll">Team Members<\/span><span class="lv">' + d.m + '<\/span><\/div>';
+    lines += '<div class="pricing-line"><span class="ll">Per Person Rate<\/span><span class="lv">$' + d.r.toFixed(2) + '<\/span><\/div>';
+    lines += '<div class="pricing-line"><span class="ll">Headshots Total<\/span><span class="lv">' + fmt(d.ht) + '<\/span><\/div>';
     if (d.on) {
-      lines += '<div class="pricing-line"><span class="ll">On-Site Setup Fee</span><span class="lv">$' + SDPH_CONFIG.onsiteFee + '</span></div>';
+      lines += '<div class="pricing-line"><span class="ll">On-Site Setup Fee<\/span><span class="lv">$' + SDPH_CONFIG.onsiteFee + '<\/span><\/div>';
     }
     if (d.g > 0) {
-      lines += '<div class="pricing-line"><span class="ll">Group Portraits</span><span class="lv">' + fmt(d.gt) + '</span></div>';
+      lines += '<div class="pricing-line"><span class="ll">Group Portraits<\/span><span class="lv">' + fmt(d.gt) + '<\/span><\/div>';
     }
-    lines += '<div class="pricing-line hl"><span class="ll">Session Total</span><span class="lv">' + fmt(d.st) + '</span></div>';
+    lines += '<div class="pricing-line hl"><span class="ll">Session Total<\/span><span class="lv">' + fmt(d.st) + '<\/span><\/div>';
     if (d.pct > 0) {
-      lines += '<div class="sav"><span>Volume discount: ' + d.pct + '% off base rate</span></div>';
+      lines += '<div class="sav"><span>Volume discount: ' + d.pct + '% off base rate<\/span><\/div>';
     }
-    lines += '<div class="stm"><span>Estimated session time: ' + d.ts + '</span></div>';
+    lines += '<div class="stm"><span>Estimated session time: ' + d.ts + '<\/span><\/div>';
     return lines;
   }
 
@@ -130,6 +130,36 @@ var SDPH_CONFIG = {
 
   calc();
 
+
+  /* CONDITIONAL SOURCE DETAIL FIELD */
+  var srcSelect = document.getElementById('sf-src');
+  var srcDetailWrap = document.getElementById('sf-src-detail-wrap');
+  var srcDetailLabel = document.getElementById('sf-src-detail-label');
+  var srcDetailInput = document.getElementById('sf-src-detail');
+
+  if (srcSelect && srcDetailWrap) {
+    srcSelect.addEventListener('change', function() {
+      var val = srcSelect.value;
+      if (val === 'AI') {
+        srcDetailLabel.textContent = 'Which AI platform?';
+        srcDetailInput.placeholder = 'e.g. ChatGPT, Perplexity, Gemini...';
+        srcDetailWrap.classList.remove('hidden');
+      } else if (val === 'Social Media') {
+        srcDetailLabel.textContent = 'Which platform?';
+        srcDetailInput.placeholder = 'e.g. Instagram, Facebook, TikTok...';
+        srcDetailWrap.classList.remove('hidden');
+      } else if (val === 'Other') {
+        srcDetailLabel.textContent = 'Please specify';
+        srcDetailInput.placeholder = 'How did you find us?';
+        srcDetailWrap.classList.remove('hidden');
+      } else {
+        srcDetailWrap.classList.add('hidden');
+        srcDetailInput.value = '';
+      }
+    });
+  }
+
+
   /* MODAL */
   var ov = document.getElementById('sdph-ov');
   var fv = document.getElementById('sdph-fv');
@@ -142,17 +172,17 @@ var SDPH_CONFIG = {
     var d = getData();
     var sum = document.getElementById('sdph-sum');
     var html = '';
-    html += '<div class="sdph-sr"><span>Session Location</span><span>' + d.loc + '</span></div>';
-    html += '<div class="sdph-sr"><span>Team Members</span><span>' + d.m + '</span></div>';
-    html += '<div class="sdph-sr"><span>Per Person Rate</span><span>$' + d.r.toFixed(2) + '</span></div>';
-    html += '<div class="sdph-sr"><span>Headshots Total</span><span>' + fmt(d.ht) + '</span></div>';
+    html += '<div class="sdph-sr"><span>Session Location<\/span><span>' + d.loc + '<\/span><\/div>';
+    html += '<div class="sdph-sr"><span>Team Members<\/span><span>' + d.m + '<\/span><\/div>';
+    html += '<div class="sdph-sr"><span>Per Person Rate<\/span><span>$' + d.r.toFixed(2) + '<\/span><\/div>';
+    html += '<div class="sdph-sr"><span>Headshots Total<\/span><span>' + fmt(d.ht) + '<\/span><\/div>';
     if (d.on) {
-      html += '<div class="sdph-sr"><span>On-Site Setup Fee</span><span>$' + SDPH_CONFIG.onsiteFee + '</span></div>';
+      html += '<div class="sdph-sr"><span>On-Site Setup Fee<\/span><span>$' + SDPH_CONFIG.onsiteFee + '<\/span><\/div>';
     }
     if (d.g > 0) {
-      html += '<div class="sdph-sr"><span>Group Portraits (' + d.g + ')</span><span>' + fmt(d.gt) + '</span></div>';
+      html += '<div class="sdph-sr"><span>Group Portraits (' + d.g + ')<\/span><span>' + fmt(d.gt) + '<\/span><\/div>';
     }
-    html += '<div class="sdph-stot"><span>Estimated Total</span><span>' + fmt(d.st) + '</span></div>';
+    html += '<div class="sdph-stot"><span>Estimated Total<\/span><span>' + fmt(d.st) + '<\/span><\/div>';
     sum.innerHTML = html;
     fv.classList.remove('hidden');
     sv.classList.add('hidden');
@@ -177,6 +207,7 @@ var SDPH_CONFIG = {
     if (e.key === 'Escape' && ov.classList.contains('active')) closeModal();
   });
 
+
   /* FORM SUBMIT */
   sendBtn.addEventListener('click', function() {
     var fn = document.getElementById('sf-fn').value.trim();
@@ -191,6 +222,12 @@ var SDPH_CONFIG = {
     sendBtn.disabled = true;
     sendBtn.textContent = 'Sending...';
     var d = getData();
+    var srcVal = document.getElementById('sf-src').value;
+    var srcDetail = document.getElementById('sf-src-detail').value.trim();
+    var referralSource = srcVal;
+    if (srcDetail && (srcVal === 'AI' || srcVal === 'Social Media' || srcVal === 'Other')) {
+      referralSource = srcVal + ' - ' + srcDetail;
+    }
     var payload = {
       first_name: fn,
       last_name: ln,
@@ -201,7 +238,7 @@ var SDPH_CONFIG = {
       preferred_time: document.getElementById('sf-tm').value,
       venue: document.getElementById('sf-vn').value.trim(),
       details: document.getElementById('sf-det').value.trim(),
-      referral_source: document.getElementById('sf-src').value,
+      referral_source: referralSource,
       session_location: d.loc,
       team_members: d.m,
       per_person_rate: '$' + d.r.toFixed(2),
@@ -232,6 +269,8 @@ var SDPH_CONFIG = {
         document.getElementById('sf-vn').value = '';
         document.getElementById('sf-det').value = '';
         document.getElementById('sf-src').value = '';
+        document.getElementById('sf-src-detail').value = '';
+        document.getElementById('sf-src-detail-wrap').classList.add('hidden');
         document.getElementById('sf-ok').checked = false;
       } else {
         err.textContent = 'Something went wrong. Please try again or contact us directly.';
@@ -247,6 +286,7 @@ var SDPH_CONFIG = {
       sendBtn.textContent = 'Send';
     });
   });
+
 
   /* PRINT */
   document.getElementById('sdph-print-btn').addEventListener('click', function() {
@@ -295,6 +335,7 @@ var SDPH_CONFIG = {
     w.document.close();
     setTimeout(function() { w.print(); }, 400);
   });
+
 
   /* PDF DOWNLOAD */
   document.getElementById('sdph-dl-btn').addEventListener('click', function() {
