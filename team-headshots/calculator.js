@@ -137,22 +137,27 @@ var SDPH_CONFIG = {
   var srcDetailLabel = document.getElementById("sf-src-detail-label");
   var srcDetailInput = document.getElementById("sf-src-detail");
   if (srcSelect && srcDetailWrap) {
+    srcDetailWrap.style.display = "none";
     srcSelect.addEventListener("change", function() {
       var val = srcSelect.value;
       if (val === "AI") {
         srcDetailLabel.textContent = "Which AI platform?";
         srcDetailInput.placeholder = "e.g. ChatGPT, Perplexity, Gemini...";
-        srcDetailWrap.classList.remove("hidden");
+        srcDetailWrap.style.display = "flex";
       } else if (val === "Social Media") {
         srcDetailLabel.textContent = "Which platform?";
         srcDetailInput.placeholder = "e.g. Instagram, Facebook, TikTok...";
-        srcDetailWrap.classList.remove("hidden");
+        srcDetailWrap.style.display = "flex";
       } else if (val === "Other") {
         srcDetailLabel.textContent = "Please specify";
         srcDetailInput.placeholder = "How did you find us?";
-        srcDetailWrap.classList.remove("hidden");
+        srcDetailWrap.style.display = "flex";
+      } else if (val === "Referral") {
+        srcDetailLabel.textContent = "Who referred you?";
+        srcDetailInput.placeholder = "Name or company";
+        srcDetailWrap.style.display = "flex";
       } else {
-        srcDetailWrap.classList.add("hidden");
+        srcDetailWrap.style.display = "none";
         srcDetailInput.value = "";
       }
     });
@@ -226,7 +231,7 @@ var SDPH_CONFIG = {
     var srcVal = document.getElementById("sf-src").value;
     var srcDetail = document.getElementById("sf-src-detail").value.trim();
     var referralSource = srcVal;
-    if (srcDetail && (srcVal === "AI" || srcVal === "Social Media" || srcVal === "Other")) {
+    if (srcDetail && (srcVal === "AI" || srcVal === "Social Media" || srcVal === "Other" || srcVal === "Referral")) {
       referralSource = srcVal + " - " + srcDetail;
     }
     var payload = {
@@ -271,7 +276,7 @@ var SDPH_CONFIG = {
         document.getElementById("sf-det").value = "";
         document.getElementById("sf-src").value = "";
         document.getElementById("sf-src-detail").value = "";
-        document.getElementById("sf-src-detail-wrap").classList.add("hidden");
+        document.getElementById("sf-src-detail-wrap").style.display = "none";
         document.getElementById("sf-ok").checked = false;
       } else {
         err.textContent = "Something went wrong. Please try again or contact us directly.";
