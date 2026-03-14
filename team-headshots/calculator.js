@@ -234,34 +234,32 @@ var SDPH_CONFIG = {
     if (srcDetail && (srcVal === "AI" || srcVal === "Social Media" || srcVal === "Other" || srcVal === "Referral")) {
       referralSource = srcVal + " - " + srcDetail;
     }
-    var payload = {
-      first_name: fn,
-      last_name: ln,
-      company: document.getElementById("sf-co").value.trim(),
-      email: em,
-      phone: document.getElementById("sf-ph").value.trim(),
-      preferred_date: document.getElementById("sf-dt").value,
-      preferred_time: document.getElementById("sf-tm").value,
-      venue: document.getElementById("sf-vn").value.trim(),
-      details: document.getElementById("sf-det").value.trim(),
-      referral_source: referralSource,
-      session_location: d.loc,
-      team_members: d.m,
-      per_person_rate: "$" + d.r.toFixed(2),
-      headshots_total: fmt(d.ht),
-      group_portraits: d.g,
-      group_total: fmt(d.gt),
-      onsite_fee: d.on ? "$" + SDPH_CONFIG.onsiteFee : "$0",
-      session_total: fmt(d.st),
-      estimated_time: d.ts
-    };
+    var formData = new URLSearchParams();
+    formData.append("first_name", fn);
+    formData.append("last_name", ln);
+    formData.append("company", document.getElementById("sf-co").value.trim());
+    formData.append("email", em);
+    formData.append("phone", document.getElementById("sf-ph").value.trim());
+    formData.append("preferred_date", document.getElementById("sf-dt").value);
+    formData.append("preferred_time", document.getElementById("sf-tm").value);
+    formData.append("venue", document.getElementById("sf-vn").value.trim());
+    formData.append("details", document.getElementById("sf-det").value.trim());
+    formData.append("referral_source", referralSource);
+    formData.append("session_location", d.loc);
+    formData.append("team_members", d.m);
+    formData.append("per_person_rate", "$" + d.r.toFixed(2));
+    formData.append("headshots_total", fmt(d.ht));
+    formData.append("group_portraits", d.g);
+    formData.append("group_total", fmt(d.gt));
+    formData.append("onsite_fee", d.on ? "$" + SDPH_CONFIG.onsiteFee : "$0");
+    formData.append("session_total", fmt(d.st));
+    formData.append("estimated_time", d.ts);
     fetch(SDPH_CONFIG.webhookURL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: formData,
+      mode: "no-cors"
     })
-    .then(function(res) {
-      if (res.ok) {
+    .then(function() {
         fv.classList.add("hidden");
         sv.classList.remove("hidden");
         scr.scrollTop = 0;
@@ -277,12 +275,6 @@ var SDPH_CONFIG = {
         document.getElementById("sf-src").value = "";
         document.getElementById("sf-src-detail").value = "";
         document.getElementById("sf-src-detail-wrap").style.display = "none";
-      } else {
-        err.textContent = "Something went wrong. Please try again or contact us directly.";
-        err.classList.remove("hidden");
-        sendBtn.disabled = false;
-        sendBtn.textContent = "Send";
-      }
     })
     .catch(function() {
       err.textContent = "Something went wrong. Please try again or contact us directly.";
