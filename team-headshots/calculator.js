@@ -297,6 +297,8 @@ var SDPH_CONFIG = {
         document.getElementById("sf-src").value = "";
         document.getElementById("sf-src-detail").value = "";
         document.getElementById("sf-src-detail-wrap").style.display = "none";
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: "quote_requested_teams" });
     })
     .catch(function() {
       err.textContent = "Something went wrong. Please try again or contact us directly.";
