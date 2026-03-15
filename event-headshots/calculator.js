@@ -272,6 +272,8 @@ var SDPH_EV_CONFIG = {
         document.getElementById("sf-ev-src").value = "";
         document.getElementById("sf-ev-src-detail").value = "";
         document.getElementById("sf-ev-src-detail-wrap").style.display = "none";
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: "quote_requested_events" });
     })
     .catch(function() {
       err.textContent = "Something went wrong. Please try again or contact us directly.";
