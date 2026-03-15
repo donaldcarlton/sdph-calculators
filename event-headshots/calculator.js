@@ -6,8 +6,8 @@ var SDPH_EV_CONFIG = {
   webhookURL: "https://hooks.zapier.com/hooks/catch/26507972/uxj812n/",
   halfDayRate: 2499,
   fullDayRate: 4499,
-  retouchHalf: 1500,
-  retouchFull: 3000,
+  retouchHalf: 1000,
+  retouchFull: 2000,
   hmHalf: 600,
   hmFull: 1000,
   retainer: 500
