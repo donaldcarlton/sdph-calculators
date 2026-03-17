@@ -295,7 +295,7 @@ var SDPH_EV_CONFIG = {
     h.push("<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}body{background:#fff}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}<\/style>");
     h.push("<\/head><body>");
     h.push("<div style=\"max-width:700px;margin:0 auto;padding:28px 30px\">");
-    h.push("<div style=\"background:#0A3258;border-radius:8px 8px 0 0;padding:26px 32px;display:flex;justify-content:space-between;align-items:flex-start\">");
+    h.push("<div style=\"background:#1e3a52;border-radius:8px 8px 0 0;padding:26px 32px;display:flex;justify-content:space-between;align-items:flex-start\">");
     h.push("<div><div style=\"font-family:Oswald,sans-serif;font-size:22px;font-weight:400;color:#fff;text-transform:uppercase\">SAN DIEGO PROFESSIONAL HEADSHOTS<\/div>");
     h.push("<div style=\"font-size:11px;color:rgba(255,255,255,.65);margin-top:4px\">INDIVIDUALS | TEAMS | EVENTS<\/div><\/div>");
     h.push("<div style=\"text-align:right;font-size:12px;color:rgba(255,255,255,.85);line-height:1.7\">7950 Silverton Ave, Suite 107<br>San Diego, CA 92126<br>(619) 618-8003<br>info@sandiegoprofessionalheadshots.com<\/div><\/div>");
@@ -320,12 +320,12 @@ var SDPH_EV_CONFIG = {
     for (var j = 0; j < pr.length; j++) {
       h.push("<tr style=\"border-bottom:1px solid #e8e8e8\"><td style=\"padding:12px 18px;font-size:14px;color:#333\">" + pr[j][0] + "<\/td><td style=\"padding:12px 18px;font-size:14px;font-weight:600;text-align:right\">" + pr[j][1] + "<\/td><\/tr>");
     }
-    h.push("<tr><td style=\"padding:14px 18px;font-size:16px;font-weight:700;border-top:2px solid #0A3258\">Project Total<\/td><td style=\"padding:14px 18px;font-size:20px;font-weight:700;color:#0A3258;text-align:right;border-top:2px solid #0A3258\">" + fmt(d.projectTotal) + "<\/td><\/tr><\/table>");
+    h.push("<tr><td style=\"padding:14px 18px;font-size:16px;font-weight:700;border-top:2px solid #1e3a52\">Project Total<\/td><td style=\"padding:14px 18px;font-size:20px;font-weight:700;color:#1e3a52;text-align:right;border-top:2px solid #1e3a52\">" + fmt(d.projectTotal) + "<\/td><\/tr><\/table>");
     h.push("<hr style=\"border:none;border-top:1px solid #e8e8e8;margin:22px 0\">");
     h.push("<div style=\"font-size:15px;font-weight:700;margin-bottom:10px\">Ready to Book?<\/div>");
     h.push("<div style=\"font-size:13px;color:#555;line-height:1.6\">Contact us to confirm your event date and details. We will coordinate all logistics so your event runs seamlessly.<\/div>");
-    h.push("<div style=\"margin-top:12px;font-size:13px\"><span style=\"color:#0A3258;font-weight:600\">(619) 618-8003<\/span> <span style=\"color:#ccc\">|<\/span> <span style=\"color:#0A3258;font-weight:600\">info@sandiegoprofessionalheadshots.com<\/span><\/div>");
-    h.push("<div style=\"margin-top:8px;font-size:13px;color:#0A3258;font-weight:600\">www.sandiegoprofessionalheadshots.com<\/div>");
+    h.push("<div style=\"margin-top:12px;font-size:13px\"><span style=\"color:#1e3a52;font-weight:600\">(619) 618-8003<\/span> <span style=\"color:#ccc\">|<\/span> <span style=\"color:#1e3a52;font-weight:600\">info@sandiegoprofessionalheadshots.com<\/span><\/div>");
+    h.push("<div style=\"margin-top:8px;font-size:13px;color:#1e3a52;font-weight:600\">www.sandiegoprofessionalheadshots.com<\/div>");
     h.push("<div style=\"margin-top:22px;font-size:10px;color:#999;line-height:1.5\">Pricing shown is an estimate based on the information provided. Final invoicing reflects actual services rendered. A $" + SDPH_EV_CONFIG.retainer + " non-refundable retainer and signed photography agreement are required to secure your booking.<\/div>");
     h.push("<\/div><\/div><\/body><\/html>");
     var w = window.open("", "_blank", "width=800,height=900");
