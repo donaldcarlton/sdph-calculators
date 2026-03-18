@@ -188,8 +188,9 @@ textarea.form-input { min-height: 80px; resize: vertical; }
     </div>
     <div class="section">
       <div class="section-title">Other Settings</div>
-      <div class="form-row cols-3">
+      <div class="form-row cols-4">
         <div class="form-group"><label class="form-label">Group Portrait Price</label><input type="number" class="form-input" id="t-group"></div>
+        <div class="form-group"><label class="form-label">On-Site Setup Fee</label><input type="number" class="form-input" id="t-setup"></div>
         <div class="form-group"><label class="form-label">Retainer Amount</label><input type="number" class="form-input" id="t-retainer"></div>
         <div class="form-group"><label class="form-label">Minimum People</label><input type="number" class="form-input" id="t-min"></div>
       </div>
@@ -198,18 +199,31 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 
   <div class="dash-panel" id="panel-event">
     <div class="section">
+      <div class="section-title">Booth &amp; Slider Settings</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Max Booths in Dropdown</label><input type="number" class="form-input" id="e-maxbooths" min="1" max="20"></div>
+        <div class="form-group"><label class="form-label">Half-Day Slider Min</label><input type="number" class="form-input" id="e-hd-min" min="0"></div>
+        <div class="form-group"><label class="form-label">Half-Day Slider Max</label><input type="number" class="form-input" id="e-hd-max" min="1"></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Full-Day Slider Min</label><input type="number" class="form-input" id="e-fd-min" min="0"></div>
+        <div class="form-group"><label class="form-label">Full-Day Slider Max</label><input type="number" class="form-input" id="e-fd-max" min="1"></div>
+        <div class="form-group"></div>
+      </div>
+    </div>
+    <div class="section">
       <div class="section-title">Event Headshot Booth Rates</div>
       <div class="form-row cols-3">
         <div class="form-group"><label class="form-label">Half-Day Rate</label><input type="number" class="form-input" id="e-half"></div>
         <div class="form-group"><label class="form-label">Full-Day Rate</label><input type="number" class="form-input" id="e-full"></div>
         <div class="form-group"><label class="form-label">Retainer</label><input type="number" class="form-input" id="e-retainer"></div>
       </div>
-      <div class="form-row cols-4">
-        <div class="form-group"><label class="form-label">Retouch Half-Day</label><input type="number" class="form-input" id="e-rh"></div>
-        <div class="form-group"><label class="form-label">Retouch Full-Day</label><input type="number" class="form-input" id="e-rf"></div>
-        <div class="form-group"><label class="form-label">H&amp;M Half-Day</label><input type="number" class="form-input" id="e-hmh"></div>
-        <div class="form-group"><label class="form-label">H&amp;M Full-Day</label><input type="number" class="form-input" id="e-hmf"></div>
-      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Headshot Booth Upgrades</div>
+      <div class="section-desc">Drag to reorder. These appear as optional add-ons in the event calculator.</div>
+      <div id="event-upgrades-list"></div>
+      <button class="btn-add" onclick="addEventUpgrade()" style="margin-top:16px;">+ Add Upgrade</button>
     </div>
   </div>
 
@@ -494,6 +508,7 @@ const DEFAULT_CONFIG = {
         "100-200": 115
       },
       "groupPortrait": 250,
+      "onsiteSetupFee": 299,
       "retainer": 500,
       "minPeople": 3
     },
@@ -510,15 +525,34 @@ const DEFAULT_CONFIG = {
   },
 
   "eventCalculator": {
+    "settings": {
+      "maxBooths": 3,
+      "halfDayMin": 0,
+      "halfDayMax": 10,
+      "fullDayMin": 0,
+      "fullDayMax": 10
+    },
     "rates": {
       "halfDay": 2500,
       "fullDay": 4500,
-      "retouchHalfDay": 1000,
-      "retouchFullDay": 2000,
-      "hmHalfDay": 600,
-      "hmFullDay": 1000,
       "retainer": 500
-    }
+    },
+    "upgrades": [
+      {
+        "id": "retouching",
+        "title": "Retouching Package",
+        "description": "Add light retouching for all participants' headshots. Retouching covers skin, hair, and clothing refinements for polished, professional headshots ready for immediate use.",
+        "halfDayPrice": 1000,
+        "fullDayPrice": 2000
+      },
+      {
+        "id": "hair-makeup",
+        "title": "Professional Hair & Makeup Artist",
+        "description": "On-site professional hair and makeup touch-ups to ensure participants are camera-ready for their headshots.",
+        "halfDayPrice": 600,
+        "fullDayPrice": 1000
+      }
+    ]
   }
 };
 
@@ -713,6 +747,7 @@ function renameTeamTier(location, oldKey, newKey) {
 function renderTeamOther() {
   const r = config.teamCalculator.rates;
   document.getElementById('t-group').value = r.groupPortrait;
+  document.getElementById('t-setup').value = r.onsiteSetupFee || 299;
   document.getElementById('t-retainer').value = r.retainer;
   document.getElementById('t-min').value = r.minPeople;
 }
@@ -720,13 +755,87 @@ function renderTeamOther() {
 // ==================== EVENT CALCULATOR ====================
 function renderEventRates() {
   const r = config.eventCalculator.rates;
+  const s = config.eventCalculator.settings;
   document.getElementById('e-half').value = r.halfDay;
   document.getElementById('e-full').value = r.fullDay;
   document.getElementById('e-retainer').value = r.retainer;
-  document.getElementById('e-rh').value = r.retouchHalfDay;
-  document.getElementById('e-rf').value = r.retouchFullDay;
-  document.getElementById('e-hmh').value = r.hmHalfDay;
-  document.getElementById('e-hmf').value = r.hmFullDay;
+  document.getElementById('e-maxbooths').value = s.maxBooths;
+  document.getElementById('e-hd-min').value = s.halfDayMin;
+  document.getElementById('e-hd-max').value = s.halfDayMax;
+  document.getElementById('e-fd-min').value = s.fullDayMin;
+  document.getElementById('e-fd-max').value = s.fullDayMax;
+  renderEventUpgrades();
+}
+
+function renderEventUpgrades() {
+  const upgrades = config.eventCalculator.upgrades || [];
+  const el = document.getElementById('event-upgrades-list');
+  el.innerHTML = upgrades.map((u, i) => `
+    <div class="card-editor" draggable="true" data-upgrade-idx="${i}" style="cursor:grab;">
+      <div class="card-editor-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="color:var(--text2);font-size:18px;cursor:grab;" title="Drag to reorder">⋮⋮</span>
+          <span class="card-editor-title">${u.title || 'New Upgrade'}</span>
+        </div>
+        <button class="btn-danger" onclick="deleteEventUpgrade(${i})">Remove</button>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label class="form-label">Title</label>
+        <input class="form-input" value="${esc(u.title)}" onchange="config.eventCalculator.upgrades[${i}].title=this.value;this.closest('.card-editor').querySelector('.card-editor-title').textContent=this.value;">
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" onchange="config.eventCalculator.upgrades[${i}].description=this.value">${esc(u.description)}</textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Half-Day Price ($)</label>
+          <input type="number" class="form-input" value="${u.halfDayPrice}" onchange="config.eventCalculator.upgrades[${i}].halfDayPrice=+this.value">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full-Day Price ($)</label>
+          <input type="number" class="form-input" value="${u.fullDayPrice}" onchange="config.eventCalculator.upgrades[${i}].fullDayPrice=+this.value">
+        </div>
+      </div>
+    </div>
+  `).join('');
+  initUpgradeDragDrop();
+}
+
+function addEventUpgrade() {
+  if (!config.eventCalculator.upgrades) config.eventCalculator.upgrades = [];
+  config.eventCalculator.upgrades.push({
+    id: 'upgrade-' + Date.now(),
+    title: '',
+    description: '',
+    halfDayPrice: 0,
+    fullDayPrice: 0
+  });
+  renderEventUpgrades();
+  toast('Upgrade added', 'success');
+}
+
+function deleteEventUpgrade(idx) {
+  config.eventCalculator.upgrades.splice(idx, 1);
+  renderEventUpgrades();
+}
+
+function initUpgradeDragDrop() {
+  let dragIdx = null;
+  document.querySelectorAll('[data-upgrade-idx]').forEach(item => {
+    item.addEventListener('dragstart', e => { dragIdx = +item.dataset.upgradeIdx; item.style.opacity = '0.4'; });
+    item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+    item.addEventListener('dragover', e => e.preventDefault());
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      const dropIdx = +item.dataset.upgradeIdx;
+      if (dragIdx === null || dragIdx === dropIdx) return;
+      const ups = config.eventCalculator.upgrades;
+      const [moved] = ups.splice(dragIdx, 1);
+      ups.splice(dropIdx, 0, moved);
+      renderEventUpgrades();
+    });
+  });
 }
 
 // ==================== SETTINGS ====================
@@ -748,6 +857,7 @@ function readAllForms() {
   config.pricing.settings.popularBadgeText = document.getElementById('p-badge').value;
 
   config.teamCalculator.rates.groupPortrait = +document.getElementById('t-group').value;
+  config.teamCalculator.rates.onsiteSetupFee = +document.getElementById('t-setup').value;
   config.teamCalculator.rates.retainer = +document.getElementById('t-retainer').value;
   config.teamCalculator.rates.minPeople = +document.getElementById('t-min').value;
 
@@ -755,10 +865,13 @@ function readAllForms() {
   er.halfDay = +document.getElementById('e-half').value;
   er.fullDay = +document.getElementById('e-full').value;
   er.retainer = +document.getElementById('e-retainer').value;
-  er.retouchHalfDay = +document.getElementById('e-rh').value;
-  er.retouchFullDay = +document.getElementById('e-rf').value;
-  er.hmHalfDay = +document.getElementById('e-hmh').value;
-  er.hmFullDay = +document.getElementById('e-hmf').value;
+
+  const es = config.eventCalculator.settings;
+  es.maxBooths = +document.getElementById('e-maxbooths').value;
+  es.halfDayMin = +document.getElementById('e-hd-min').value;
+  es.halfDayMax = +document.getElementById('e-hd-max').value;
+  es.fullDayMin = +document.getElementById('e-fd-min').value;
+  es.fullDayMax = +document.getElementById('e-fd-max').value;
 
   config.lastUpdated = new Date().toISOString();
 }
