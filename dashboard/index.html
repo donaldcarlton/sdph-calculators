@@ -89,7 +89,8 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 .logo-list { display: flex; flex-direction: column; gap: 8px; }
 .logo-item { display: grid; grid-template-columns: 40px 80px 1fr 100px 100px 40px; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
 .logo-item:hover { border-color: var(--accent); }
-.logo-item .drag-handle { cursor: grab; color: var(--text2); font-size: 18px; text-align: center; user-select: none; }
+.logo-item .drag-handle { cursor: grab; color: var(--text2); font-size: 18px; text-align: center; user-select: none; padding: 4px; }
+.logo-item .drag-handle:active { cursor: grabbing; }
 .logo-item .logo-preview { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--logo-preview-bg); border-radius: 4px; padding: 4px; }
 .logo-item .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(1); }
 .logo-item .logo-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -631,8 +632,8 @@ function renderCarouselSettings() {
 function renderLogoList() {
   const el = document.getElementById('logo-list');
   el.innerHTML = config.carousel.logos.map((l, i) => `
-    <div class="logo-item" draggable="true" data-idx="${i}">
-      <div class="drag-handle" title="Drag to reorder">⋮⋮</div>
+    <div class="logo-item" data-idx="${i}">
+      <div class="drag-handle" draggable="true" title="Drag to reorder">⋮⋮</div>
       <div class="logo-preview"><img src="${l.url}" alt="${l.name}" onerror="this.style.display='none'"></div>
       <div class="logo-name">${l.name}</div>
       <input class="logo-field" value="${l.height}" placeholder="height" onchange="config.carousel.logos[${i}].height=this.value">
@@ -659,8 +660,14 @@ function addLogo() {
 function initDragDrop() {
   let dragIdx = null;
   document.querySelectorAll('.logo-item').forEach(item => {
-    item.addEventListener('dragstart', e => { dragIdx = +item.dataset.idx; item.style.opacity = '0.4'; });
-    item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+    const handle = item.querySelector('.drag-handle');
+    handle.addEventListener('dragstart', e => {
+      dragIdx = +item.dataset.idx;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setDragImage(item, 0, 0);
+      item.style.opacity = '0.4';
+    });
+    handle.addEventListener('dragend', () => { item.style.opacity = '1'; });
     item.addEventListener('dragover', e => e.preventDefault());
     item.addEventListener('drop', e => {
       e.preventDefault();
@@ -793,10 +800,10 @@ function renderEventUpgrades() {
   const upgrades = config.eventCalculator.upgrades || [];
   const el = document.getElementById('event-upgrades-list');
   el.innerHTML = upgrades.map((u, i) => `
-    <div class="card-editor" draggable="true" data-upgrade-idx="${i}" style="cursor:grab;">
+    <div class="card-editor" data-upgrade-idx="${i}">
       <div class="card-editor-header">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:var(--text2);font-size:18px;cursor:grab;" title="Drag to reorder">⋮⋮</span>
+          <span class="upgrade-drag-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;" title="Drag to reorder">⋮⋮</span>
           <span class="card-editor-title">${u.title || 'New Upgrade'}</span>
         </div>
         <button class="btn-danger" onclick="deleteEventUpgrade(${i})">Remove</button>
@@ -845,8 +852,15 @@ function deleteEventUpgrade(idx) {
 function initUpgradeDragDrop() {
   let dragIdx = null;
   document.querySelectorAll('[data-upgrade-idx]').forEach(item => {
-    item.addEventListener('dragstart', e => { dragIdx = +item.dataset.upgradeIdx; item.style.opacity = '0.4'; });
-    item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+    const handle = item.querySelector('.upgrade-drag-handle');
+    if (!handle) return;
+    handle.addEventListener('dragstart', e => {
+      dragIdx = +item.dataset.upgradeIdx;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setDragImage(item, 0, 0);
+      item.style.opacity = '0.4';
+    });
+    handle.addEventListener('dragend', () => { item.style.opacity = '1'; });
     item.addEventListener('dragover', e => e.preventDefault());
     item.addEventListener('drop', e => {
       e.preventDefault();
