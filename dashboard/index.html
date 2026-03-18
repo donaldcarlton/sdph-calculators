@@ -91,6 +91,12 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 .logo-item:hover { border-color: var(--accent); }
 .logo-item .drag-handle { cursor: grab; color: var(--text2); font-size: 18px; text-align: center; user-select: none; padding: 4px; }
 .logo-item .drag-handle:active { cursor: grabbing; }
+.logo-item.dragging { opacity: 0.3; }
+.logo-item.drop-above { box-shadow: 0 -2px 0 0 var(--accent); margin-top: 8px; transition: margin 0.15s; }
+.logo-item.drop-below { box-shadow: 0 2px 0 0 var(--accent); margin-bottom: 8px; transition: margin 0.15s; }
+.card-editor.dragging { opacity: 0.3; }
+.card-editor.drop-above { box-shadow: 0 -2px 0 0 var(--accent); margin-top: 12px; transition: margin 0.15s; }
+.card-editor.drop-below { box-shadow: 0 2px 0 0 var(--accent); margin-bottom: 12px; transition: margin 0.15s; }
 .logo-item .logo-preview { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--logo-preview-bg); border-radius: 4px; padding: 4px; }
 .logo-item .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(1); }
 .logo-item .logo-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -659,22 +665,50 @@ function addLogo() {
 
 function initDragDrop() {
   let dragIdx = null;
-  document.querySelectorAll('.logo-item').forEach(item => {
+  const items = () => document.querySelectorAll('.logo-item');
+
+  function clearIndicators() {
+    items().forEach(el => el.classList.remove('drop-above', 'drop-below'));
+  }
+
+  items().forEach(item => {
     const handle = item.querySelector('.drag-handle');
     handle.addEventListener('dragstart', e => {
       dragIdx = +item.dataset.idx;
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setDragImage(item, 0, 0);
-      item.style.opacity = '0.4';
+      requestAnimationFrame(() => item.classList.add('dragging'));
     });
-    handle.addEventListener('dragend', () => { item.style.opacity = '1'; });
-    item.addEventListener('dragover', e => e.preventDefault());
+    handle.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      clearIndicators();
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (+item.dataset.idx === dragIdx) return;
+      clearIndicators();
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        item.classList.add('drop-above');
+      } else {
+        item.classList.add('drop-below');
+      }
+    });
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drop-above', 'drop-below');
+    });
     item.addEventListener('drop', e => {
       e.preventDefault();
-      const dropIdx = +item.dataset.idx;
-      if (dragIdx === null || dragIdx === dropIdx) return;
+      clearIndicators();
+      const targetIdx = +item.dataset.idx;
+      if (dragIdx === null || dragIdx === targetIdx) return;
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const dropIdx = e.clientY < midY ? targetIdx : targetIdx + (targetIdx > dragIdx ? 0 : 1);
       const [moved] = config.carousel.logos.splice(dragIdx, 1);
-      config.carousel.logos.splice(dropIdx, 0, moved);
+      const insertAt = dropIdx > dragIdx ? dropIdx - 1 : dropIdx;
+      config.carousel.logos.splice(insertAt, 0, moved);
       renderLogoList();
     });
   });
@@ -851,24 +885,51 @@ function deleteEventUpgrade(idx) {
 
 function initUpgradeDragDrop() {
   let dragIdx = null;
-  document.querySelectorAll('[data-upgrade-idx]').forEach(item => {
+  const items = () => document.querySelectorAll('[data-upgrade-idx]');
+
+  function clearIndicators() {
+    items().forEach(el => el.classList.remove('drop-above', 'drop-below'));
+  }
+
+  items().forEach(item => {
     const handle = item.querySelector('.upgrade-drag-handle');
     if (!handle) return;
     handle.addEventListener('dragstart', e => {
       dragIdx = +item.dataset.upgradeIdx;
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setDragImage(item, 0, 0);
-      item.style.opacity = '0.4';
+      requestAnimationFrame(() => item.classList.add('dragging'));
     });
-    handle.addEventListener('dragend', () => { item.style.opacity = '1'; });
-    item.addEventListener('dragover', e => e.preventDefault());
+    handle.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      clearIndicators();
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (+item.dataset.upgradeIdx === dragIdx) return;
+      clearIndicators();
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        item.classList.add('drop-above');
+      } else {
+        item.classList.add('drop-below');
+      }
+    });
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drop-above', 'drop-below');
+    });
     item.addEventListener('drop', e => {
       e.preventDefault();
-      const dropIdx = +item.dataset.upgradeIdx;
-      if (dragIdx === null || dragIdx === dropIdx) return;
-      const ups = config.eventCalculator.upgrades;
-      const [moved] = ups.splice(dragIdx, 1);
-      ups.splice(dropIdx, 0, moved);
+      clearIndicators();
+      const targetIdx = +item.dataset.upgradeIdx;
+      if (dragIdx === null || dragIdx === targetIdx) return;
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const dropIdx = e.clientY < midY ? targetIdx : targetIdx + (targetIdx > dragIdx ? 0 : 1);
+      const [moved] = config.eventCalculator.upgrades.splice(dragIdx, 1);
+      const insertAt = dropIdx > dragIdx ? dropIdx - 1 : dropIdx;
+      config.eventCalculator.upgrades.splice(insertAt, 0, moved);
       renderEventUpgrades();
     });
   });
