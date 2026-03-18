@@ -163,7 +163,7 @@ textarea.form-input { min-height: 80px; resize: vertical; }
         <div class="form-group"><label class="form-label">Speed (seconds)</label><input type="number" class="form-input" id="c-speed" min="30" max="300"><span class="form-hint">Lower = faster scroll</span></div>
         <div class="form-group"><label class="form-label">Logo Gap (px)</label><input type="number" class="form-input" id="c-gap" min="10" max="100"></div>
         <div class="form-group"><label class="form-label">Edge Inset (px)</label><input type="number" class="form-input" id="c-clip" min="0" max="100"></div>
-        <div class="form-group"><label class="form-label">Logo Width</label><input type="text" class="form-input" id="c-width" placeholder="200px"></div>
+        <div class="form-group"><label class="form-label">Max Logo Width (px)</label><input type="number" class="form-input" id="c-maxwidth" min="100" max="400" placeholder="200"><span class="form-hint">Caps wide logos. Height controls size.</span></div>
       </div>
     </div>
     <div class="section">
@@ -284,7 +284,7 @@ const DEFAULT_CONFIG = {
       "trackGap": 10,
       "clipInset": 50,
       "padding": "35px 0",
-      "defaultLogoWidth": "200px",
+      "defaultLogoWidth": "auto",
       "defaultLogoMaxWidth": "200px",
       "mobile": {
         "breakpoint": 768,
@@ -625,7 +625,7 @@ function renderCarouselSettings() {
   document.getElementById('c-speed').value = s.speed;
   document.getElementById('c-gap').value = s.gap;
   document.getElementById('c-clip').value = s.clipInset;
-  document.getElementById('c-width').value = s.defaultLogoWidth;
+  document.getElementById('c-maxwidth').value = parseInt(s.defaultLogoMaxWidth) || 200;
 }
 
 function renderLogoList() {
@@ -871,8 +871,8 @@ function readAllForms() {
   s.speed = +document.getElementById('c-speed').value;
   s.gap = +document.getElementById('c-gap').value;
   s.clipInset = +document.getElementById('c-clip').value;
-  s.defaultLogoWidth = document.getElementById('c-width').value;
-  s.defaultLogoMaxWidth = document.getElementById('c-width').value;
+  s.defaultLogoWidth = 'auto';
+  s.defaultLogoMaxWidth = document.getElementById('c-maxwidth').value + 'px';
 
   config.pricing.settings.accentColor = document.getElementById('p-accent').value;
   config.pricing.settings.buttonColor = document.getElementById('p-button').value;
