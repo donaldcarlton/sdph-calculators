@@ -255,6 +255,7 @@
         "100-200": 115
       },
       "groupPortrait": 250,
+      "onsiteSetupFee": 299,
       "retainer": 500,
       "minPeople": 3
     },
@@ -271,14 +272,33 @@
   },
 
   "eventCalculator": {
+    "settings": {
+      "maxBooths": 3,
+      "halfDayMin": 0,
+      "halfDayMax": 10,
+      "fullDayMin": 0,
+      "fullDayMax": 10
+    },
     "rates": {
       "halfDay": 2500,
       "fullDay": 4500,
-      "retouchHalfDay": 1000,
-      "retouchFullDay": 2000,
-      "hmHalfDay": 600,
-      "hmFullDay": 1000,
       "retainer": 500
-    }
+    },
+    "upgrades": [
+      {
+        "id": "retouching",
+        "title": "Retouching Package",
+        "description": "Add light retouching for all participants' headshots. Retouching covers skin, hair, and clothing refinements for polished, professional headshots ready for immediate use.",
+        "halfDayPrice": 1000,
+        "fullDayPrice": 2000
+      },
+      {
+        "id": "hair-makeup",
+        "title": "Professional Hair & Makeup Artist",
+        "description": "On-site professional hair and makeup touch-ups to ensure participants are camera-ready for their headshots.",
+        "halfDayPrice": 600,
+        "fullDayPrice": 1000
+      }
+    ]
   }
 }
