@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-18T23:03:09.451Z",
+  "lastUpdated": "2026-03-18T23:05:24.357Z",
   "carousel": {
     "settings": {
       "speed": 20,
@@ -98,6 +98,12 @@
         "width": null
       },
       {
+        "name": "Swinerton",
+        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png",
+        "height": "100px",
+        "width": null
+      },
+      {
         "name": "Cushman & Wakefield",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e578de96-7361-4632-9c39-ba6147826624/Cushman+%26+Wakefield+Logo.png",
         "height": "46px",
@@ -137,12 +143,6 @@
         "name": "Solar Turbines",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png",
         "height": "50px",
-        "width": null
-      },
-      {
-        "name": "Swinerton",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png",
-        "height": "100px",
         "width": null
       },
       {
