@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDPH Widget Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #252836;
+  --border: #2e3240;
+  --text: #e4e6ed;
+  --text2: #8b8fa3;
+  --accent: #c8a86e;
+  --accent2: #e8c88e;
+  --danger: #e74c3c;
+  --success: #27ae60;
+  --blue: #3b82f6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--accent); }
+code { background: var(--surface2); padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+
+.dash-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.dash-logo { font-size: 18px; font-weight: 700; color: var(--accent); }
+.dash-logo span { color: var(--text2); font-weight: 400; }
+.dash-actions { display: flex; gap: 12px; align-items: center; }
+.dash-status { font-size: 12px; color: var(--text2); padding: 6px 12px; background: var(--surface2); border-radius: 20px; }
+.dash-status.saving { color: var(--accent); }
+.dash-status.saved { color: var(--success); }
+.dash-status.error { color: var(--danger); }
+
+.btn { padding: 10px 20px; border: none; border-radius: 6px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: var(--accent2); }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); }
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-add { background: var(--surface2); color: var(--accent); border: 1px dashed var(--border); padding: 8px 16px; font-size: 13px; font-family: inherit; cursor: pointer; border-radius: 6px; }
+.btn-add:hover { border-color: var(--accent); }
+
+.dash-tabs { display: flex; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; overflow-x: auto; }
+.dash-tab { padding: 14px 24px; font-size: 14px; font-weight: 500; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+.dash-tab:hover { color: var(--text); }
+.dash-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.dash-content { max-width: 1200px; margin: 0 auto; padding: 32px; }
+.dash-panel { display: none; }
+.dash-panel.active { display: block; }
+
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+.section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--accent); }
+.section-desc { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.5; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input { padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.15s; width: 100%; }
+.form-input:focus { border-color: var(--accent); }
+textarea.form-input { min-height: 80px; resize: vertical; }
+.form-hint { font-size: 11px; color: var(--text2); }
+
+.logo-list { display: flex; flex-direction: column; gap: 8px; }
+.logo-item { display: grid; grid-template-columns: 40px 80px 1fr 100px 100px 40px; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
+.logo-item:hover { border-color: var(--accent); }
+.logo-item .drag-handle { cursor: grab; color: var(--text2); font-size: 18px; text-align: center; user-select: none; }
+.logo-item .logo-preview { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 4px; padding: 4px; }
+.logo-item .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(1); }
+.logo-item .logo-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.logo-field { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 13px; width: 100%; }
+.delete-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; text-align: center; }
+.delete-btn:hover { color: var(--danger); }
+
+.add-row { display: flex; gap: 12px; align-items: end; padding: 16px; background: var(--surface2); border-radius: 8px; margin-top: 16px; flex-wrap: wrap; }
+.add-row .form-group { flex: 1; min-width: 120px; margin-bottom: 0; }
+
+.pricing-tab-selector { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.pricing-tab-btn { padding: 8px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); font-family: inherit; font-size: 13px; cursor: pointer; }
+.pricing-tab-btn.active { border-color: var(--accent); color: var(--accent); }
+
+.card-editor { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card-editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.card-editor-title { font-size: 15px; font-weight: 600; }
+.card-editor-badge { font-size: 11px; background: var(--accent); color: #000; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+
+.feature-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.feature-item { display: grid; grid-template-columns: 1fr 1fr 50px 30px; gap: 8px; align-items: center; }
+.feature-item input[type="text"], .feature-item textarea { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 12px; width: 100%; }
+
+.rate-row { display: grid; grid-template-columns: 1fr 120px 120px 40px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.rate-row:last-child { border-bottom: none; }
+.rate-label { font-size: 14px; color: var(--text); }
+.rate-header { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; z-index: 1000; animation: toastIn 0.3s ease; }
+.toast.success { background: var(--success); color: #fff; }
+.toast.error { background: var(--danger); color: #fff; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 768px) {
+  .dash-content { padding: 16px; }
+  .form-row, .form-row.cols-3, .form-row.cols-4 { grid-template-columns: 1fr; }
+  .logo-item { grid-template-columns: 30px 60px 1fr 60px 30px; font-size: 12px; }
+  .add-row { flex-direction: column; }
+  .dash-header { padding: 12px 16px; }
+  .dash-tabs { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="dash-header">
+  <div class="dash-logo">SDPH <span>Widget Dashboard</span></div>
+  <div class="dash-actions">
+    <span class="dash-status" id="status">Ready</span>
+    <button class="btn btn-secondary btn-sm" onclick="loadConfig()">Reload</button>
+    <button class="btn btn-primary" onclick="saveConfig()">Save &amp; Publish</button>
+  </div>
+</div>
+
+<div class="dash-tabs">
+  <div class="dash-tab active" data-tab="carousel">Logo Carousel</div>
+  <div class="dash-tab" data-tab="pricing">Pricing Table</div>
+  <div class="dash-tab" data-tab="team">Team Calculator</div>
+  <div class="dash-tab" data-tab="event">Event Calculator</div>
+  <div class="dash-tab" data-tab="settings">Settings</div>
+</div>
+
+<div class="dash-content">
+  <div class="dash-panel active" id="panel-carousel">
+    <div class="section">
+      <div class="section-title">Carousel Settings</div>
+      <div class="form-row cols-4">
+        <div class="form-group"><label class="form-label">Speed (seconds)</label><input type="number" class="form-input" id="c-speed" min="30" max="300"><span class="form-hint">Lower = faster scroll</span></div>
+        <div class="form-group"><label class="form-label">Logo Gap (px)</label><input type="number" class="form-input" id="c-gap" min="10" max="100"></div>
+        <div class="form-group"><label class="form-label">Edge Inset (px)</label><input type="number" class="form-input" id="c-clip" min="0" max="100"></div>
+        <div class="form-group"><label class="form-label">Logo Width</label><input type="text" class="form-input" id="c-width" placeholder="200px"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Client Logos</div>
+      <div class="section-desc">Drag to reorder. First logos appear on page load. Heights control desktop sizing.</div>
+      <div class="logo-list" id="logo-list"></div>
+      <div class="add-row">
+        <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="add-name" placeholder="Company Name"></div>
+        <div class="form-group" style="flex:2;"><label class="form-label">Squarespace CDN URL</label><input type="text" class="form-input" id="add-url" placeholder="https://images.squarespace-cdn.com/..."></div>
+        <div class="form-group" style="flex:0 0 80px;"><label class="form-label">Height</label><input type="text" class="form-input" id="add-height" value="50px"></div>
+        <div class="form-group" style="flex:0 0 80px;"><label class="form-label">Width</label><input type="text" class="form-input" id="add-width" placeholder="null"></div>
+        <button class="btn btn-primary btn-sm" onclick="addLogo()" style="align-self:end;height:38px;">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-panel" id="panel-pricing">
+    <div class="section">
+      <div class="section-title">Pricing Table Settings</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Accent / Popular Color</label><input type="color" class="form-input" id="p-accent" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Button Color</label><input type="color" class="form-input" id="p-button" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Popular Badge Text</label><input type="text" class="form-input" id="p-badge"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Session Packages</div>
+      <div class="pricing-tab-selector" id="pricing-tabs"></div>
+      <div id="pricing-cards"></div>
+    </div>
+  </div>
+
+  <div class="dash-panel" id="panel-team">
+    <div class="section">
+      <div class="section-title">Team Headshot Rates — On-Site</div>
+      <div class="section-desc">Per-person rate at each volume tier. Add or remove tiers as needed.</div>
+      <div id="team-onsite-rates"></div>
+      <button class="btn-add" onclick="addTeamTier('onsite')" style="margin-top:12px;">+ Add Tier</button>
+    </div>
+    <div class="section">
+      <div class="section-title">Team Headshot Rates — Studio</div>
+      <div id="team-studio-rates"></div>
+      <button class="btn-add" onclick="addTeamTier('studio')" style="margin-top:12px;">+ Add Tier</button>
+    </div>
+    <div class="section">
+      <div class="section-title">Other Settings</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Group Portrait Price</label><input type="number" class="form-input" id="t-group"></div>
+        <div class="form-group"><label class="form-label">Retainer Amount</label><input type="number" class="form-input" id="t-retainer"></div>
+        <div class="form-group"><label class="form-label">Minimum People</label><input type="number" class="form-input" id="t-min"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-panel" id="panel-event">
+    <div class="section">
+      <div class="section-title">Event Headshot Booth Rates</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Half-Day Rate</label><input type="number" class="form-input" id="e-half"></div>
+        <div class="form-group"><label class="form-label">Full-Day Rate</label><input type="number" class="form-input" id="e-full"></div>
+        <div class="form-group"><label class="form-label">Retainer</label><input type="number" class="form-input" id="e-retainer"></div>
+      </div>
+      <div class="form-row cols-4">
+        <div class="form-group"><label class="form-label">Retouch Half-Day</label><input type="number" class="form-input" id="e-rh"></div>
+        <div class="form-group"><label class="form-label">Retouch Full-Day</label><input type="number" class="form-input" id="e-rf"></div>
+        <div class="form-group"><label class="form-label">H&amp;M Half-Day</label><input type="number" class="form-input" id="e-hmh"></div>
+        <div class="form-group"><label class="form-label">H&amp;M Full-Day</label><input type="number" class="form-input" id="e-hmf"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-panel" id="panel-settings">
+    <div class="section">
+      <div class="section-title">GitHub Connection</div>
+      <div class="section-desc">Enter your GitHub Personal Access Token to enable saving. The token needs <code>repo</code> scope. Create one at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>.</div>
+      <div class="form-group"><label class="form-label">Personal Access Token</label><input type="password" class="form-input" id="gh-token" placeholder="ghp_xxxxxxxxxxxx"><span class="form-hint">Stored in your browser only. Never sent anywhere except GitHub's API.</span></div>
+      <div class="form-row" style="margin-top:16px;">
+        <div class="form-group"><label class="form-label">Repository</label><input type="text" class="form-input" id="gh-repo" value="donaldcarlton/sdph-web-apps"></div>
+        <div class="form-group"><label class="form-label">Config File Path</label><input type="text" class="form-input" id="gh-path" value="sdph-config.json"></div>
+      </div>
+      <button class="btn btn-primary" onclick="testGitHub()" style="margin-top:16px;">Test Connection</button>
+    </div>
+    <div class="section">
+      <div class="section-title">Export / Import</div>
+      <div class="section-desc">Download the current config as a JSON file or paste one to import.</div>
+      <button class="btn btn-secondary" onclick="exportConfig()">Download Config JSON</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()" style="margin-left:8px;">Import Config JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importConfig(event)">
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== DEFAULT CONFIG ====================
+// This is the fallback when GitHub hasn't been set up yet.
+const DEFAULT_CONFIG = {
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-18T00:00:00Z",
+
+  "carousel": {
+    "settings": {
+      "speed": 100,
+      "gap": 40,
+      "trackGap": 10,
+      "clipInset": 50,
+      "padding": "35px 0",
+      "defaultLogoWidth": "200px",
+      "defaultLogoMaxWidth": "200px",
+      "mobile": {
+        "breakpoint": 768,
+        "cellWidth": 90,
+        "cellHeight": 55,
+        "cellMargin": 8,
+        "speed": 60,
+        "clipInset": 8,
+        "padding": "8px 0"
+      },
+      "tablet": {
+        "breakpointMin": 769,
+        "breakpointMax": 1024,
+        "cellWidth": 140,
+        "cellHeight": 80,
+        "cellMargin": 12,
+        "speed": 100,
+        "clipInset": 30,
+        "padding": "15px 0"
+      }
+    },
+    "logos": [
+      { "name": "Dell", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png", "height": "114px", "width": "90%" },
+      { "name": "Union Bank", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e07c71d6-dead-46b1-b884-862d2dbf1f31/Union+Bank+Logo.png", "height": "46px", "width": null },
+      { "name": "J.P. Morgan", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/566c5692-7528-4eff-8f62-b7ef01cdf560/JP+Morgan+Logo.png", "height": "44px", "width": null },
+      { "name": "PwC", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/db9922a2-e0b5-450e-b715-76cc19031f3f/PwC+Logo.png", "height": "80px", "width": "100%" },
+      { "name": "Qualcomm", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ad3ef100-5dc9-4b2d-b14c-46a35459c73a/Qualcomm+Logo.png", "height": "42px", "width": null },
+      { "name": "Petco", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/79f6122b-69c6-4e4e-9f4b-d198fdf7c142/Petco+Logo.png", "height": "46px", "width": null },
+      { "name": "Merrill Lynch", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c067d27f-a421-4d7c-a493-8093ac88d8db/Merrill+Lynch+Logo.png", "height": "60px", "width": null },
+      { "name": "Sony", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7e7ad105-901f-4fb4-ad5d-2ab3ebe1e3c7/Sony+Logo.png", "height": "30px", "width": "100%" },
+      { "name": "Illumina", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/894db8e4-f8b5-4ccc-95f4-6a97ac70ea50/Illumina+Logo.png", "height": "48px", "width": "100%" },
+      { "name": "Wells Fargo Advisors", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/596e69d8-45ef-4daf-8a44-642abb2d0ab3/Wells+Fargo+Advisors+Logo.png", "height": "70px", "width": "100%" },
+      { "name": "Raytheon", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/de30bd6b-3ba5-4503-9b0e-0a1bf1e0cfc5/Raytheon+Logo.png", "height": "42px", "width": null },
+      { "name": "Cushman & Wakefield", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e578de96-7361-4632-9c39-ba6147826624/Cushman+%26+Wakefield+Logo.png", "height": "46px", "width": null },
+      { "name": "ServiceNow", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9a2c61a6-b2f5-4b39-acf3-fc7a33973c3e/Service+Now+Logo.png", "height": "42px", "width": null },
+      { "name": "Morgan Stanley", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8ecfe521-dbcd-4db6-a674-63242083cf41/Morgan+Stanley+Logo.png", "height": "42px", "width": null },
+      { "name": "Ameriprise Financial", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/19a2e277-9c0b-43c9-89ea-70ea521b6401/Ameriprise+Logo.png", "height": "65px", "width": null },
+      { "name": "LPL Financial", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66e9ff45-3d23-41d8-853d-2b6e20ea990f/LPL+Financial+Logo.png", "height": "72px", "width": null },
+      { "name": "Intuit", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c97cbf79-7575-491e-853d-f9604f74b015/Intuit+Logo.png", "height": "46px", "width": "100%" },
+      { "name": "Solar Turbines", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png", "height": "50px", "width": "100%" },
+      { "name": "Swinerton", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png", "height": "100px", "width": "100%" },
+      { "name": "University of San Diego", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png", "height": "110px", "width": "100%" },
+      { "name": "Berkshire Hathaway HomeServices", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/cd4a0b43-3902-4788-af40-6a4aeb71d4bc/Berkshire+Hathaway+Home+Services+Logo.png", "height": "100px", "width": "100%" },
+      { "name": "Pacific Sotheby's International Realty", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/179ddf7a-0758-4065-8f1a-7fcb1a10cc32/Pacific+Sothebys+Logo.png", "height": "85px", "width": "100%" },
+      { "name": "UC San Diego", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9c89df39-b210-4563-9bfb-61205e9a0457/UCSD+Logo.png", "height": "80px", "width": "100%" },
+      { "name": "Keller Williams", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/2b4cd925-2698-4680-be35-1fa0242c7b8a/Keller+Williams+Logo.png", "height": "75px", "width": "100%" },
+      { "name": "Dentons", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7eb7e801-3735-40de-a220-5c29683b2b85/Dentons+Logo.png", "height": "53px", "width": null },
+      { "name": "Dinsmore", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/167ab3b6-8f4d-4af1-b516-2dcbd3557f33/Dinsmore+Logo.png", "height": "42px", "width": null },
+      { "name": "AFP", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66de24e8-e0d9-4747-8b58-a97fa9ca193b/AFP+Logo.png", "height": "80px", "width": null },
+      { "name": "Crinetics Pharmaceuticals", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/f42d98b3-44f0-4557-9d36-1166c902c196/Crinetics+Logo.png", "height": "65px", "width": null },
+      { "name": "Commonwealth Financial Network", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ddaebde5-5fde-48bb-8cc2-f87bc3760dd3/Commonwealth+Financial+Logo.png", "height": "55px", "width": null },
+      { "name": "Duane Morris", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/53147907-9a8e-41d8-b4e8-769275ba22cd/Duane+Morris+Logo.png", "height": "42px", "width": null }
+    ]
+  },
+
+  "pricing": {
+    "settings": {
+      "accentColor": "#c8a86e",
+      "buttonColor": "#1a1a1a",
+      "popularBadgeText": "Most Popular"
+    },
+    "tabs": [
+      {
+        "id": "studio",
+        "label": "Individual Studio Sessions",
+        "cols": 3,
+        "cards": [
+          {
+            "title": "Express Studio Session",
+            "description": "A quick, efficient session designed to produce one strong headshot. Ideal for professionals who need a single, polished image and prefer a streamlined session.",
+            "price": 199,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/express-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c4fce6dd-e028-454e-b625-4fb3ff0d85d9/Headshots_San_Diego-56.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "75% 20%",
+            "popular": false,
+            "features": [
+              { "text": "20 minute studio session", "bold": false, "tooltip": null },
+              { "text": "1 look", "bold": false, "tooltip": "No wardrobe or background changes." },
+              { "text": "Standard retouching for 1 image", "bold": true, "tooltip": "Includes light hair, skin, and clothing cleanup for a polished, natural final image.\n\nRetouching for additional images may be purchased in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Professional Studio Session",
+            "description": "A flexible session that allows for multiple looks within an efficient time window. Well suited for professionals who want options while keeping the process simple.",
+            "price": 295,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/professional-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9fa5bd22-59ab-44cd-a707-3710191d092c/Headshots_San_Diego-37.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "70% 20%",
+            "popular": true,
+            "features": [
+              { "text": "30 minute studio session", "bold": false, "tooltip": null },
+              { "text": "2 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 2 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Executive Studio Session",
+            "description": "A more relaxed, extended session for clients who want additional time and attention. This option allows room to refine details and explore more variety.",
+            "price": 495,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/executive-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/73ff252a-14f1-4c18-8d6a-30ef9ddf6dee/Headshots_San_Diego-60.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "65% 20%",
+            "popular": false,
+            "features": [
+              { "text": "60 minute studio session", "bold": false, "tooltip": null },
+              { "text": "3 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 3 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "location",
+        "label": "Individual Location Sessions",
+        "cols": 2,
+        "cards": [
+          {
+            "title": "Mobile Studio Location Session",
+            "description": "We bring our studio to your office or residence, setting up professional lighting and a backdrop to create studio-quality headshots without disrupting your schedule.",
+            "price": 495,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/mobile-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/982c0415-cca6-4ef1-b6ca-bab73321da46/Headshots_San_Diego-31.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "40% 20%",
+            "popular": false,
+            "features": [
+              { "text": "Mobile studio setup with professional lighting and backdrop", "bold": true, "tooltip": "Requires at least a 10×10 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up." },
+              { "text": "Up to 30 minute session (not including setup)", "bold": false, "tooltip": "Includes active shooting time. We arrive approximately 30 minutes prior to your appointment time to set up." },
+              { "text": "Up to 2 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 2 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Environmental Headshot Session",
+            "description": "For clients who want their real environment reflected in the image. Sessions take place indoors or outdoors at your office, residence, or a chosen public space.",
+            "price": 695,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/environmental-headshot-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/df56a20d-a80c-4b2b-9eb7-1746f5f8f3d5/Headshots_San_Diego-57.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "40% 20%",
+            "popular": false,
+            "features": [
+              { "text": "Up to 60 minute session", "bold": false, "tooltip": null },
+              { "text": "Pre-shoot consultation", "bold": false, "tooltip": "We'll connect ahead of your session to talk through goals, usage, wardrobe, location, and any preferences so everything feels dialed in before you arrive." },
+              { "text": "Up to 3 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 3 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "specialty",
+        "label": "ERAS Residency & Military",
+        "cols": 2,
+        "cards": [
+          {
+            "title": "ERAS Residency Headshot Studio Session",
+            "description": "Meets ERAS residency application requirements. Your headshots are photographed, formatted, and delivered according to current ERAS specifications so you can submit with confidence.",
+            "price": 249,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/residency-headshots",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8397e891-dc45-4c22-902c-994b6ebe5356/Headshots_San_Diego-15.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "70% 20%",
+            "popular": false,
+            "features": [
+              { "text": "20 minute studio session", "bold": false, "tooltip": null },
+              { "text": "1 look", "bold": false, "tooltip": "No wardrobe or background changes." },
+              { "text": "Premium retouching for 1 image", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "ERAS formatted images", "bold": true, "tooltip": "Final images are formatted and delivered according to current ERAS residency application specifications." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Military & Civil Service Studio Session",
+            "description": "For military or civil service professionals, with headshots photographed in front of an American flag. Images are retouched and delivered to meet common standards for official applications.",
+            "price": 249,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/military-civil-service",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a9abf89a-1bdf-4c80-9145-c58073171e2e/Headshots_San_Diego-42.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "center 15%",
+            "popular": false,
+            "features": [
+              { "text": "20 minute studio session", "bold": false, "tooltip": null },
+              { "text": "1 look", "bold": false, "tooltip": "No wardrobe or background changes." },
+              { "text": "Premium retouching for 1 image", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "teamCalculator": {
+    "rates": {
+      "onsite": {
+        "3-9": 225,
+        "10-24": 195,
+        "25-49": 175,
+        "50-99": 155,
+        "100-200": 135
+      },
+      "studio": {
+        "3-9": 195,
+        "10-24": 175,
+        "25-49": 155,
+        "50-99": 135,
+        "100-200": 115
+      },
+      "groupPortrait": 250,
+      "retainer": 500,
+      "minPeople": 3
+    },
+    "includes": [
+      "Mobile studio setup with professional lighting and backdrop",
+      "15-30 images per person",
+      "Guided coaching and direction for all participants",
+      "Live image review during session",
+      "Private galleries delivered to participants",
+      "Centralized gallery for team management",
+      "Optional team signup and scheduling link",
+      "Professional retouching for one selected image per person"
+    ]
+  },
+
+  "eventCalculator": {
+    "rates": {
+      "halfDay": 2500,
+      "fullDay": 4500,
+      "retouchHalfDay": 1000,
+      "retouchFullDay": 2000,
+      "hmHalfDay": 600,
+      "hmFullDay": 1000,
+      "retainer": 500
+    }
+  }
+};
+
+// ==================== STATE ====================
+let config = null;
+let activePricingTab = 0;
+const CONFIG_URL = 'https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json';
+
+// ==================== LOAD ====================
+async function loadConfig() {
+  setStatus('Loading...', 'saving');
+  try {
+    const r = await fetch(CONFIG_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    config = await r.json();
+    setStatus('Loaded from GitHub', 'saved');
+  } catch(e) {
+    const cached = localStorage.getItem('sdph-config');
+    if (cached) {
+      config = JSON.parse(cached);
+      setStatus('Loaded from cache', 'saved');
+    } else {
+      config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+      setStatus('Using defaults', 'saving');
+    }
+  }
+  renderAll();
+}
+
+// ==================== RENDER ALL ====================
+function renderAll() {
+  if (!config) return;
+  renderCarouselSettings();
+  renderLogoList();
+  renderPricingSettings();
+  renderPricingTabs();
+  renderPricingCards();
+  renderTeamRates('onsite');
+  renderTeamRates('studio');
+  renderTeamOther();
+  renderEventRates();
+  renderGitHubSettings();
+}
+
+// ==================== CAROUSEL ====================
+function renderCarouselSettings() {
+  const s = config.carousel.settings;
+  document.getElementById('c-speed').value = s.speed;
+  document.getElementById('c-gap').value = s.gap;
+  document.getElementById('c-clip').value = s.clipInset;
+  document.getElementById('c-width').value = s.defaultLogoWidth;
+}
+
+function renderLogoList() {
+  const el = document.getElementById('logo-list');
+  el.innerHTML = config.carousel.logos.map((l, i) => `
+    <div class="logo-item" draggable="true" data-idx="${i}">
+      <div class="drag-handle" title="Drag to reorder">⋮⋮</div>
+      <div class="logo-preview"><img src="${l.url}" alt="${l.name}" onerror="this.style.display='none'"></div>
+      <div class="logo-name">${l.name}</div>
+      <input class="logo-field" value="${l.height}" placeholder="height" onchange="config.carousel.logos[${i}].height=this.value">
+      <input class="logo-field" value="${l.width || ''}" placeholder="width" onchange="config.carousel.logos[${i}].width=this.value||null">
+      <button class="delete-btn" onclick="config.carousel.logos.splice(${i},1);renderLogoList();" title="Remove">✕</button>
+    </div>
+  `).join('');
+  initDragDrop();
+}
+
+function addLogo() {
+  const name = document.getElementById('add-name').value.trim();
+  const url = document.getElementById('add-url').value.trim();
+  const height = document.getElementById('add-height').value.trim() || '50px';
+  const width = document.getElementById('add-width').value.trim() || null;
+  if (!name || !url) return toast('Name and URL required', 'error');
+  config.carousel.logos.push({ name, url, height, width: width === 'null' ? null : width });
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-url').value = '';
+  renderLogoList();
+  toast('Logo added', 'success');
+}
+
+function initDragDrop() {
+  let dragIdx = null;
+  document.querySelectorAll('.logo-item').forEach(item => {
+    item.addEventListener('dragstart', e => { dragIdx = +item.dataset.idx; item.style.opacity = '0.4'; });
+    item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+    item.addEventListener('dragover', e => e.preventDefault());
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      const dropIdx = +item.dataset.idx;
+      if (dragIdx === null || dragIdx === dropIdx) return;
+      const [moved] = config.carousel.logos.splice(dragIdx, 1);
+      config.carousel.logos.splice(dropIdx, 0, moved);
+      renderLogoList();
+    });
+  });
+}
+
+// ==================== PRICING ====================
+function renderPricingSettings() {
+  document.getElementById('p-accent').value = config.pricing.settings.accentColor;
+  document.getElementById('p-button').value = config.pricing.settings.buttonColor;
+  document.getElementById('p-badge').value = config.pricing.settings.popularBadgeText;
+}
+
+function renderPricingTabs() {
+  document.getElementById('pricing-tabs').innerHTML = config.pricing.tabs.map((t, i) =>
+    `<button class="pricing-tab-btn ${i === activePricingTab ? 'active' : ''}" onclick="activePricingTab=${i};renderPricingCards();">${t.label}</button>`
+  ).join('');
+}
+
+function renderPricingCards() {
+  renderPricingTabs();
+  const tab = config.pricing.tabs[activePricingTab];
+  if (!tab) return;
+  const el = document.getElementById('pricing-cards');
+  el.innerHTML = tab.cards.map((card, ci) => `
+    <div class="card-editor">
+      <div class="card-editor-header">
+        <span class="card-editor-title">${card.title || 'New Package'}</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <label style="font-size:12px;color:var(--text2);"><input type="checkbox" ${card.popular ? 'checked' : ''} onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].popular=this.checked;renderPricingCards();"> Popular</label>
+          ${card.popular ? '<span class="card-editor-badge">★ Popular</span>' : ''}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(card.title)}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Price ($)</label><input type="number" class="form-input" value="${card.price}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].price=+this.value"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Description</label><textarea class="form-input" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].description=this.value">${esc(card.description)}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">CTA Button Text</label><input class="form-input" value="${esc(card.ctaText)}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].ctaText=this.value"></div>
+        <div class="form-group"><label class="form-label">CTA URL</label><input class="form-input" value="${esc(card.ctaUrl)}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].ctaUrl=this.value"></div>
+      </div>
+      <label class="form-label" style="margin-top:12px;">Features</label>
+      <div class="feature-list">
+        ${card.features.map((f, fi) => `
+          <div class="feature-item">
+            <input type="text" value="${esc(f.text)}" placeholder="Feature text" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].features[${fi}].text=this.value">
+            <input type="text" value="${esc(f.tooltip || '')}" placeholder="Tooltip (optional)" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].features[${fi}].tooltip=this.value||null">
+            <label style="font-size:11px;color:var(--text2);white-space:nowrap;cursor:pointer;"><input type="checkbox" ${f.bold ? 'checked' : ''} onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].features[${fi}].bold=this.checked"> Bold</label>
+            <button class="delete-btn" onclick="config.pricing.tabs[${activePricingTab}].cards[${ci}].features.splice(${fi},1);renderPricingCards();">✕</button>
+          </div>
+        `).join('')}
+      </div>
+      <button class="btn-add" onclick="config.pricing.tabs[${activePricingTab}].cards[${ci}].features.push({text:'',bold:false,tooltip:null});renderPricingCards();" style="margin-top:8px;">+ Add Feature</button>
+    </div>
+  `).join('');
+}
+
+// ==================== TEAM CALCULATOR ====================
+function renderTeamRates(location) {
+  const rates = config.teamCalculator.rates[location];
+  const el = document.getElementById('team-' + location + '-rates');
+  const entries = Object.entries(rates);
+  el.innerHTML = `
+    <div class="rate-row"><span class="rate-header">Team Size Range</span><span class="rate-header">Per Person Rate ($)</span><span></span><span></span></div>
+    ${entries.map(([range, rate], i) => `
+      <div class="rate-row">
+        <input class="logo-field" value="${range}" onchange="renameTeamTier('${location}','${range}',this.value)">
+        <input type="number" class="logo-field" value="${rate}" onchange="config.teamCalculator.rates.${location}['${range}']=+this.value" style="width:120px;">
+        <span style="font-size:12px;color:var(--text2);">/person</span>
+        <button class="delete-btn" onclick="delete config.teamCalculator.rates.${location}['${range}'];renderTeamRates('${location}');" title="Remove tier">✕</button>
+      </div>
+    `).join('')}
+  `;
+}
+
+function addTeamTier(location) {
+  const rates = config.teamCalculator.rates[location];
+  const keys = Object.keys(rates);
+  const lastKey = keys[keys.length - 1] || '0-0';
+  const lastMax = parseInt(lastKey.split('-')[1]) || 0;
+  const newKey = (lastMax + 1) + '-' + (lastMax + 50);
+  rates[newKey] = 100;
+  renderTeamRates(location);
+  toast('Tier added', 'success');
+}
+
+function renameTeamTier(location, oldKey, newKey) {
+  if (oldKey === newKey) return;
+  const rates = config.teamCalculator.rates[location];
+  const val = rates[oldKey];
+  const ordered = {};
+  Object.entries(rates).forEach(([k, v]) => {
+    if (k === oldKey) ordered[newKey] = val;
+    else ordered[k] = v;
+  });
+  config.teamCalculator.rates[location] = ordered;
+}
+
+function renderTeamOther() {
+  const r = config.teamCalculator.rates;
+  document.getElementById('t-group').value = r.groupPortrait;
+  document.getElementById('t-retainer').value = r.retainer;
+  document.getElementById('t-min').value = r.minPeople;
+}
+
+// ==================== EVENT CALCULATOR ====================
+function renderEventRates() {
+  const r = config.eventCalculator.rates;
+  document.getElementById('e-half').value = r.halfDay;
+  document.getElementById('e-full').value = r.fullDay;
+  document.getElementById('e-retainer').value = r.retainer;
+  document.getElementById('e-rh').value = r.retouchHalfDay;
+  document.getElementById('e-rf').value = r.retouchFullDay;
+  document.getElementById('e-hmh').value = r.hmHalfDay;
+  document.getElementById('e-hmf').value = r.hmFullDay;
+}
+
+// ==================== SETTINGS ====================
+function renderGitHubSettings() {
+  document.getElementById('gh-token').value = localStorage.getItem('sdph-gh-token') || '';
+}
+
+// ==================== READ FORM VALUES INTO CONFIG ====================
+function readAllForms() {
+  const s = config.carousel.settings;
+  s.speed = +document.getElementById('c-speed').value;
+  s.gap = +document.getElementById('c-gap').value;
+  s.clipInset = +document.getElementById('c-clip').value;
+  s.defaultLogoWidth = document.getElementById('c-width').value;
+  s.defaultLogoMaxWidth = document.getElementById('c-width').value;
+
+  config.pricing.settings.accentColor = document.getElementById('p-accent').value;
+  config.pricing.settings.buttonColor = document.getElementById('p-button').value;
+  config.pricing.settings.popularBadgeText = document.getElementById('p-badge').value;
+
+  config.teamCalculator.rates.groupPortrait = +document.getElementById('t-group').value;
+  config.teamCalculator.rates.retainer = +document.getElementById('t-retainer').value;
+  config.teamCalculator.rates.minPeople = +document.getElementById('t-min').value;
+
+  const er = config.eventCalculator.rates;
+  er.halfDay = +document.getElementById('e-half').value;
+  er.fullDay = +document.getElementById('e-full').value;
+  er.retainer = +document.getElementById('e-retainer').value;
+  er.retouchHalfDay = +document.getElementById('e-rh').value;
+  er.retouchFullDay = +document.getElementById('e-rf').value;
+  er.hmHalfDay = +document.getElementById('e-hmh').value;
+  er.hmFullDay = +document.getElementById('e-hmf').value;
+
+  config.lastUpdated = new Date().toISOString();
+}
+
+// ==================== SAVE TO GITHUB ====================
+async function saveConfig() {
+  readAllForms();
+  localStorage.setItem('sdph-config', JSON.stringify(config));
+
+  const token = document.getElementById('gh-token').value.trim();
+  localStorage.setItem('sdph-gh-token', token);
+  if (!token) return toast('Set your GitHub token in the Settings tab to publish.', 'error');
+
+  const repo = document.getElementById('gh-repo').value.trim();
+  const path = document.getElementById('gh-path').value.trim();
+  setStatus('Saving...', 'saving');
+
+  try {
+    const getR = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    let sha = null;
+    if (getR.ok) sha = (await getR.json()).sha;
+
+    const body = {
+      message: 'Update SDPH config — ' + new Date().toLocaleString(),
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(config, null, 2)))),
+      branch: 'main'
+    };
+    if (sha) body.sha = sha;
+
+    const putR = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (putR.ok) {
+      setStatus('Published ✓', 'saved');
+      toast('Saved! Changes go live in 1-2 minutes.', 'success');
+    } else {
+      throw new Error((await putR.json()).message);
+    }
+  } catch(e) {
+    setStatus('Save failed', 'error');
+    toast('GitHub error: ' + e.message, 'error');
+  }
+}
+
+async function testGitHub() {
+  const token = document.getElementById('gh-token').value.trim();
+  localStorage.setItem('sdph-gh-token', token);
+  if (!token) return toast('Enter a token first', 'error');
+  try {
+    const r = await fetch('https://api.github.com/user', { headers: { Authorization: `token ${token}` } });
+    if (r.ok) toast('Connected as ' + (await r.json()).login, 'success');
+    else toast('Invalid token', 'error');
+  } catch(e) { toast('Connection failed', 'error'); }
+}
+
+// ==================== EXPORT / IMPORT ====================
+function exportConfig() {
+  readAllForms();
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sdph-config.json';
+  a.click();
+}
+
+function importConfig(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      config = JSON.parse(e.target.result);
+      renderAll();
+      toast('Config imported', 'success');
+    } catch(err) { toast('Invalid JSON file', 'error'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ==================== HELPERS ====================
+function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+function setStatus(t, c) { const el = document.getElementById('status'); el.textContent = t; el.className = 'dash-status ' + (c || ''); }
+function toast(msg, type) { const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
+
+// Tab switching
+document.querySelectorAll('.dash-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Init
+loadConfig();
+</script>
+</body>
+</html>
