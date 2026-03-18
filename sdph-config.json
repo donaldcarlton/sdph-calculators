@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-18T23:02:14.944Z",
+  "lastUpdated": "2026-03-18T23:03:09.451Z",
   "carousel": {
     "settings": {
       "speed": 20,
@@ -35,7 +35,7 @@
         "name": "Dell",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png",
         "height": "114px",
-        "width": "90%"
+        "width": null
       },
       {
         "name": "Union Bank",
