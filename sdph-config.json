@@ -1,0 +1,284 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-18T00:00:00Z",
+
+  "carousel": {
+    "settings": {
+      "speed": 100,
+      "gap": 40,
+      "trackGap": 10,
+      "clipInset": 50,
+      "padding": "35px 0",
+      "defaultLogoWidth": "200px",
+      "defaultLogoMaxWidth": "200px",
+      "mobile": {
+        "breakpoint": 768,
+        "cellWidth": 90,
+        "cellHeight": 55,
+        "cellMargin": 8,
+        "speed": 60,
+        "clipInset": 8,
+        "padding": "8px 0"
+      },
+      "tablet": {
+        "breakpointMin": 769,
+        "breakpointMax": 1024,
+        "cellWidth": 140,
+        "cellHeight": 80,
+        "cellMargin": 12,
+        "speed": 100,
+        "clipInset": 30,
+        "padding": "15px 0"
+      }
+    },
+    "logos": [
+      { "name": "Dell", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png", "height": "114px", "width": "90%" },
+      { "name": "Union Bank", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e07c71d6-dead-46b1-b884-862d2dbf1f31/Union+Bank+Logo.png", "height": "46px", "width": null },
+      { "name": "J.P. Morgan", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/566c5692-7528-4eff-8f62-b7ef01cdf560/JP+Morgan+Logo.png", "height": "44px", "width": null },
+      { "name": "PwC", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/db9922a2-e0b5-450e-b715-76cc19031f3f/PwC+Logo.png", "height": "80px", "width": "100%" },
+      { "name": "Qualcomm", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ad3ef100-5dc9-4b2d-b14c-46a35459c73a/Qualcomm+Logo.png", "height": "42px", "width": null },
+      { "name": "Petco", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/79f6122b-69c6-4e4e-9f4b-d198fdf7c142/Petco+Logo.png", "height": "46px", "width": null },
+      { "name": "Merrill Lynch", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c067d27f-a421-4d7c-a493-8093ac88d8db/Merrill+Lynch+Logo.png", "height": "60px", "width": null },
+      { "name": "Sony", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7e7ad105-901f-4fb4-ad5d-2ab3ebe1e3c7/Sony+Logo.png", "height": "30px", "width": "100%" },
+      { "name": "Illumina", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/894db8e4-f8b5-4ccc-95f4-6a97ac70ea50/Illumina+Logo.png", "height": "48px", "width": "100%" },
+      { "name": "Wells Fargo Advisors", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/596e69d8-45ef-4daf-8a44-642abb2d0ab3/Wells+Fargo+Advisors+Logo.png", "height": "70px", "width": "100%" },
+      { "name": "Raytheon", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/de30bd6b-3ba5-4503-9b0e-0a1bf1e0cfc5/Raytheon+Logo.png", "height": "42px", "width": null },
+      { "name": "Cushman & Wakefield", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e578de96-7361-4632-9c39-ba6147826624/Cushman+%26+Wakefield+Logo.png", "height": "46px", "width": null },
+      { "name": "ServiceNow", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9a2c61a6-b2f5-4b39-acf3-fc7a33973c3e/Service+Now+Logo.png", "height": "42px", "width": null },
+      { "name": "Morgan Stanley", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8ecfe521-dbcd-4db6-a674-63242083cf41/Morgan+Stanley+Logo.png", "height": "42px", "width": null },
+      { "name": "Ameriprise Financial", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/19a2e277-9c0b-43c9-89ea-70ea521b6401/Ameriprise+Logo.png", "height": "65px", "width": null },
+      { "name": "LPL Financial", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66e9ff45-3d23-41d8-853d-2b6e20ea990f/LPL+Financial+Logo.png", "height": "72px", "width": null },
+      { "name": "Intuit", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c97cbf79-7575-491e-853d-f9604f74b015/Intuit+Logo.png", "height": "46px", "width": "100%" },
+      { "name": "Solar Turbines", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png", "height": "50px", "width": "100%" },
+      { "name": "Swinerton", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png", "height": "100px", "width": "100%" },
+      { "name": "University of San Diego", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png", "height": "110px", "width": "100%" },
+      { "name": "Berkshire Hathaway HomeServices", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/cd4a0b43-3902-4788-af40-6a4aeb71d4bc/Berkshire+Hathaway+Home+Services+Logo.png", "height": "100px", "width": "100%" },
+      { "name": "Pacific Sotheby's International Realty", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/179ddf7a-0758-4065-8f1a-7fcb1a10cc32/Pacific+Sothebys+Logo.png", "height": "85px", "width": "100%" },
+      { "name": "UC San Diego", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9c89df39-b210-4563-9bfb-61205e9a0457/UCSD+Logo.png", "height": "80px", "width": "100%" },
+      { "name": "Keller Williams", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/2b4cd925-2698-4680-be35-1fa0242c7b8a/Keller+Williams+Logo.png", "height": "75px", "width": "100%" },
+      { "name": "Dentons", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7eb7e801-3735-40de-a220-5c29683b2b85/Dentons+Logo.png", "height": "53px", "width": null },
+      { "name": "Dinsmore", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/167ab3b6-8f4d-4af1-b516-2dcbd3557f33/Dinsmore+Logo.png", "height": "42px", "width": null },
+      { "name": "AFP", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66de24e8-e0d9-4747-8b58-a97fa9ca193b/AFP+Logo.png", "height": "80px", "width": null },
+      { "name": "Crinetics Pharmaceuticals", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/f42d98b3-44f0-4557-9d36-1166c902c196/Crinetics+Logo.png", "height": "65px", "width": null },
+      { "name": "Commonwealth Financial Network", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ddaebde5-5fde-48bb-8cc2-f87bc3760dd3/Commonwealth+Financial+Logo.png", "height": "55px", "width": null },
+      { "name": "Duane Morris", "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/53147907-9a8e-41d8-b4e8-769275ba22cd/Duane+Morris+Logo.png", "height": "42px", "width": null }
+    ]
+  },
+
+  "pricing": {
+    "settings": {
+      "accentColor": "#c8a86e",
+      "buttonColor": "#1a1a1a",
+      "popularBadgeText": "Most Popular"
+    },
+    "tabs": [
+      {
+        "id": "studio",
+        "label": "Individual Studio Sessions",
+        "cols": 3,
+        "cards": [
+          {
+            "title": "Express Studio Session",
+            "description": "A quick, efficient session designed to produce one strong headshot. Ideal for professionals who need a single, polished image and prefer a streamlined session.",
+            "price": 199,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/express-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c4fce6dd-e028-454e-b625-4fb3ff0d85d9/Headshots_San_Diego-56.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "75% 20%",
+            "popular": false,
+            "features": [
+              { "text": "20 minute studio session", "bold": false, "tooltip": null },
+              { "text": "1 look", "bold": false, "tooltip": "No wardrobe or background changes." },
+              { "text": "Standard retouching for 1 image", "bold": true, "tooltip": "Includes light hair, skin, and clothing cleanup for a polished, natural final image.\n\nRetouching for additional images may be purchased in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Professional Studio Session",
+            "description": "A flexible session that allows for multiple looks within an efficient time window. Well suited for professionals who want options while keeping the process simple.",
+            "price": 295,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/professional-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9fa5bd22-59ab-44cd-a707-3710191d092c/Headshots_San_Diego-37.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "70% 20%",
+            "popular": true,
+            "features": [
+              { "text": "30 minute studio session", "bold": false, "tooltip": null },
+              { "text": "2 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 2 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Executive Studio Session",
+            "description": "A more relaxed, extended session for clients who want additional time and attention. This option allows room to refine details and explore more variety.",
+            "price": 495,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/executive-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/73ff252a-14f1-4c18-8d6a-30ef9ddf6dee/Headshots_San_Diego-60.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "65% 20%",
+            "popular": false,
+            "features": [
+              { "text": "60 minute studio session", "bold": false, "tooltip": null },
+              { "text": "3 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 3 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "location",
+        "label": "Individual Location Sessions",
+        "cols": 2,
+        "cards": [
+          {
+            "title": "Mobile Studio Location Session",
+            "description": "We bring our studio to your office or residence, setting up professional lighting and a backdrop to create studio-quality headshots without disrupting your schedule.",
+            "price": 495,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/mobile-studio-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/982c0415-cca6-4ef1-b6ca-bab73321da46/Headshots_San_Diego-31.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "40% 20%",
+            "popular": false,
+            "features": [
+              { "text": "Mobile studio setup with professional lighting and backdrop", "bold": true, "tooltip": "Requires at least a 10×10 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up." },
+              { "text": "Up to 30 minute session (not including setup)", "bold": false, "tooltip": "Includes active shooting time. We arrive approximately 30 minutes prior to your appointment time to set up." },
+              { "text": "Up to 2 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 2 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Environmental Headshot Session",
+            "description": "For clients who want their real environment reflected in the image. Sessions take place indoors or outdoors at your office, residence, or a chosen public space.",
+            "price": 695,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/environmental-headshot-session",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/df56a20d-a80c-4b2b-9eb7-1746f5f8f3d5/Headshots_San_Diego-57.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "40% 20%",
+            "popular": false,
+            "features": [
+              { "text": "Up to 60 minute session", "bold": false, "tooltip": null },
+              { "text": "Pre-shoot consultation", "bold": false, "tooltip": "We'll connect ahead of your session to talk through goals, usage, wardrobe, location, and any preferences so everything feels dialed in before you arrive." },
+              { "text": "Up to 3 looks", "bold": false, "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing." },
+              { "text": "Premium retouching for 3 images", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "specialty",
+        "label": "ERAS Residency & Military",
+        "cols": 2,
+        "cards": [
+          {
+            "title": "ERAS Residency Headshot Studio Session",
+            "description": "Meets ERAS residency application requirements. Your headshots are photographed, formatted, and delivered according to current ERAS specifications so you can submit with confidence.",
+            "price": 249,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/residency-headshots",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8397e891-dc45-4c22-902c-994b6ebe5356/Headshots_San_Diego-15.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "70% 20%",
+            "popular": false,
+            "features": [
+              { "text": "20 minute studio session", "bold": false, "tooltip": null },
+              { "text": "1 look", "bold": false, "tooltip": "No wardrobe or background changes." },
+              { "text": "Premium retouching for 1 image", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "ERAS formatted images", "bold": true, "tooltip": "Final images are formatted and delivered according to current ERAS residency application specifications." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Live image review during session", "bold": false, "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          },
+          {
+            "title": "Military & Civil Service Studio Session",
+            "description": "For military or civil service professionals, with headshots photographed in front of an American flag. Images are retouched and delivered to meet common standards for official applications.",
+            "price": 249,
+            "ctaText": "Book Online",
+            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/military-civil-service",
+            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a9abf89a-1bdf-4c80-9145-c58073171e2e/Headshots_San_Diego-42.jpg?content-type=image%2Fjpeg",
+            "imagePosition": "center 15%",
+            "popular": false,
+            "features": [
+              { "text": "20 minute studio session", "bold": false, "tooltip": null },
+              { "text": "1 look", "bold": false, "tooltip": "No wardrobe or background changes." },
+              { "text": "Premium retouching for 1 image", "bold": true, "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery." },
+              { "text": "Same-day online gallery", "bold": false, "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting." },
+              { "text": "Images optimized for all platforms", "bold": false, "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media." },
+              { "text": "Headshot preparation & style guide", "bold": false, "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session." },
+              { "text": "Professional coaching and direction", "bold": false, "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "teamCalculator": {
+    "rates": {
+      "onsite": {
+        "3-9": 225,
+        "10-24": 195,
+        "25-49": 175,
+        "50-99": 155,
+        "100-200": 135
+      },
+      "studio": {
+        "3-9": 195,
+        "10-24": 175,
+        "25-49": 155,
+        "50-99": 135,
+        "100-200": 115
+      },
+      "groupPortrait": 250,
+      "retainer": 500,
+      "minPeople": 3
+    },
+    "includes": [
+      "Mobile studio setup with professional lighting and backdrop",
+      "15-30 images per person",
+      "Guided coaching and direction for all participants",
+      "Live image review during session",
+      "Private galleries delivered to participants",
+      "Centralized gallery for team management",
+      "Optional team signup and scheduling link",
+      "Professional retouching for one selected image per person"
+    ]
+  },
+
+  "eventCalculator": {
+    "rates": {
+      "halfDay": 2500,
+      "fullDay": 4500,
+      "retouchHalfDay": 1000,
+      "retouchFullDay": 2000,
+      "hmHalfDay": 600,
+      "hmFullDay": 1000,
+      "retainer": 500
+    }
+  }
+}
