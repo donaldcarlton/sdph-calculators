@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-18T23:09:07.178Z",
+  "lastUpdated": "2026-03-18T23:10:02.188Z",
   "carousel": {
     "settings": {
       "speed": 20,
@@ -101,7 +101,7 @@
         "name": "Swinerton",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png",
         "height": "150px",
-        "width": "50%"
+        "width": "150%"
       },
       {
         "name": "Cushman & Wakefield",
@@ -149,7 +149,7 @@
         "name": "University of San Diego",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png",
         "height": "150px",
-        "width": "50%"
+        "width": "100%"
       },
       {
         "name": "Berkshire Hathaway HomeServices",
