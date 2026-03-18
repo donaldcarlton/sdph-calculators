@@ -6,18 +6,37 @@
 <title>SDPH Widget Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0f1117;
-  --surface: #1a1d27;
-  --surface2: #252836;
-  --border: #2e3240;
-  --text: #e4e6ed;
-  --text2: #8b8fa3;
-  --accent: #c8a86e;
-  --accent2: #e8c88e;
+:root, [data-theme="dark"] {
+  --bg: #111111;
+  --surface: #1a1a1a;
+  --surface2: #252525;
+  --border: #333333;
+  --text: #e0e0e0;
+  --text2: #888888;
+  --accent: #e0e0e0;
+  --accent2: #ffffff;
   --danger: #e74c3c;
   --success: #27ae60;
   --blue: #3b82f6;
+  --logo-preview-bg: #ffffff;
+  --input-bg: #111111;
+  --btn-primary-text: #111111;
+}
+[data-theme="light"] {
+  --bg: #f2f2f2;
+  --surface: #ffffff;
+  --surface2: #e8e8e8;
+  --border: #d0d0d0;
+  --text: #1a1a1a;
+  --text2: #666666;
+  --accent: #1a1a1a;
+  --accent2: #333333;
+  --danger: #d63031;
+  --success: #27ae60;
+  --blue: #2563eb;
+  --logo-preview-bg: #ffffff;
+  --input-bg: #ffffff;
+  --btn-primary-text: #ffffff;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
@@ -34,7 +53,7 @@ code { background: var(--surface2); padding: 2px 6px; border-radius: 3px; font-s
 .dash-status.error { color: var(--danger); }
 
 .btn { padding: 10px 20px; border: none; border-radius: 6px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-.btn-primary { background: var(--accent); color: #000; }
+.btn-primary { background: var(--accent); color: var(--btn-primary-text); }
 .btn-primary:hover { background: var(--accent2); }
 .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover { border-color: var(--accent); }
@@ -62,7 +81,7 @@ code { background: var(--surface2); padding: 2px 6px; border-radius: 3px; font-s
 .form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
-.form-input { padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.15s; width: 100%; }
+.form-input { padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.15s; width: 100%; }
 .form-input:focus { border-color: var(--accent); }
 textarea.form-input { min-height: 80px; resize: vertical; }
 .form-hint { font-size: 11px; color: var(--text2); }
@@ -71,7 +90,7 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 .logo-item { display: grid; grid-template-columns: 40px 80px 1fr 100px 100px 40px; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
 .logo-item:hover { border-color: var(--accent); }
 .logo-item .drag-handle { cursor: grab; color: var(--text2); font-size: 18px; text-align: center; user-select: none; }
-.logo-item .logo-preview { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 4px; padding: 4px; }
+.logo-item .logo-preview { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--logo-preview-bg); border-radius: 4px; padding: 4px; }
 .logo-item .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(1); }
 .logo-item .logo-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .logo-field { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 13px; width: 100%; }
@@ -88,7 +107,7 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 .card-editor { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
 .card-editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .card-editor-title { font-size: 15px; font-weight: 600; }
-.card-editor-badge { font-size: 11px; background: var(--accent); color: #000; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+.card-editor-badge { font-size: 11px; background: var(--accent); color: var(--btn-primary-text); padding: 3px 10px; border-radius: 10px; font-weight: 600; }
 
 .feature-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
 .feature-item { display: grid; grid-template-columns: 1fr 1fr 50px 30px; gap: 8px; align-items: center; }
@@ -119,6 +138,9 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 <div class="dash-header">
   <div class="dash-logo">SDPH <span>Widget Dashboard</span></div>
   <div class="dash-actions">
+    <button class="btn btn-secondary btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="display:flex;align-items:center;gap:6px;padding:6px 12px;">
+      <span id="theme-icon">☀</span>
+    </button>
     <span class="dash-status" id="status">Ready</span>
     <button class="btn btn-secondary btn-sm" onclick="loadConfig()">Reload</button>
     <button class="btn btn-primary" onclick="saveConfig()">Save &amp; Publish</button>
@@ -961,6 +983,23 @@ function importConfig(event) {
 function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 function setStatus(t, c) { const el = document.getElementById('status'); el.textContent = t; el.className = 'dash-status ' + (c || ''); }
 function toast(msg, type) { const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
+
+// ==================== THEME ====================
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem('sdph-dash-theme', next);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').textContent = theme === 'dark' ? '☀' : '☾';
+  document.getElementById('theme-toggle').title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+}
+
+// Apply saved theme immediately
+applyTheme(localStorage.getItem('sdph-dash-theme') || 'dark');
 
 // Tab switching
 document.querySelectorAll('.dash-tab').forEach(tab => {
