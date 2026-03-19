@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-19T07:29:28.941Z",
+  "lastUpdated": "2026-03-19T07:30:02.227Z",
   "carousel": {
     "settings": {
       "speed": 100,
@@ -671,27 +671,6 @@
             "50-99": 135,
             "100-200": 115
           }
-        }
-      },
-      {
-        "id": "slider-1773905177612",
-        "type": "slider",
-        "title": "Number of Retouched Images",
-        "hint": "select the number of retouched images per person",
-        "min": 1,
-        "max": 20,
-        "default": 1,
-        "pricingMode": "perUnit",
-        "pricingLabel": "Retouches",
-        "perUnitLabel": "image",
-        "showPerUnitRate": true,
-        "linkedDropdown": null,
-        "rates": {
-          "1-2": 50,
-          "2-4": 40,
-          "4-8": 35,
-          "8-10": 25,
-          "10-20": 20
         }
       },
       {
