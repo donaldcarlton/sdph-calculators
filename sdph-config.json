@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-19T08:31:50.092Z",
+  "lastUpdated": "2026-03-19T08:33:07.660Z",
   "carousel": {
     "settings": {
       "speed": 100,
@@ -628,7 +628,7 @@
     },
     "volumeDiscount": {
       "enabled": true,
-      "format": "percent",
+      "format": "both",
       "label": "Volume Savings: {amount}"
     },
     "inputs": [
