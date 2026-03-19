@@ -12,6 +12,42 @@ var SDPH_CONFIG = {
 
 (function() {
 
+  var badgeCfg = { sessionTime: { enabled: true, label: "Estimated Session Time: {time}" }, volumeDiscount: { enabled: true, format: "both", label: "Volume Savings: {amount}" } };
+
+  // Load badge config from sdph-config.json
+  fetch("https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json?t=" + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(cfg) {
+      if (cfg.teamCalculator) {
+        if (cfg.teamCalculator.sessionTime) badgeCfg.sessionTime = cfg.teamCalculator.sessionTime;
+        if (cfg.teamCalculator.volumeDiscount) badgeCfg.volumeDiscount = cfg.teamCalculator.volumeDiscount;
+      }
+      calc();
+    })
+    .catch(function() {});
+
+  function fmtVolumeBadge(d) {
+    var vd = badgeCfg.volumeDiscount;
+    if (!vd.enabled || d.pct <= 0) return "";
+    var amount;
+    if (vd.format === "dollars") {
+      amount = fmt(d.dollarSaved) + " saved";
+    } else if (vd.format === "percent") {
+      amount = d.pct + "% off";
+    } else {
+      amount = fmt(d.dollarSaved) + " saved (" + d.pct + "% off)";
+    }
+    var label = (vd.label || "Volume Savings: {amount}").replace("{amount}", amount);
+    return label;
+  }
+
+  function fmtTimeBadge(d) {
+    var st = badgeCfg.sessionTime;
+    if (!st.enabled) return "";
+    var label = (st.label || "Estimated Session Time: {time}").replace("{time}", d.ts);
+    return label;
+  }
+
   var mS = document.getElementById("sdph-ms");
   var mN = document.getElementById("sdph-mn");
   var gS = document.getElementById("sdph-gs");
@@ -69,6 +105,7 @@ var SDPH_CONFIG = {
     var gt = g * SDPH_CONFIG.groupRate;
     var st = ht + osFee + gt;
     var pct = Math.round(((SDPH_CONFIG.baseRate - r) / SDPH_CONFIG.baseRate) * 100);
+    var dollarSaved = (SDPH_CONFIG.baseRate - r) * m;
     var mins;
     if (m <= 4) { mins = m * 15; }
     else if (m <= 12) { mins = 60; }
@@ -84,7 +121,7 @@ var SDPH_CONFIG = {
     }
     return {
       m: m, g: g, on: on, r: r, ht: ht, osFee: osFee, gt: gt, st: st,
-      pct: pct, ts: ts, loc: on ? "On-Site (Office, Hotel, Etc.)" : "Studio"
+      pct: pct, dollarSaved: dollarSaved, ts: ts, loc: on ? "On-Site (Office, Hotel, Etc.)" : "Studio"
     };
   }
 
@@ -100,10 +137,14 @@ var SDPH_CONFIG = {
       L += "<div class=\"pricing-line\"><span class=\"ll\">Group Portraits<\/span><span class=\"lv\">" + fmt(d.gt) + "<\/span><\/div>";
     }
     L += "<div class=\"pricing-line hl\"><span class=\"ll\">Session Total<\/span><span class=\"lv\">" + fmt(d.st) + "<\/span><\/div>";
-    if (d.pct > 0) {
-      L += "<div class=\"sav\"><span>Volume discount: " + d.pct + "% off base rate<\/span><\/div>";
+    var volText = fmtVolumeBadge(d);
+    if (volText) {
+      L += "<div class=\"sav\"><span>" + volText + "<\/span><\/div>";
     }
-    L += "<div class=\"stm\"><span>Estimated session time: " + d.ts + "<\/span><\/div>";
+    var timeText = fmtTimeBadge(d);
+    if (timeText) {
+      L += "<div class=\"stm\"><span>" + timeText + "<\/span><\/div>";
+    }
     return L;
   }
 
@@ -340,10 +381,14 @@ var SDPH_CONFIG = {
       h.push("<tr style=\"border-bottom:1px solid #e8e8e8\"><td style=\"padding:12px 18px;font-size:14px;color:#333\">" + pr[j][0] + "<\/td><td style=\"padding:12px 18px;font-size:14px;font-weight:600;text-align:right\">" + pr[j][1] + "<\/td><\/tr>");
     }
     h.push("<tr><td style=\"padding:14px 18px;font-size:16px;font-weight:700;border-top:2px solid #1e3a52\">Session Total<\/td><td style=\"padding:14px 18px;font-size:20px;font-weight:700;color:#1e3a52;text-align:right;border-top:2px solid #1e3a52\">" + fmt(d.st) + "<\/td><\/tr><\/table>");
-    if (d.pct > 0) {
-      h.push("<div style=\"display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;margin-top:12px\">Volume discount: " + d.pct + "% off base rate<\/div>");
+    var volText = fmtVolumeBadge(d);
+    if (volText) {
+      h.push("<div style=\"display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;margin-top:12px\">" + volText + "<\/div>");
     }
-    h.push("<div style=\"font-size:12px;color:#777;margin-top:8px\">Estimated session time: " + d.ts + "<\/div>");
+    var timeText = fmtTimeBadge(d);
+    if (timeText) {
+      h.push("<div style=\"font-size:12px;color:#777;margin-top:8px\">" + timeText + "<\/div>");
+    }
     h.push("<hr style=\"border:none;border-top:1px solid #e8e8e8;margin:22px 0\">");
     h.push("<div style=\"font-size:15px;font-weight:700;margin-bottom:10px\">Ready to Book?<\/div>");
     h.push("<div style=\"font-size:13px;color:#555;line-height:1.6\">Contact us to confirm your session date and details. We will coordinate all logistics so your team can focus on what matters.<\/div>");
@@ -434,19 +479,24 @@ var SDPH_CONFIG = {
       doc.setTextColor(nv[0], nv[1], nv[2]);
       doc.text(fmt(d.st), W - M - 6, y, { align: "right" });
       y += 10;
-      if (d.pct > 0) {
+      var volText = fmtVolumeBadge(d);
+      if (volText) {
+        var volW = doc.getStringUnitWidth(volText) * 8 / doc.internal.scaleFactor + 12;
         doc.setFillColor(232, 245, 233);
-        doc.roundedRect(M, y - 4, 68, 7, 3, 3, "F");
+        doc.roundedRect(M, y - 4, Math.max(volW, 68), 7, 3, 3, "F");
         doc.setFont("helvetica", "bold");
         doc.setFontSize(8);
         doc.setTextColor(gn[0], gn[1], gn[2]);
-        doc.text("Volume discount: " + d.pct + "% off base rate", M + 4, y + 1);
+        doc.text(volText, M + 4, y + 1);
         y += 10;
       }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(lg[0], lg[1], lg[2]);
-      doc.text("Estimated session time: " + d.ts, M, y);
+      var timeText = fmtTimeBadge(d);
+      if (timeText) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(lg[0], lg[1], lg[2]);
+        doc.text(timeText, M, y);
+      }
       y += 12;
       doc.setDrawColor(ln[0], ln[1], ln[2]);
       doc.setLineWidth(0.3);
