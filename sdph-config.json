@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-03-18T23:29:58.756Z",
+  "version": "1.1.0",
+  "lastUpdated": "2026-03-18T00:00:00Z",
   "carousel": {
     "settings": {
       "speed": 100,
@@ -28,14 +28,15 @@
         "speed": 100,
         "clipInset": 30,
         "padding": "15px 0"
-      }
+      },
+      "grayscale": true
     },
     "logos": [
       {
         "name": "Dell",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png",
         "height": "114px",
-        "width": null
+        "width": "90%"
       },
       {
         "name": "Union Bank",
@@ -53,7 +54,7 @@
         "name": "PwC",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/db9922a2-e0b5-450e-b715-76cc19031f3f/PwC+Logo.png",
         "height": "80px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Qualcomm",
@@ -77,19 +78,19 @@
         "name": "Sony",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7e7ad105-901f-4fb4-ad5d-2ab3ebe1e3c7/Sony+Logo.png",
         "height": "30px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Illumina",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/894db8e4-f8b5-4ccc-95f4-6a97ac70ea50/Illumina+Logo.png",
         "height": "48px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Wells Fargo Advisors",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/596e69d8-45ef-4daf-8a44-642abb2d0ab3/Wells+Fargo+Advisors+Logo.png",
         "height": "70px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Raytheon",
@@ -131,49 +132,49 @@
         "name": "Intuit",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c97cbf79-7575-491e-853d-f9604f74b015/Intuit+Logo.png",
         "height": "46px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Solar Turbines",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png",
         "height": "50px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Swinerton",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png",
         "height": "100px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "University of San Diego",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png",
         "height": "110px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Berkshire Hathaway HomeServices",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/cd4a0b43-3902-4788-af40-6a4aeb71d4bc/Berkshire+Hathaway+Home+Services+Logo.png",
         "height": "100px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Pacific Sotheby's International Realty",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/179ddf7a-0758-4065-8f1a-7fcb1a10cc32/Pacific+Sothebys+Logo.png",
         "height": "85px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "UC San Diego",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9c89df39-b210-4563-9bfb-61205e9a0457/UCSD+Logo.png",
         "height": "80px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Keller Williams",
         "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/2b4cd925-2698-4680-be35-1fa0242c7b8a/Keller+Williams+Logo.png",
         "height": "75px",
-        "width": null
+        "width": "100%"
       },
       {
         "name": "Dentons",
@@ -401,7 +402,7 @@
               {
                 "text": "Mobile studio setup with professional lighting and backdrop",
                 "bold": true,
-                "tooltip": "Requires at least a 10×10 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
+                "tooltip": "Requires at least a 10\u00d710 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
               },
               {
                 "text": "Up to 30 minute session (not including setup)",
@@ -618,26 +619,78 @@
     ]
   },
   "teamCalculator": {
-    "rates": {
-      "onsite": {
-        "3-9": 225,
-        "10-24": 195,
-        "25-49": 175,
-        "50-99": 155,
-        "100-200": 135
+    "retainer": 500,
+    "minPeople": 3,
+    "disclaimer": "Pricing shown is an estimate based on the information provided. Per-person rates reflect projected volume and may adjust if the final headcount changes. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
+    "inputs": [
+      {
+        "id": "location",
+        "type": "dropdown",
+        "title": "Session Location",
+        "hint": "Choose a venue for the session.",
+        "options": [
+          {
+            "id": "onsite",
+            "label": "On-Site (Office, Hotel, Etc.)",
+            "fee": 299,
+            "feeLabel": "On-Site Setup Fee"
+          },
+          {
+            "id": "studio",
+            "label": "Studio",
+            "fee": 0,
+            "feeLabel": ""
+          }
+        ]
       },
-      "studio": {
-        "3-9": 195,
-        "10-24": 175,
-        "25-49": 155,
-        "50-99": 135,
-        "100-200": 115
+      {
+        "id": "team-members",
+        "type": "slider",
+        "title": "Number of Team Members",
+        "hint": "Adjust slider for the number of people who need headshots.",
+        "min": 3,
+        "max": 200,
+        "default": 3,
+        "pricingMode": "perUnit",
+        "pricingLabel": "Headshot Sessions",
+        "showPerUnitRate": true,
+        "perUnitLabel": "/person",
+        "linkedDropdown": "location",
+        "ratesByOption": {
+          "onsite": {
+            "3-9": 225,
+            "10-24": 195,
+            "25-49": 175,
+            "50-99": 155,
+            "100-200": 135
+          },
+          "studio": {
+            "3-9": 195,
+            "10-24": 175,
+            "25-49": 155,
+            "50-99": 135,
+            "100-200": 115
+          }
+        }
       },
-      "groupPortrait": 250,
-      "onsiteSetupFee": 299,
-      "retainer": 500,
-      "minPeople": 3
-    },
+      {
+        "id": "group-portraits",
+        "type": "slider",
+        "title": "Number of Group Portraits",
+        "hint": "Enter number of group portraits needed.",
+        "min": 0,
+        "max": 10,
+        "default": 0,
+        "pricingMode": "perUnit",
+        "pricingLabel": "Group Portraits",
+        "showPerUnitRate": true,
+        "perUnitLabel": "/portrait",
+        "linkedDropdown": null,
+        "rates": {
+          "0-10": 250
+        }
+      }
+    ],
     "includes": [
       "Mobile studio setup with professional lighting and backdrop",
       "15-30 images per person",
@@ -678,5 +731,6 @@
         "fullDayPrice": 1000
       }
     ]
-  }
+  },
+  "notes": ""
 }
