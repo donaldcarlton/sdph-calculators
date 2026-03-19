@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-19T00:23:53.285Z",
+  "lastUpdated": "2026-03-19T00:25:00.124Z",
   "carousel": {
     "settings": {
       "speed": 100,
@@ -29,7 +29,7 @@
         "clipInset": 30,
         "padding": "15px 0"
       },
-      "grayscale": true
+      "grayscale": false
     },
     "logos": [
       {
@@ -689,26 +689,6 @@
         "rates": {
           "0-10": 250
         }
-      },
-      {
-        "id": "dropdown-1773879769305",
-        "type": "dropdown",
-        "title": "Retouching",
-        "hint": "Would you like retouching",
-        "options": [
-          {
-            "id": "opt-1",
-            "label": "No",
-            "fee": 0,
-            "feeLabel": ""
-          },
-          {
-            "id": "opt-1773879801492",
-            "label": "Yes",
-            "fee": 200,
-            "feeLabel": "Retouching Package"
-          }
-        ]
       }
     ],
     "includes": [
