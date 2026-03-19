@@ -1,12 +1,12 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-19T00:25:17.953Z",
+  "lastUpdated": "2026-03-19T00:25:46.842Z",
   "carousel": {
     "settings": {
       "speed": 100,
       "gap": 40,
       "trackGap": 10,
-      "clipInset": 50,
+      "clipInset": 100,
       "padding": "35px 0",
       "defaultLogoWidth": "auto",
       "defaultLogoMaxWidth": "200px",
@@ -29,7 +29,7 @@
         "clipInset": 30,
         "padding": "15px 0"
       },
-      "grayscale": false
+      "grayscale": true
     },
     "logos": [
       {
