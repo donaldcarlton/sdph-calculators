@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-19T00:25:46.842Z",
+  "lastUpdated": "2026-03-19T01:12:00.037Z",
   "carousel": {
     "settings": {
       "speed": 100,
@@ -652,7 +652,7 @@
         "max": 200,
         "default": 3,
         "pricingMode": "perUnit",
-        "pricingLabel": "Headshot Sessions",
+        "pricingLabel": "Headshots Total",
         "showPerUnitRate": true,
         "perUnitLabel": "/person",
         "linkedDropdown": "location",
