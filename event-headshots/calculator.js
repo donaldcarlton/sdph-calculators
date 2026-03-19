@@ -13,7 +13,7 @@ var SDPH_EV_CONFIG = {
   retainer: 500
 };
 
-document.addEventListener("DOMContentLoaded", function() {
+(function() {
 
   var hdS = document.getElementById("sdph-ev-hds");
   var hdN = document.getElementById("sdph-ev-hdn");
@@ -461,4 +461,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-});
+})();
