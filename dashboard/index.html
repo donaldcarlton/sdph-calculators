@@ -221,6 +221,11 @@ textarea.form-input { min-height: 80px; resize: vertical; }
       <div id="team-inputs"></div>
     </div>
     <div class="section">
+      <div class="section-title">Badges</div>
+      <div class="section-desc">Badges appear on the calculator to show session time estimates and volume savings. Use <code>{time}</code> and <code>{amount}</code> placeholders in labels.</div>
+      <div id="team-badges"></div>
+    </div>
+    <div class="section">
       <div class="section-title">Colors</div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Banner Color</label><input type="color" class="form-input" id="team-color-banner" style="height:40px;padding:4px;"></div>
@@ -256,6 +261,11 @@ textarea.form-input { min-height: 80px; resize: vertical; }
       </div>
       <div class="section-desc">Each input appears in the calculator. Dropdowns let users pick an option (with optional fees). Sliders set a quantity (with tiered pricing). Checkboxes are optional add-ons. Drag &#8286;&#8286; to reorder.</div>
       <div id="event-inputs"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Badges</div>
+      <div class="section-desc">Badges appear on the calculator to show session time estimates and volume savings. Use <code>{time}</code> and <code>{amount}</code> placeholders in labels.</div>
+      <div id="event-badges"></div>
     </div>
     <div class="section">
       <div class="section-title">Colors</div>
@@ -397,10 +407,12 @@ const DEFAULT_CONFIG = {
     "minPeople": 3,
     "disclaimer": "Pricing shown is an estimate based on the information provided. Per-person rates reflect projected volume and may adjust if the final headcount changes. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
     "colors": {"banner":"#1e3a52","button":"#1e3a52"},
+    "sessionTime": {"enabled":true,"label":"Estimated Session Time: {time}"},
+    "volumeDiscount": {"enabled":true,"format":"both","label":"Volume Savings: {amount}"},
     "inputs": [
       {"id":"location","type":"dropdown","title":"Session Location","hint":"Choose a venue for the session.","options":[{"id":"onsite","label":"On-Site (Office, Hotel, Etc.)","fee":299,"feeLabel":"On-Site Setup Fee"},{"id":"studio","label":"Studio","fee":0,"feeLabel":""}]},
-      {"id":"team-members","type":"slider","title":"Number of Team Members","hint":"Adjust slider for the number of people who need headshots.","min":3,"max":200,"default":3,"pricingMode":"perUnit","pricingLabel":"Headshots Total","showPerUnitRate":true,"perUnitLabel":"/person","linkedDropdown":"location","ratesByOption":{"onsite":{"3-9":225,"10-24":195,"25-49":175,"50-99":155,"100-200":135},"studio":{"3-9":195,"10-24":175,"25-49":155,"50-99":135,"100-200":115}}},
-      {"id":"group-portraits","type":"slider","title":"Number of Group Portraits","hint":"Enter number of group portraits needed.","min":0,"max":10,"default":0,"pricingMode":"perUnit","pricingLabel":"Group Portraits","showPerUnitRate":true,"perUnitLabel":"/portrait","linkedDropdown":null,"rates":{"0-10":250}}
+      {"id":"team-members","type":"slider","title":"Number of Team Members","hint":"Adjust slider for the number of people who need headshots.","min":3,"max":200,"default":3,"pricingMode":"perUnit","pricingLabel":"Headshots Total","showPerUnitRate":true,"perUnitLabel":"/person","linkedDropdown":"location","timePerUnit":5,"timeMinimum":60,"ratesByOption":{"onsite":{"3-9":225,"10-24":195,"25-49":175,"50-99":155,"100-200":135},"studio":{"3-9":195,"10-24":175,"25-49":155,"50-99":135,"100-200":115}}},
+      {"id":"group-portraits","type":"slider","title":"Number of Group Portraits","hint":"Enter number of group portraits needed.","min":0,"max":10,"default":0,"pricingMode":"perUnit","pricingLabel":"Group Portraits","showPerUnitRate":true,"perUnitLabel":"/portrait","linkedDropdown":null,"timePerUnit":15,"rates":{"0-10":250}}
     ],
     "includes": [
       "Mobile studio setup with professional lighting and backdrop",
@@ -417,6 +429,8 @@ const DEFAULT_CONFIG = {
     "retainer": 500,
     "disclaimer": "Pricing shown is an estimate based on the information provided. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
     "colors": {"banner":"#1e3a52","button":"#1e3a52"},
+    "sessionTime": {"enabled":false,"label":"Estimated Session Time: {time}"},
+    "volumeDiscount": {"enabled":false,"format":"dollars","label":"Volume Savings: {amount}"},
     "inputs": [
       {"id":"booths","type":"dropdown","role":"multiplier","title":"How Many Booths Do You Need?","hint":"Each headshot booth is fully equipped with professional lighting and backdrop and is staffed with one photographer and one assistant.","options":[{"id":"1","label":"1","fee":0,"feeLabel":"","multiplier":1},{"id":"2","label":"2","fee":0,"feeLabel":"","multiplier":2},{"id":"3","label":"3","fee":0,"feeLabel":"","multiplier":3}]},
       {"id":"half-days","type":"slider","title":"How Many Half-Days?","hint":"Up to 4 hours per day","min":0,"max":10,"default":1,"pricingMode":"perUnit","pricingLabel":"Half-Day Sessions","showPerUnitRate":true,"perUnitLabel":"/half-day","linkedDropdown":null,"rates":{"0-10":2500}},
@@ -503,6 +517,10 @@ async function loadConfig() {
   if (!config.eventCalculator.colors) config.eventCalculator.colors = {banner:'#1e3a52',button:'#1e3a52'};
   if (!config.teamCalculator.includes) config.teamCalculator.includes = [];
   if (!config.eventCalculator.includes) config.eventCalculator.includes = [];
+  if (!config.teamCalculator.sessionTime) config.teamCalculator.sessionTime = {enabled:true,label:'Estimated Session Time: {time}'};
+  if (!config.teamCalculator.volumeDiscount) config.teamCalculator.volumeDiscount = {enabled:true,format:'both',label:'Volume Savings: {amount}'};
+  if (!config.eventCalculator.sessionTime) config.eventCalculator.sessionTime = {enabled:false,label:'Estimated Session Time: {time}'};
+  if (!config.eventCalculator.volumeDiscount) config.eventCalculator.volumeDiscount = {enabled:false,format:'dollars',label:'Volume Savings: {amount}'};
   renderAll();
 }
 
@@ -683,6 +701,7 @@ function initPricingCardDragDrop() {
 // ==================== SHARED CALCULATOR ====================
 function renderCalcTab(key) {
   renderCalcInputs(key);
+  renderCalcBadges(key);
   renderCalcColors(key);
   renderCalcOther(key);
   renderCalcIncludes(key);
@@ -807,6 +826,10 @@ function renderCalcSliderCard(key, inp, ii) {
       <div class="form-row">
         <div class="form-group"><label class="form-label">Link rates to dropdown?</label><select class="form-input" onchange="linkCalcSliderToDropdown('${key}',${ii},this.value)"><option value="">No — use flat rates</option>${ddOptions}</select><span class="form-hint">Rates change based on dropdown selection</span></div>
         <div class="form-group"><label class="form-label">Show per-unit rate?</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${inp.showPerUnitRate ? 'checked' : ''} onchange="config.${p}.inputs[${ii}].showPerUnitRate=this.checked"><span class="toggle-slider"></span></label></div></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Time Per Unit (min)</label><input type="number" class="form-input" value="${inp.timePerUnit || ''}" onchange="config.${p}.inputs[${ii}].timePerUnit=+this.value||null" placeholder="e.g. 5"><span class="form-hint">Minutes per unit for session time badge</span></div>
+        <div class="form-group"><label class="form-label">Time Minimum (min)</label><input type="number" class="form-input" value="${inp.timeMinimum || ''}" onchange="config.${p}.inputs[${ii}].timeMinimum=+this.value||null" placeholder="e.g. 60"><span class="form-hint">Floor for this slider's time contribution</span></div>
       </div>
       <label class="form-label" style="margin-top:12px;">Pricing Tiers</label>
       ${ratesHtml}
@@ -1004,6 +1027,41 @@ function initCalcInputDragDrop(key) {
   });
 }
 
+function renderCalcBadges(key) {
+  const calc = getCalcConfig(key);
+  const p = getCalcPath(key);
+  const st = calc.sessionTime || {};
+  const vd = calc.volumeDiscount || {};
+  document.getElementById(key + '-badges').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card-editor" style="margin-bottom:0;">
+        <div class="card-editor-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="card-editor-badge" style="background:var(--blue);color:#fff;">Session Time</span>
+            <span class="card-editor-title">Session Time Badge</span>
+          </div>
+          <div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${st.enabled ? 'checked' : ''} onchange="config.${p}.sessionTime.enabled=this.checked"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);">${st.enabled ? 'On' : 'Off'}</span></div>
+        </div>
+        <div class="section-desc" style="margin-bottom:12px;">Sums all slider (qty &times; timePerUnit) values. Uses the largest timeMinimum across all sliders as a floor.</div>
+        <div class="form-group"><label class="form-label">Label Template</label><input class="form-input" value="${esc(st.label || 'Estimated Session Time: {time}')}" onchange="config.${p}.sessionTime.label=this.value"><span class="form-hint">Use <code>{time}</code> for the computed time value</span></div>
+      </div>
+      <div class="card-editor" style="margin-bottom:0;">
+        <div class="card-editor-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="card-editor-badge" style="background:var(--success);color:#fff;">Volume Discount</span>
+            <span class="card-editor-title">Volume Discount Badge</span>
+          </div>
+          <div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${vd.enabled ? 'checked' : ''} onchange="config.${p}.volumeDiscount.enabled=this.checked"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);">${vd.enabled ? 'On' : 'Off'}</span></div>
+        </div>
+        <div class="section-desc" style="margin-bottom:12px;">Computes savings across all sliders with tiered pricing by comparing current rate to the first tier rate.</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Display Format</label><select class="form-input" onchange="config.${p}.volumeDiscount.format=this.value"><option value="dollars" ${vd.format==='dollars'?'selected':''}>Dollars ($X saved)</option><option value="percent" ${vd.format==='percent'?'selected':''}>Percent (X% off)</option><option value="both" ${vd.format==='both'?'selected':''}>Both ($X / X%)</option></select></div>
+          <div class="form-group"><label class="form-label">Label Template</label><input class="form-input" value="${esc(vd.label || 'Volume Savings: {amount}')}" onchange="config.${p}.volumeDiscount.label=this.value"><span class="form-hint">Use <code>{amount}</code> for the computed savings</span></div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function renderCalcColors(key) {
   const colors = getCalcConfig(key).colors || {};
   document.getElementById(key + '-color-banner').value = colors.banner || '#1e3a52';
@@ -1079,6 +1137,8 @@ function readAllForms() {
   if (!config.eventCalculator.colors) config.eventCalculator.colors = {};
   config.eventCalculator.colors.banner = document.getElementById('event-color-banner').value;
   config.eventCalculator.colors.button = document.getElementById('event-color-button').value;
+
+  // Badge settings are written directly to config via onchange handlers, no extra read needed
 
   // Notes & timestamp
   config.notes = document.getElementById('cfg-notes').value;

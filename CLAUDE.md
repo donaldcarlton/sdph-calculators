@@ -59,6 +59,8 @@ The Team and Event calculators now use identical input types in the config. The 
 - Toggle: show per-unit rate in pricing panel
 - Link to dropdown toggle: if linked, show separate rate tables per dropdown option. If not linked, show flat rate table.
 - Rate tiers: editable range (e.g., "3-9") + rate ($). Add/remove tiers.
+- `timePerUnit` (optional, minutes): minutes per unit, used by session time badge (e.g., 5 min/person)
+- `timeMinimum` (optional, minutes): floor for this slider's time contribution (e.g., 60 min minimum)
 
 **Checkbox** (purple badge):
 - Title, description text, pricing label
@@ -73,6 +75,9 @@ The Team and Event calculators now use identical input types in the config. The 
 ### 2. Additional sections on both calculator tabs
 
 - **Colors section**: Banner color picker + Button color picker
+- **Badges section**: Configurable badges that appear on the live calculator:
+  - **Session Time badge**: enabled toggle + label with `{time}` placeholder. Engine sums all slider `(qty * timePerUnit)` and uses the largest `timeMinimum` across all sliders as a floor.
+  - **Volume Discount badge**: enabled toggle + format dropdown (dollars/percent/both) + label with `{amount}` placeholder. Computes savings across ALL sliders with tiered pricing (comparing current rate to first tier rate).
 - **Retainer** ($) and **Minimum People** (team only) fields
 - **Disclaimer** textarea
 - **Sessions Include** list: add/remove items (shows on estimate documents)
@@ -102,6 +107,15 @@ Here's the structure of the two calculator sections in `sdph-config.json`:
     "minPeople": 3,
     "disclaimer": "...",
     "colors": { "banner": "#1e3a52", "button": "#1e3a52" },
+    "sessionTime": {
+      "enabled": true,
+      "label": "Estimated Session Time: {time}"
+    },
+    "volumeDiscount": {
+      "enabled": true,
+      "format": "both",
+      "label": "Volume Savings: {amount}"
+    },
     "inputs": [
       {
         "id": "location",
@@ -124,6 +138,8 @@ Here's the structure of the two calculator sections in `sdph-config.json`:
         "showPerUnitRate": true,
         "perUnitLabel": "/person",
         "linkedDropdown": "location",
+        "timePerUnit": 5,
+        "timeMinimum": 60,
         "ratesByOption": {
           "onsite": { "3-9": 225, "10-24": 195, "25-49": 175, "50-99": 155, "100-200": 135 },
           "studio": { "3-9": 195, "10-24": 175, "25-49": 155, "50-99": 135, "100-200": 115 }
@@ -139,6 +155,7 @@ Here's the structure of the two calculator sections in `sdph-config.json`:
         "showPerUnitRate": true,
         "perUnitLabel": "/portrait",
         "linkedDropdown": null,
+        "timePerUnit": 15,
         "rates": { "0-10": 250 }
       }
     ],
@@ -158,6 +175,15 @@ Here's the structure of the two calculator sections in `sdph-config.json`:
     "retainer": 500,
     "disclaimer": "...",
     "colors": { "banner": "#1e3a52", "button": "#1e3a52" },
+    "sessionTime": {
+      "enabled": false,
+      "label": "Estimated Session Time: {time}"
+    },
+    "volumeDiscount": {
+      "enabled": false,
+      "format": "dollars",
+      "label": "Volume Savings: {amount}"
+    },
     "inputs": [
       {
         "id": "booths",
