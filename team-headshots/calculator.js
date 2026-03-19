@@ -10,7 +10,7 @@ var SDPH_CONFIG = {
   retainer: 500
 };
 
-(function() {
+document.addEventListener("DOMContentLoaded", function() {
 
   var badgeCfg = { sessionTime: { enabled: true, label: "Estimated Session Time: {time}" }, volumeDiscount: { enabled: true, format: "percent", label: "Volume Savings: {amount}" } };
   var configURL = "https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json";
@@ -547,4 +547,4 @@ var SDPH_CONFIG = {
     }
   });
 
-})();
+});
