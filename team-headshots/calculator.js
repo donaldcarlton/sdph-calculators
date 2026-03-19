@@ -12,7 +12,8 @@ var SDPH_CONFIG = {
 
 (function() {
 
-  var badgeCfg = { sessionTime: { enabled: true, label: "Estimated Session Time: {time}" }, volumeDiscount: { enabled: true, format: "both", label: "Volume Savings: {amount}" } };
+  var badgeCfgLoaded = false;
+  var badgeCfg = { sessionTime: { enabled: true, label: "Estimated Session Time: {time}" }, volumeDiscount: { enabled: true, format: "percent", label: "Volume Savings: {amount}" } };
 
   // Load badge config from sdph-config.json
   fetch("https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json?t=" + Date.now())
@@ -22,11 +23,13 @@ var SDPH_CONFIG = {
         if (cfg.teamCalculator.sessionTime) badgeCfg.sessionTime = cfg.teamCalculator.sessionTime;
         if (cfg.teamCalculator.volumeDiscount) badgeCfg.volumeDiscount = cfg.teamCalculator.volumeDiscount;
       }
+      badgeCfgLoaded = true;
       calc();
     })
-    .catch(function() {});
+    .catch(function() { badgeCfgLoaded = true; calc(); });
 
   function fmtVolumeBadge(d) {
+    if (!badgeCfgLoaded) return "";
     var vd = badgeCfg.volumeDiscount;
     if (!vd.enabled || d.pct <= 0) return "";
     var amount;
@@ -42,6 +45,7 @@ var SDPH_CONFIG = {
   }
 
   function fmtTimeBadge(d) {
+    if (!badgeCfgLoaded) return "";
     var st = badgeCfg.sessionTime;
     if (!st.enabled) return "";
     var label = (st.label || "Estimated Session Time: {time}").replace("{time}", d.ts);
