@@ -1,12 +1,12 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-19T01:12:41.891Z",
+  "lastUpdated": "2026-03-18T00:00:00Z",
   "carousel": {
     "settings": {
       "speed": 100,
       "gap": 40,
       "trackGap": 10,
-      "clipInset": 100,
+      "clipInset": 50,
       "padding": "35px 0",
       "defaultLogoWidth": "auto",
       "defaultLogoMaxWidth": "200px",
@@ -402,7 +402,7 @@
               {
                 "text": "Mobile studio setup with professional lighting and backdrop",
                 "bold": true,
-                "tooltip": "Requires at least a 10×10 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
+                "tooltip": "Requires at least a 10\u00d710 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
               },
               {
                 "text": "Up to 30 minute session (not including setup)",
@@ -700,37 +700,108 @@
       "Centralized gallery for team management",
       "Optional team signup and scheduling link",
       "Professional retouching for one selected image per person"
-    ]
+    ],
+    "colors": {
+      "banner": "#1e3a52",
+      "button": "#1e3a52"
+    }
   },
   "eventCalculator": {
-    "settings": {
-      "maxBooths": 3,
-      "halfDayMin": 0,
-      "halfDayMax": 10,
-      "fullDayMin": 0,
-      "fullDayMax": 10
+    "retainer": 500,
+    "disclaimer": "Pricing shown is an estimate based on the information provided. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
+    "colors": {
+      "banner": "#1e3a52",
+      "button": "#1e3a52"
     },
-    "rates": {
-      "halfDay": 2500,
-      "fullDay": 4500,
-      "retainer": 500
-    },
-    "upgrades": [
+    "inputs": [
+      {
+        "id": "booths",
+        "type": "dropdown",
+        "title": "How Many Booths Do You Need?",
+        "hint": "Each headshot booth is fully equipped with professional lighting and backdrop and is staffed with one photographer and one assistant.",
+        "options": [
+          {
+            "id": "1",
+            "label": "1",
+            "fee": 0,
+            "feeLabel": "",
+            "multiplier": 1
+          },
+          {
+            "id": "2",
+            "label": "2",
+            "fee": 0,
+            "feeLabel": "",
+            "multiplier": 2
+          },
+          {
+            "id": "3",
+            "label": "3",
+            "fee": 0,
+            "feeLabel": "",
+            "multiplier": 3
+          }
+        ],
+        "role": "multiplier"
+      },
+      {
+        "id": "half-days",
+        "type": "slider",
+        "title": "How Many Half-Days?",
+        "hint": "Up to 4 hours per day",
+        "min": 0,
+        "max": 10,
+        "default": 1,
+        "pricingMode": "perUnit",
+        "pricingLabel": "Half-Day Sessions",
+        "showPerUnitRate": true,
+        "perUnitLabel": "/half-day",
+        "linkedDropdown": null,
+        "rates": {
+          "0-10": 2500
+        }
+      },
+      {
+        "id": "full-days",
+        "type": "slider",
+        "title": "How Many Full-Days?",
+        "hint": "Up to 8 hours per day",
+        "min": 0,
+        "max": 10,
+        "default": 0,
+        "pricingMode": "perUnit",
+        "pricingLabel": "Full-Day Sessions",
+        "showPerUnitRate": true,
+        "perUnitLabel": "/full-day",
+        "linkedDropdown": null,
+        "rates": {
+          "0-10": 4500
+        }
+      },
       {
         "id": "retouching",
+        "type": "checkbox",
         "title": "Retouching Package",
         "description": "Add light retouching for all participants' headshots. Retouching covers skin, hair, and clothing refinements for polished, professional headshots ready for immediate use.",
+        "pricingLabel": "Retouching Package",
         "halfDayPrice": 1000,
-        "fullDayPrice": 2000
+        "fullDayPrice": 2000,
+        "linkedHalfDay": "half-days",
+        "linkedFullDay": "full-days"
       },
       {
         "id": "hair-makeup",
+        "type": "checkbox",
         "title": "Professional Hair & Makeup Artist",
         "description": "On-site professional hair and makeup touch-ups to ensure participants are camera-ready for their headshots.",
+        "pricingLabel": "Hair & Makeup",
         "halfDayPrice": 600,
-        "fullDayPrice": 1000
+        "fullDayPrice": 1000,
+        "linkedHalfDay": "half-days",
+        "linkedFullDay": "full-days"
       }
-    ]
+    ],
+    "includes": []
   },
   "notes": ""
 }
