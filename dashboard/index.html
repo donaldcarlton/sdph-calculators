@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDPH Widget Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root, [data-theme="dark"] {
+  --bg: #111111; --surface: #1a1a1a; --surface2: #252525; --border: #333333;
+  --text: #e0e0e0; --text2: #888888; --accent: #e0e0e0; --accent2: #ffffff;
+  --danger: #e74c3c; --success: #27ae60; --blue: #3b82f6;
+  --logo-preview-bg: #ffffff; --input-bg: #111111; --btn-primary-text: #111111;
+}
+[data-theme="light"] {
+  --bg: #f2f2f2; --surface: #ffffff; --surface2: #e8e8e8; --border: #d0d0d0;
+  --text: #1a1a1a; --text2: #666666; --accent: #1a1a1a; --accent2: #333333;
+  --danger: #d63031; --success: #27ae60; --blue: #2563eb;
+  --logo-preview-bg: #ffffff; --input-bg: #ffffff; --btn-primary-text: #ffffff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--accent); }
+code { background: var(--surface2); padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+
+.dash-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.dash-logo { font-size: 18px; font-weight: 700; color: var(--accent); }
+.dash-logo span { color: var(--text2); font-weight: 400; }
+.dash-actions { display: flex; gap: 12px; align-items: center; }
+.dash-status { font-size: 12px; color: var(--text2); padding: 6px 12px; background: var(--surface2); border-radius: 20px; }
+.dash-status.saving { color: var(--accent); }
+.dash-status.saved { color: var(--success); }
+.dash-status.error { color: var(--danger); }
+
+.btn { padding: 10px 20px; border: none; border-radius: 6px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: var(--btn-primary-text); }
+.btn-primary:hover { background: var(--accent2); }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); }
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-add { background: var(--surface2); color: var(--accent); border: 1px dashed var(--border); padding: 8px 16px; font-size: 13px; font-family: inherit; cursor: pointer; border-radius: 6px; }
+.btn-add:hover { border-color: var(--accent); }
+
+.dash-tabs { display: flex; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; overflow-x: auto; }
+.dash-tab { padding: 14px 24px; font-size: 14px; font-weight: 500; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+.dash-tab:hover { color: var(--text); }
+.dash-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.dash-content { max-width: 1200px; margin: 0 auto; padding: 32px; }
+.dash-panel { display: none; }
+.dash-panel.active { display: block; }
+
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+.section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--accent); }
+.section-desc { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.5; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.form-row.cols-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input { padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.15s; width: 100%; }
+.form-input:focus { border-color: var(--accent); }
+textarea.form-input { min-height: 80px; resize: vertical; }
+.form-hint { font-size: 11px; color: var(--text2); }
+
+.logo-list { display: flex; flex-direction: column; gap: 8px; }
+.logo-item { display: grid; grid-template-columns: 40px 80px 1fr 100px 100px 40px; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
+.logo-item:hover { border-color: var(--accent); }
+.logo-item .drag-handle { cursor: grab; color: var(--text2); font-size: 18px; text-align: center; user-select: none; padding: 4px; }
+.logo-item .drag-handle:active { cursor: grabbing; }
+.logo-item.dragging { opacity: 0.3; }
+.logo-item.drop-above { box-shadow: 0 -2px 0 0 var(--accent); margin-top: 8px; transition: margin 0.15s; }
+.logo-item.drop-below { box-shadow: 0 2px 0 0 var(--accent); margin-bottom: 8px; transition: margin 0.15s; }
+.logo-item .logo-preview { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--logo-preview-bg); border-radius: 4px; padding: 4px; }
+.logo-item .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(1); }
+.logo-item .logo-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.logo-field { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 13px; width: 100%; }
+.delete-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 18px; text-align: center; }
+.delete-btn:hover { color: var(--danger); }
+
+.add-row { display: flex; gap: 12px; align-items: end; padding: 16px; background: var(--surface2); border-radius: 8px; margin-top: 16px; flex-wrap: wrap; }
+.add-row .form-group { flex: 1; min-width: 120px; margin-bottom: 0; }
+
+.pricing-tab-selector { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.pricing-tab-btn { padding: 8px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); font-family: inherit; font-size: 13px; cursor: pointer; }
+.pricing-tab-btn.active { border-color: var(--accent); color: var(--accent); }
+
+.card-editor { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card-editor.dragging { opacity: 0.3; }
+.card-editor.drop-above { box-shadow: 0 -2px 0 0 var(--accent); margin-top: 12px; transition: margin 0.15s; }
+.card-editor.drop-below { box-shadow: 0 2px 0 0 var(--accent); margin-bottom: 12px; transition: margin 0.15s; }
+.card-editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.card-editor-title { font-size: 15px; font-weight: 600; }
+.card-editor-badge { font-size: 11px; background: var(--accent); color: var(--btn-primary-text); padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+.feature-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.feature-item { display: grid; grid-template-columns: 1fr 1fr 50px 30px; gap: 8px; align-items: center; }
+.feature-item input[type="text"], .feature-item textarea { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 12px; width: 100%; }
+
+.rate-row { display: grid; grid-template-columns: 1fr 120px 40px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.rate-row:last-child { border-bottom: none; }
+.rate-header { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.editable-list { display: flex; flex-direction: column; gap: 6px; }
+.editable-list-item { display: grid; grid-template-columns: 1fr 30px; gap: 8px; align-items: center; }
+.editable-list-item input { padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 13px; width: 100%; }
+
+.toggle-row { display: flex; align-items: center; gap: 10px; }
+.toggle-switch { position: relative; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 24px; transition: 0.2s; }
+.toggle-slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 2px; bottom: 2px; background: var(--text2); border-radius: 50%; transition: 0.2s; }
+.toggle-switch input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: var(--btn-primary-text); }
+
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; z-index: 1000; animation: toastIn 0.3s ease; }
+.toast.success { background: var(--success); color: #fff; }
+.toast.error { background: var(--danger); color: #fff; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 768px) {
+  .dash-content { padding: 16px; }
+  .form-row, .form-row.cols-3, .form-row.cols-4, .form-row.cols-5 { grid-template-columns: 1fr; }
+  .logo-item { grid-template-columns: 30px 60px 1fr 60px 30px; font-size: 12px; }
+  .add-row { flex-direction: column; }
+  .dash-header { padding: 12px 16px; }
+  .dash-tabs { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="dash-header">
+  <div class="dash-logo">SDPH <span>Widget Dashboard</span></div>
+  <div class="dash-actions">
+    <button class="btn btn-secondary btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="display:flex;align-items:center;gap:6px;padding:6px 12px;"><span id="theme-icon">&#9788;</span></button>
+    <span class="dash-status" id="status">Ready</span>
+    <button class="btn btn-secondary btn-sm" onclick="loadConfig()">Reload</button>
+    <button class="btn btn-primary" onclick="saveConfig()">Save &amp; Publish</button>
+  </div>
+</div>
+
+<div class="dash-tabs">
+  <div class="dash-tab active" data-tab="carousel">Logo Carousel</div>
+  <div class="dash-tab" data-tab="pricing">Pricing Table</div>
+  <div class="dash-tab" data-tab="team">Team Calculator</div>
+  <div class="dash-tab" data-tab="event">Event Calculator</div>
+  <div class="dash-tab" data-tab="settings">Settings</div>
+</div>
+
+<div class="dash-content">
+
+  <!-- ====== CAROUSEL ====== -->
+  <div class="dash-panel active" id="panel-carousel">
+    <div class="section">
+      <div class="section-title">Carousel Settings</div>
+      <div class="form-row cols-4">
+        <div class="form-group"><label class="form-label">Speed (seconds)</label><input type="number" class="form-input" id="c-speed" min="10" max="300"><span class="form-hint">Lower = faster scroll</span></div>
+        <div class="form-group"><label class="form-label">Logo Gap (px)</label><input type="number" class="form-input" id="c-gap" min="0" max="100"></div>
+        <div class="form-group"><label class="form-label">Edge Inset (px)</label><input type="number" class="form-input" id="c-clip" min="0" max="100"></div>
+        <div class="form-group"><label class="form-label">Max Logo Width (px)</label><input type="number" class="form-input" id="c-maxwidth" min="100" max="400"><span class="form-hint">Caps wide logos</span></div>
+      </div>
+      <div class="form-row cols-5">
+        <div class="form-group"><label class="form-label">Mobile Cell W</label><input type="number" class="form-input" id="c-mob-w" min="50" max="200"></div>
+        <div class="form-group"><label class="form-label">Mobile Cell H</label><input type="number" class="form-input" id="c-mob-h" min="30" max="150"></div>
+        <div class="form-group"><label class="form-label">Tablet Cell W</label><input type="number" class="form-input" id="c-tab-w" min="80" max="300"></div>
+        <div class="form-group"><label class="form-label">Tablet Cell H</label><input type="number" class="form-input" id="c-tab-h" min="40" max="200"></div>
+        <div class="form-group"><label class="form-label">Grayscale</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" id="c-grayscale"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);" id="c-gray-label">On</span></div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Client Logos</div>
+      <div class="section-desc">Drag the &#8286;&#8286; handle to reorder. First logos appear on page load.</div>
+      <div class="logo-list" id="logo-list"></div>
+      <div class="add-row">
+        <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="add-name" placeholder="Company Name"></div>
+        <div class="form-group" style="flex:2;"><label class="form-label">Squarespace CDN URL</label><input type="text" class="form-input" id="add-url" placeholder="https://images.squarespace-cdn.com/..."></div>
+        <div class="form-group" style="flex:0 0 80px;"><label class="form-label">Height</label><input type="text" class="form-input" id="add-height" value="50px"></div>
+        <div class="form-group" style="flex:0 0 80px;"><label class="form-label">Width</label><input type="text" class="form-input" id="add-width" placeholder="null"></div>
+        <button class="btn btn-primary btn-sm" onclick="addLogo()" style="align-self:end;height:38px;">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== PRICING ====== -->
+  <div class="dash-panel" id="panel-pricing">
+    <div class="section">
+      <div class="section-title">Pricing Table Settings</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Accent / Popular Color</label><input type="color" class="form-input" id="p-accent" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Button Color</label><input type="color" class="form-input" id="p-button" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Popular Badge Text</label><input type="text" class="form-input" id="p-badge"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0;">Session Packages</div>
+        <div style="display:flex;gap:8px;"><button class="btn-add" onclick="addPricingTab()">+ Add Tab</button></div>
+      </div>
+      <div class="pricing-tab-selector" id="pricing-tabs"></div>
+      <div id="pricing-cards"></div>
+    </div>
+  </div>
+
+  <!-- ====== TEAM CALCULATOR ====== -->
+  <div class="dash-panel" id="panel-team">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0;">Calculator Inputs</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-add" onclick="addCalcInput('team','dropdown')">+ Dropdown</button>
+          <button class="btn-add" onclick="addCalcInput('team','slider')">+ Slider</button>
+          <button class="btn-add" onclick="addCalcInput('team','checkbox')">+ Checkbox</button>
+        </div>
+      </div>
+      <div class="section-desc">Each input appears in the calculator. Dropdowns let users pick an option (with optional fees). Sliders set a quantity (with tiered pricing). Checkboxes are optional add-ons. Drag &#8286;&#8286; to reorder.</div>
+      <div id="team-inputs"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Badges</div>
+      <div class="section-desc">Badges appear on the calculator to show session time estimates and volume savings. Use <code>{time}</code> and <code>{amount}</code> placeholders in labels.</div>
+      <div id="team-badges"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Colors</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Banner Color</label><input type="color" class="form-input" id="team-color-banner" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Button Color</label><input type="color" class="form-input" id="team-color-button" style="height:40px;padding:4px;"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Retainer ($)</label><input type="number" class="form-input" id="team-retainer"></div>
+        <div class="form-group"><label class="form-label">Minimum People</label><input type="number" class="form-input" id="team-min"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Disclaimer Text</div>
+      <textarea class="form-input" id="team-disclaimer" rows="4"></textarea>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Sessions Include</div><button class="btn-add" onclick="addCalcInclude('team')">+ Add Item</button></div>
+      <div class="editable-list" id="team-includes"></div>
+    </div>
+  </div>
+
+  <!-- ====== EVENT CALCULATOR ====== -->
+  <div class="dash-panel" id="panel-event">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0;">Calculator Inputs</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-add" onclick="addCalcInput('event','dropdown')">+ Dropdown</button>
+          <button class="btn-add" onclick="addCalcInput('event','slider')">+ Slider</button>
+          <button class="btn-add" onclick="addCalcInput('event','checkbox')">+ Checkbox</button>
+        </div>
+      </div>
+      <div class="section-desc">Each input appears in the calculator. Dropdowns let users pick an option (with optional fees). Sliders set a quantity (with tiered pricing). Checkboxes are optional add-ons. Drag &#8286;&#8286; to reorder.</div>
+      <div id="event-inputs"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Badges</div>
+      <div class="section-desc">Badges appear on the calculator to show session time estimates and volume savings. Use <code>{time}</code> and <code>{amount}</code> placeholders in labels.</div>
+      <div id="event-badges"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Colors</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Banner Color</label><input type="color" class="form-input" id="event-color-banner" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Button Color</label><input type="color" class="form-input" id="event-color-button" style="height:40px;padding:4px;"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Retainer ($)</label><input type="number" class="form-input" id="event-retainer"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Disclaimer Text</div>
+      <textarea class="form-input" id="event-disclaimer" rows="4"></textarea>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Sessions Include</div><button class="btn-add" onclick="addCalcInclude('event')">+ Add Item</button></div>
+      <div class="editable-list" id="event-includes"></div>
+    </div>
+  </div>
+
+  <!-- ====== SETTINGS ====== -->
+  <div class="dash-panel" id="panel-settings">
+    <div class="section">
+      <div class="section-title">GitHub Connection</div>
+      <div class="section-desc">Personal Access Token with <code>repo</code> scope. Create at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> (Classic token).</div>
+      <div class="form-group"><label class="form-label">Personal Access Token</label><input type="password" class="form-input" id="gh-token" placeholder="ghp_xxxxxxxxxxxx"><span class="form-hint">Stored in your browser only.</span></div>
+      <div class="form-row" style="margin-top:16px;">
+        <div class="form-group"><label class="form-label">Repository</label><input type="text" class="form-input" id="gh-repo" value="donaldcarlton/sdph-web-apps"></div>
+        <div class="form-group"><label class="form-label">Config File Path</label><input type="text" class="form-input" id="gh-path" value="sdph-config.json"></div>
+      </div>
+      <button class="btn btn-primary" onclick="testGitHub()" style="margin-top:16px;">Test Connection</button>
+    </div>
+    <div class="section">
+      <div class="section-title">Notes / Changelog</div>
+      <div class="section-desc">Keep track of changes you make. Saved with the config.</div>
+      <textarea class="form-input" id="cfg-notes" rows="6" placeholder="e.g. March 18 — Updated team rates for Q2"></textarea>
+    </div>
+    <div class="section">
+      <div class="section-title">Export / Import</div>
+      <button class="btn btn-secondary" onclick="exportConfig()">Download Config JSON</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()" style="margin-left:8px;">Import Config JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importConfig(event)">
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DEFAULT_CONFIG = {
+  "version": "1.1.0",
+  "lastUpdated": "2026-03-18T00:00:00Z",
+  "carousel": {
+    "settings": {
+      "speed": 100,
+      "gap": 40,
+      "trackGap": 10,
+      "clipInset": 50,
+      "padding": "35px 0",
+      "defaultLogoWidth": "auto",
+      "defaultLogoMaxWidth": "200px",
+      "mobile": {
+        "breakpoint": 768,
+        "cellWidth": 90,
+        "cellHeight": 55,
+        "cellMargin": 8,
+        "speed": 60,
+        "clipInset": 8,
+        "padding": "8px 0"
+      },
+      "tablet": {
+        "breakpointMin": 769,
+        "breakpointMax": 1024,
+        "cellWidth": 140,
+        "cellHeight": 80,
+        "cellMargin": 12,
+        "speed": 100,
+        "clipInset": 30,
+        "padding": "15px 0"
+      },
+      "grayscale": true
+    },
+    "logos": [
+      {"name":"Dell","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png","height":"114px","width":"90%"},
+      {"name":"Union Bank","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e07c71d6-dead-46b1-b884-862d2dbf1f31/Union+Bank+Logo.png","height":"46px","width":null},
+      {"name":"J.P. Morgan","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/566c5692-7528-4eff-8f62-b7ef01cdf560/JP+Morgan+Logo.png","height":"44px","width":null},
+      {"name":"PwC","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/db9922a2-e0b5-450e-b715-76cc19031f3f/PwC+Logo.png","height":"80px","width":"100%"},
+      {"name":"Qualcomm","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ad3ef100-5dc9-4b2d-b14c-46a35459c73a/Qualcomm+Logo.png","height":"42px","width":null},
+      {"name":"Petco","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/79f6122b-69c6-4e4e-9f4b-d198fdf7c142/Petco+Logo.png","height":"46px","width":null},
+      {"name":"Merrill Lynch","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c067d27f-a421-4d7c-a493-8093ac88d8db/Merrill+Lynch+Logo.png","height":"60px","width":null},
+      {"name":"Sony","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7e7ad105-901f-4fb4-ad5d-2ab3ebe1e3c7/Sony+Logo.png","height":"30px","width":"100%"},
+      {"name":"Illumina","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/894db8e4-f8b5-4ccc-95f4-6a97ac70ea50/Illumina+Logo.png","height":"48px","width":"100%"},
+      {"name":"Wells Fargo Advisors","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/596e69d8-45ef-4daf-8a44-642abb2d0ab3/Wells+Fargo+Advisors+Logo.png","height":"70px","width":"100%"},
+      {"name":"Raytheon","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/de30bd6b-3ba5-4503-9b0e-0a1bf1e0cfc5/Raytheon+Logo.png","height":"42px","width":null},
+      {"name":"Cushman & Wakefield","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e578de96-7361-4632-9c39-ba6147826624/Cushman+%26+Wakefield+Logo.png","height":"46px","width":null},
+      {"name":"ServiceNow","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9a2c61a6-b2f5-4b39-acf3-fc7a33973c3e/Service+Now+Logo.png","height":"42px","width":null},
+      {"name":"Morgan Stanley","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8ecfe521-dbcd-4db6-a674-63242083cf41/Morgan+Stanley+Logo.png","height":"42px","width":null},
+      {"name":"Ameriprise Financial","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/19a2e277-9c0b-43c9-89ea-70ea521b6401/Ameriprise+Logo.png","height":"65px","width":null},
+      {"name":"LPL Financial","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66e9ff45-3d23-41d8-853d-2b6e20ea990f/LPL+Financial+Logo.png","height":"72px","width":null},
+      {"name":"Intuit","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c97cbf79-7575-491e-853d-f9604f74b015/Intuit+Logo.png","height":"46px","width":"100%"},
+      {"name":"Solar Turbines","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png","height":"50px","width":"100%"},
+      {"name":"Swinerton","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png","height":"100px","width":"100%"},
+      {"name":"University of San Diego","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png","height":"110px","width":"100%"},
+      {"name":"Berkshire Hathaway HomeServices","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/cd4a0b43-3902-4788-af40-6a4aeb71d4bc/Berkshire+Hathaway+Home+Services+Logo.png","height":"100px","width":"100%"},
+      {"name":"Pacific Sotheby's International Realty","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/179ddf7a-0758-4065-8f1a-7fcb1a10cc32/Pacific+Sothebys+Logo.png","height":"85px","width":"100%"},
+      {"name":"UC San Diego","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9c89df39-b210-4563-9bfb-61205e9a0457/UCSD+Logo.png","height":"80px","width":"100%"},
+      {"name":"Keller Williams","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/2b4cd925-2698-4680-be35-1fa0242c7b8a/Keller+Williams+Logo.png","height":"75px","width":"100%"},
+      {"name":"Dentons","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7eb7e801-3735-40de-a220-5c29683b2b85/Dentons+Logo.png","height":"53px","width":null},
+      {"name":"Dinsmore","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/167ab3b6-8f4d-4af1-b516-2dcbd3557f33/Dinsmore+Logo.png","height":"42px","width":null},
+      {"name":"AFP","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66de24e8-e0d9-4747-8b58-a97fa9ca193b/AFP+Logo.png","height":"80px","width":null},
+      {"name":"Crinetics Pharmaceuticals","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/f42d98b3-44f0-4557-9d36-1166c902c196/Crinetics+Logo.png","height":"65px","width":null},
+      {"name":"Commonwealth Financial Network","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ddaebde5-5fde-48bb-8cc2-f87bc3760dd3/Commonwealth+Financial+Logo.png","height":"55px","width":null},
+      {"name":"Duane Morris","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/53147907-9a8e-41d8-b4e8-769275ba22cd/Duane+Morris+Logo.png","height":"42px","width":null}
+    ]
+  },
+  "pricing": {
+    "settings": {
+      "accentColor": "#c8a86e",
+      "buttonColor": "#1a1a1a",
+      "popularBadgeText": "Most Popular"
+    },
+    "tabs": [
+      {
+        "id": "studio",
+        "label": "Individual Studio Sessions",
+        "cols": 3,
+        "cards": [
+          {"title":"Express Studio Session","description":"A quick, efficient session designed to produce one strong headshot.","price":199,"ctaText":"Book Online","ctaUrl":"https://www.sandiegoprofessionalheadshots.com/express-studio-session","image":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c4fce6dd-e028-454e-b625-4fb3ff0d85d9/Headshots_San_Diego-56.jpg?content-type=image%2Fjpeg","imagePosition":"75% 20%","popular":false,"features":[{"text":"20 minute studio session","bold":false,"tooltip":null},{"text":"1 look","bold":false,"tooltip":"No wardrobe or background changes."},{"text":"Standard retouching for 1 image","bold":true,"tooltip":"Includes light hair, skin, and clothing cleanup."},{"text":"Same-day online gallery","bold":false,"tooltip":null},{"text":"Professional coaching and direction","bold":false,"tooltip":null}]},
+          {"title":"Professional Studio Session","description":"A flexible session that allows for multiple looks.","price":295,"ctaText":"Book Online","ctaUrl":"https://www.sandiegoprofessionalheadshots.com/professional-studio-session","image":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9fa5bd22-59ab-44cd-a707-3710191d092c/Headshots_San_Diego-37.jpg?content-type=image%2Fjpeg","imagePosition":"70% 20%","popular":true,"features":[{"text":"30 minute studio session","bold":false,"tooltip":null},{"text":"2 looks","bold":false,"tooltip":null},{"text":"Premium retouching for 2 images","bold":true,"tooltip":null},{"text":"Same-day online gallery","bold":false,"tooltip":null},{"text":"Professional coaching and direction","bold":false,"tooltip":null}]},
+          {"title":"Executive Studio Session","description":"Extended session for clients who want additional time and attention.","price":495,"ctaText":"Book Online","ctaUrl":"https://www.sandiegoprofessionalheadshots.com/executive-studio-session","image":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/73ff252a-14f1-4c18-8d6a-30ef9ddf6dee/Headshots_San_Diego-60.jpg?content-type=image%2Fjpeg","imagePosition":"65% 20%","popular":false,"features":[{"text":"60 minute studio session","bold":false,"tooltip":null},{"text":"3 looks","bold":false,"tooltip":null},{"text":"Premium retouching for 3 images","bold":true,"tooltip":null},{"text":"Same-day online gallery","bold":false,"tooltip":null},{"text":"Professional coaching and direction","bold":false,"tooltip":null}]}
+        ]
+      }
+    ]
+  },
+  "teamCalculator": {
+    "retainer": 500,
+    "minPeople": 3,
+    "disclaimer": "Pricing shown is an estimate based on the information provided. Per-person rates reflect projected volume and may adjust if the final headcount changes. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
+    "colors": {"banner":"#1e3a52","button":"#1e3a52"},
+    "sessionTime": {"enabled":true,"label":"Estimated Session Time: {time}"},
+    "volumeDiscount": {"enabled":true,"format":"both","label":"Volume Savings: {amount}"},
+    "inputs": [
+      {"id":"location","type":"dropdown","title":"Session Location","hint":"Choose a venue for the session.","options":[{"id":"onsite","label":"On-Site (Office, Hotel, Etc.)","fee":299,"feeLabel":"On-Site Setup Fee"},{"id":"studio","label":"Studio","fee":0,"feeLabel":""}]},
+      {"id":"team-members","type":"slider","title":"Number of Team Members","hint":"Adjust slider for the number of people who need headshots.","min":3,"max":200,"default":3,"pricingMode":"perUnit","pricingLabel":"Headshots Total","showPerUnitRate":true,"perUnitLabel":"/person","linkedDropdown":"location","timePerUnit":5,"timeMinimum":60,"ratesByOption":{"onsite":{"3-9":225,"10-24":195,"25-49":175,"50-99":155,"100-200":135},"studio":{"3-9":195,"10-24":175,"25-49":155,"50-99":135,"100-200":115}}},
+      {"id":"group-portraits","type":"slider","title":"Number of Group Portraits","hint":"Enter number of group portraits needed.","min":0,"max":10,"default":0,"pricingMode":"perUnit","pricingLabel":"Group Portraits","showPerUnitRate":true,"perUnitLabel":"/portrait","linkedDropdown":null,"timePerUnit":15,"rates":{"0-10":250}}
+    ],
+    "includes": [
+      "Mobile studio setup with professional lighting and backdrop",
+      "15-30 images per person",
+      "Guided coaching and direction for all participants",
+      "Live image review during session",
+      "Private galleries delivered to participants",
+      "Centralized gallery for team management",
+      "Optional team signup and scheduling link",
+      "Professional retouching for one selected image per person"
+    ]
+  },
+  "eventCalculator": {
+    "retainer": 500,
+    "disclaimer": "Pricing shown is an estimate based on the information provided. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
+    "colors": {"banner":"#1e3a52","button":"#1e3a52"},
+    "sessionTime": {"enabled":false,"label":"Estimated Session Time: {time}"},
+    "volumeDiscount": {"enabled":false,"format":"dollars","label":"Volume Savings: {amount}"},
+    "inputs": [
+      {"id":"booths","type":"dropdown","role":"multiplier","title":"How Many Booths Do You Need?","hint":"Each headshot booth is fully equipped with professional lighting and backdrop and is staffed with one photographer and one assistant.","options":[{"id":"1","label":"1","fee":0,"feeLabel":"","multiplier":1},{"id":"2","label":"2","fee":0,"feeLabel":"","multiplier":2},{"id":"3","label":"3","fee":0,"feeLabel":"","multiplier":3}]},
+      {"id":"half-days","type":"slider","title":"How Many Half-Days?","hint":"Up to 4 hours per day","min":0,"max":10,"default":1,"pricingMode":"perUnit","pricingLabel":"Half-Day Sessions","showPerUnitRate":true,"perUnitLabel":"/half-day","linkedDropdown":null,"rates":{"0-10":2500}},
+      {"id":"full-days","type":"slider","title":"How Many Full-Days?","hint":"Up to 8 hours per day","min":0,"max":10,"default":0,"pricingMode":"perUnit","pricingLabel":"Full-Day Sessions","showPerUnitRate":true,"perUnitLabel":"/full-day","linkedDropdown":null,"rates":{"0-10":4500}},
+      {"id":"retouching","type":"checkbox","title":"Retouching Package","description":"Add light retouching for all participants' headshots.","pricingLabel":"Retouching Package","halfDayPrice":1000,"fullDayPrice":2000,"linkedHalfDay":"half-days","linkedFullDay":"full-days"},
+      {"id":"hair-makeup","type":"checkbox","title":"Professional Hair & Makeup Artist","description":"On-site professional hair and makeup touch-ups.","pricingLabel":"Hair & Makeup","halfDayPrice":600,"fullDayPrice":1000,"linkedHalfDay":"half-days","linkedFullDay":"full-days"}
+    ],
+    "includes": []
+  },
+  "notes": ""
+};
+
+let config = null;
+let activePricingTab = 0;
+const CONFIG_URL = 'https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json';
+
+// ==================== HELPERS ====================
+function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function setStatus(t, c) { const el = document.getElementById('status'); el.textContent = t; el.className = 'dash-status ' + (c || ''); }
+function toast(msg, type) { const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
+
+function getCalcConfig(key) { return key === 'team' ? config.teamCalculator : config.eventCalculator; }
+function getCalcPath(key) { return key === 'team' ? 'teamCalculator' : 'eventCalculator'; }
+
+// ==================== LOAD ====================
+async function loadConfig() {
+  setStatus('Loading...', 'saving');
+  try {
+    const r = await fetch(CONFIG_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    config = await r.json();
+    setStatus('Loaded from GitHub', 'saved');
+  } catch(e) {
+    const cached = localStorage.getItem('sdph-config');
+    if (cached) { config = JSON.parse(cached); setStatus('Loaded from cache', 'saved'); }
+    else { config = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); setStatus('Using defaults', 'saving'); }
+  }
+  // Migrate old team calculator structure
+  if (config.teamCalculator.rates && !config.teamCalculator.inputs) {
+    const old = config.teamCalculator;
+    config.teamCalculator = {
+      retainer: old.rates?.retainer || old.retainer || 500,
+      minPeople: old.rates?.minPeople || old.minPeople || 3,
+      disclaimer: old.disclaimer || '',
+      colors: old.colors || {banner:'#1e3a52',button:'#1e3a52'},
+      inputs: [
+        {id:'location', type:'dropdown', title:'Session Location', hint:'Choose a venue for the session.', options:[{id:'onsite',label:'On-Site',fee:old.rates?.onsiteSetupFee||299,feeLabel:'On-Site Setup Fee'},{id:'studio',label:'Studio',fee:0,feeLabel:''}]},
+        {id:'team-members', type:'slider', title:'Number of Team Members', hint:'Adjust for headcount.', min:3, max:200, default:3, pricingMode:'perUnit', pricingLabel:'Headshots Total', showPerUnitRate:true, perUnitLabel:'/person', linkedDropdown:'location', ratesByOption:{onsite:old.rates?.onsite||{}, studio:old.rates?.studio||{}}},
+        {id:'group-portraits', type:'slider', title:'Number of Group Portraits', hint:'Enter group portraits needed.', min:0, max:10, default:0, pricingMode:'perUnit', pricingLabel:'Group Portraits', showPerUnitRate:true, perUnitLabel:'/portrait', linkedDropdown:null, rates:{'0-10': old.rates?.groupPortrait || 250}}
+      ],
+      includes: old.includes || []
+    };
+  }
+  // Migrate old event calculator structure (settings/rates/upgrades -> inputs)
+  if (config.eventCalculator.settings && !config.eventCalculator.inputs) {
+    const old = config.eventCalculator;
+    const s = old.settings || {};
+    const r = old.rates || {};
+    const upgrades = old.upgrades || [];
+    const boothOpts = [];
+    for (let i = 1; i <= (s.maxBooths || 3); i++) {
+      boothOpts.push({id: String(i), label: String(i), fee: 0, feeLabel: '', multiplier: i});
+    }
+    const inputs = [
+      {id:'booths', type:'dropdown', role:'multiplier', title:'How Many Booths Do You Need?', hint:'Each booth is fully equipped.', options: boothOpts},
+      {id:'half-days', type:'slider', title:'How Many Half-Days?', hint:'Up to 4 hours per day', min: s.halfDayMin||0, max: s.halfDayMax||10, default:1, pricingMode:'perUnit', pricingLabel:'Half-Day Sessions', showPerUnitRate:true, perUnitLabel:'/half-day', linkedDropdown:null, rates:{['0-'+(s.halfDayMax||10)]: r.halfDay||2500}},
+      {id:'full-days', type:'slider', title:'How Many Full-Days?', hint:'Up to 8 hours per day', min: s.fullDayMin||0, max: s.fullDayMax||10, default:0, pricingMode:'perUnit', pricingLabel:'Full-Day Sessions', showPerUnitRate:true, perUnitLabel:'/full-day', linkedDropdown:null, rates:{['0-'+(s.fullDayMax||10)]: r.fullDay||4500}}
+    ];
+    upgrades.forEach(u => {
+      inputs.push({id: u.id, type:'checkbox', title: u.title, description: u.description, pricingLabel: u.title, halfDayPrice: u.halfDayPrice, fullDayPrice: u.fullDayPrice, linkedHalfDay:'half-days', linkedFullDay:'full-days'});
+    });
+    config.eventCalculator = {
+      retainer: r.retainer || old.retainer || 500,
+      disclaimer: old.disclaimer || '',
+      colors: old.colors || {banner:'#1e3a52',button:'#1e3a52'},
+      inputs: inputs,
+      includes: old.includes || []
+    };
+  }
+  // Ensure required fields exist
+  if (!config.notes) config.notes = '';
+  if (!config.carousel.settings.grayscale && config.carousel.settings.grayscale !== false) config.carousel.settings.grayscale = true;
+  if (!config.teamCalculator.colors) config.teamCalculator.colors = {banner:'#1e3a52',button:'#1e3a52'};
+  if (!config.eventCalculator.colors) config.eventCalculator.colors = {banner:'#1e3a52',button:'#1e3a52'};
+  if (!config.teamCalculator.includes) config.teamCalculator.includes = [];
+  if (!config.eventCalculator.includes) config.eventCalculator.includes = [];
+  if (!config.teamCalculator.sessionTime) config.teamCalculator.sessionTime = {enabled:true,label:'Estimated Session Time: {time}'};
+  if (!config.teamCalculator.volumeDiscount) config.teamCalculator.volumeDiscount = {enabled:true,format:'both',label:'Volume Savings: {amount}'};
+  if (!config.eventCalculator.sessionTime) config.eventCalculator.sessionTime = {enabled:false,label:'Estimated Session Time: {time}'};
+  if (!config.eventCalculator.volumeDiscount) config.eventCalculator.volumeDiscount = {enabled:false,format:'dollars',label:'Volume Savings: {amount}'};
+  renderAll();
+}
+
+function renderAll() {
+  if (!config) return;
+  renderCarousel();
+  renderLogoList();
+  renderPricingSettings();
+  renderPricingTabs();
+  renderPricingCards();
+  renderCalcTab('team');
+  renderCalcTab('event');
+  renderSettings();
+}
+
+// ==================== CAROUSEL ====================
+function renderCarousel() {
+  const s = config.carousel.settings;
+  document.getElementById('c-speed').value = s.speed;
+  document.getElementById('c-gap').value = s.gap;
+  document.getElementById('c-clip').value = s.clipInset;
+  document.getElementById('c-maxwidth').value = parseInt(s.defaultLogoMaxWidth) || 200;
+  document.getElementById('c-mob-w').value = s.mobile.cellWidth;
+  document.getElementById('c-mob-h').value = s.mobile.cellHeight;
+  document.getElementById('c-tab-w').value = s.tablet.cellWidth;
+  document.getElementById('c-tab-h').value = s.tablet.cellHeight;
+  const grayEl = document.getElementById('c-grayscale');
+  grayEl.checked = s.grayscale !== false;
+  document.getElementById('c-gray-label').textContent = grayEl.checked ? 'On' : 'Off';
+  grayEl.onchange = function() { document.getElementById('c-gray-label').textContent = this.checked ? 'On' : 'Off'; };
+}
+
+function renderLogoList() {
+  const el = document.getElementById('logo-list');
+  el.innerHTML = config.carousel.logos.map((l, i) => `
+    <div class="logo-item" data-idx="${i}">
+      <div class="drag-handle" draggable="true" title="Drag to reorder">&#8286;&#8286;</div>
+      <div class="logo-preview"><img src="${l.url}" alt="${l.name}" onerror="this.style.display='none'"></div>
+      <div class="logo-name">${l.name}</div>
+      <input class="logo-field" value="${l.height}" placeholder="height" onchange="config.carousel.logos[${i}].height=this.value">
+      <input class="logo-field" value="${l.width || ''}" placeholder="width" onchange="config.carousel.logos[${i}].width=this.value||null">
+      <button class="delete-btn" onclick="config.carousel.logos.splice(${i},1);renderLogoList();" title="Remove">&#10005;</button>
+    </div>
+  `).join('');
+  initLogoDragDrop();
+}
+
+function addLogo() {
+  const name = document.getElementById('add-name').value.trim();
+  const url = document.getElementById('add-url').value.trim();
+  const height = document.getElementById('add-height').value.trim() || '50px';
+  const width = document.getElementById('add-width').value.trim() || null;
+  if (!name || !url) return toast('Name and URL required', 'error');
+  config.carousel.logos.push({ name, url, height, width: width === 'null' ? null : width });
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-url').value = '';
+  renderLogoList();
+  toast('Logo added', 'success');
+}
+
+function initLogoDragDrop() {
+  let dragIdx = null;
+  const items = () => document.querySelectorAll('.logo-item');
+  function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
+  items().forEach(item => {
+    const handle = item.querySelector('.drag-handle');
+    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.idx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
+    handle.addEventListener('dragend', () => { item.classList.remove('dragging'); clear(); });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.idx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
+    item.addEventListener('dragleave', () => { item.classList.remove('drop-above', 'drop-below'); });
+    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.idx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const [m] = config.carousel.logos.splice(dragIdx, 1); config.carousel.logos.splice(di > dragIdx ? di - 1 : di, 0, m); renderLogoList(); });
+  });
+}
+
+// ==================== PRICING ====================
+function renderPricingSettings() {
+  document.getElementById('p-accent').value = config.pricing.settings.accentColor;
+  document.getElementById('p-button').value = config.pricing.settings.buttonColor;
+  document.getElementById('p-badge').value = config.pricing.settings.popularBadgeText;
+}
+
+function renderPricingTabs() {
+  const tabs = config.pricing.tabs;
+  document.getElementById('pricing-tabs').innerHTML = tabs.map((t, i) =>
+    `<button class="pricing-tab-btn ${i === activePricingTab ? 'active' : ''}" onclick="activePricingTab=${i};renderPricingCards();renderPricingTabs();">${esc(t.label)}</button>`
+  ).join('') + `<button class="btn-danger" onclick="deletePricingTab()" style="margin-left:auto;" title="Delete current tab">Delete Tab</button>`;
+}
+
+function renderPricingCards() {
+  const tab = config.pricing.tabs[activePricingTab];
+  if (!tab) { document.getElementById('pricing-cards').innerHTML = '<p style="color:var(--text2)">No tabs. Click + Add Tab.</p>'; return; }
+  const el = document.getElementById('pricing-cards');
+  el.innerHTML = tab.cards.map((card, ci) => `
+    <div class="card-editor" data-pricing-card-idx="${ci}">
+      <div class="card-editor-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="pricing-card-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;" title="Drag to reorder">&#8286;&#8286;</span>
+          <span class="card-editor-title">${esc(card.title) || 'New Package'}</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <label style="font-size:12px;color:var(--text2);cursor:pointer;"><input type="checkbox" ${card.popular ? 'checked' : ''} onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].popular=this.checked;renderPricingCards();"> Popular</label>
+          ${card.popular ? '<span class="card-editor-badge">&#9733; Popular</span>' : ''}
+          <button class="btn-danger" onclick="config.pricing.tabs[${activePricingTab}].cards.splice(${ci},1);renderPricingCards();">Remove</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(card.title)}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Price ($)</label><input type="number" class="form-input" value="${card.price}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].price=+this.value"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Description</label><textarea class="form-input" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].description=this.value">${esc(card.description)}</textarea></div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" value="${esc(card.image || '')}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].image=this.value" placeholder="https://images.squarespace-cdn.com/..."></div>
+        <div class="form-group"><label class="form-label">Image Position</label><input class="form-input" value="${esc(card.imagePosition || 'center 20%')}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].imagePosition=this.value"><span class="form-hint">CSS object-position, e.g. 70% 20%</span></div>
+        <div class="form-group"><label class="form-label">Columns</label><select class="form-input" onchange="config.pricing.tabs[${activePricingTab}].cols=+this.value"><option value="2" ${tab.cols==2?'selected':''}>2</option><option value="3" ${tab.cols==3?'selected':''}>3</option></select><span class="form-hint">Cards per row in this tab</span></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">CTA Text</label><input class="form-input" value="${esc(card.ctaText)}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].ctaText=this.value"></div>
+        <div class="form-group"><label class="form-label">CTA URL</label><input class="form-input" value="${esc(card.ctaUrl)}" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].ctaUrl=this.value"></div>
+      </div>
+      <label class="form-label" style="margin-top:12px;">Features</label>
+      <div class="feature-list">
+        ${(card.features||[]).map((f, fi) => `
+          <div class="feature-item">
+            <input type="text" value="${esc(f.text)}" placeholder="Feature text" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].features[${fi}].text=this.value">
+            <input type="text" value="${esc(f.tooltip || '')}" placeholder="Tooltip" onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].features[${fi}].tooltip=this.value||null">
+            <label style="font-size:11px;color:var(--text2);white-space:nowrap;cursor:pointer;"><input type="checkbox" ${f.bold?'checked':''} onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].features[${fi}].bold=this.checked"> B</label>
+            <button class="delete-btn" onclick="config.pricing.tabs[${activePricingTab}].cards[${ci}].features.splice(${fi},1);renderPricingCards();">&#10005;</button>
+          </div>
+        `).join('')}
+      </div>
+      <button class="btn-add" onclick="config.pricing.tabs[${activePricingTab}].cards[${ci}].features.push({text:'',bold:false,tooltip:null});renderPricingCards();" style="margin-top:8px;">+ Add Feature</button>
+    </div>
+  `).join('') + `<button class="btn-add" onclick="addPricingCard()" style="width:100%;padding:14px;">+ Add Package Card</button>`;
+  initPricingCardDragDrop();
+}
+
+function addPricingTab() {
+  const name = prompt('Tab name (e.g. "Group Mini Sessions"):');
+  if (!name) return;
+  config.pricing.tabs.push({ id: name.toLowerCase().replace(/\s+/g,'-'), label: name, cols: 2, cards: [] });
+  activePricingTab = config.pricing.tabs.length - 1;
+  renderPricingTabs(); renderPricingCards();
+  toast('Tab added', 'success');
+}
+
+function deletePricingTab() {
+  if (!config.pricing.tabs[activePricingTab]) return;
+  if (!confirm('Delete tab "' + config.pricing.tabs[activePricingTab].label + '" and all its cards?')) return;
+  config.pricing.tabs.splice(activePricingTab, 1);
+  activePricingTab = Math.max(0, activePricingTab - 1);
+  renderPricingTabs(); renderPricingCards();
+}
+
+function addPricingCard() {
+  config.pricing.tabs[activePricingTab].cards.push({
+    title: '', description: '', price: 0, ctaText: 'Book Online', ctaUrl: '#',
+    image: '', imagePosition: 'center 20%', popular: false, features: []
+  });
+  renderPricingCards();
+  toast('Card added', 'success');
+}
+
+function initPricingCardDragDrop() {
+  let dragIdx = null;
+  const items = () => document.querySelectorAll('[data-pricing-card-idx]');
+  function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
+  items().forEach(item => {
+    const handle = item.querySelector('.pricing-card-handle');
+    if (!handle) return;
+    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.pricingCardIdx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
+    handle.addEventListener('dragend', () => { item.classList.remove('dragging'); clear(); });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.pricingCardIdx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
+    item.addEventListener('dragleave', () => { item.classList.remove('drop-above', 'drop-below'); });
+    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.pricingCardIdx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const cards = config.pricing.tabs[activePricingTab].cards; const [m] = cards.splice(dragIdx, 1); cards.splice(di > dragIdx ? di - 1 : di, 0, m); renderPricingCards(); });
+  });
+}
+
+// ==================== SHARED CALCULATOR ====================
+function renderCalcTab(key) {
+  renderCalcInputs(key);
+  renderCalcBadges(key);
+  renderCalcColors(key);
+  renderCalcOther(key);
+  renderCalcIncludes(key);
+}
+
+function renderCalcInputs(key) {
+  const calc = getCalcConfig(key);
+  const inputs = calc.inputs || [];
+  const p = getCalcPath(key);
+  const el = document.getElementById(key + '-inputs');
+  el.innerHTML = inputs.map((inp, ii) => {
+    if (inp.type === 'dropdown') return renderCalcDDCard(key, inp, ii);
+    if (inp.type === 'slider') return renderCalcSliderCard(key, inp, ii);
+    if (inp.type === 'checkbox') return renderCalcCBCard(key, inp, ii);
+    return '';
+  }).join('');
+  initCalcInputDragDrop(key);
+}
+
+function renderCalcDDCard(key, inp, ii) {
+  const p = getCalcPath(key);
+  const isMultiplier = inp.role === 'multiplier';
+  const optCols = isMultiplier ? '1fr 1fr 120px 80px 30px' : '1fr 1fr 150px 30px';
+  const optHeaders = isMultiplier
+    ? '<span class="rate-header">Label</span><span class="rate-header">Fee Label</span><span class="rate-header">Fee ($)</span><span class="rate-header">Mult.</span><span></span>'
+    : '<span class="rate-header">Label</span><span class="rate-header">Fee Label</span><span class="rate-header">Fee ($)</span><span></span>';
+  const optRows = (inp.options || []).map((opt, oi) => {
+    const multField = isMultiplier ? `<input type="number" class="logo-field" value="${opt.multiplier || 1}" onchange="config.${p}.inputs[${ii}].options[${oi}].multiplier=+this.value" style="width:100%;" step="1">` : '';
+    return `
+    <div class="rate-row" style="grid-template-columns:${optCols};">
+      <input class="logo-field" value="${esc(opt.label)}" onchange="config.${p}.inputs[${ii}].options[${oi}].label=this.value" placeholder="Label">
+      <input class="logo-field" value="${esc(opt.feeLabel || '')}" onchange="config.${p}.inputs[${ii}].options[${oi}].feeLabel=this.value" placeholder="Fee label">
+      <input type="number" class="logo-field" value="${opt.fee}" onchange="config.${p}.inputs[${ii}].options[${oi}].fee=+this.value" style="width:100%;" placeholder="Fee">
+      ${multField}
+      <button class="delete-btn" onclick="config.${p}.inputs[${ii}].options.splice(${oi},1);renderCalcInputs('${key}');">&#10005;</button>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="card-editor" data-calc-input-key="${key}" data-calc-input-idx="${ii}">
+      <div class="card-editor-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="calc-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
+          <span class="card-editor-badge" style="background:var(--blue);color:#fff;">Dropdown</span>
+          <span class="card-editor-title">${esc(inp.title) || 'New Dropdown'}</span>
+        </div>
+        <button class="btn-danger" onclick="config.${p}.inputs.splice(${ii},1);renderCalcInputs('${key}');">Remove</button>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.${p}.inputs[${ii}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Hint</label><input class="form-input" value="${esc(inp.hint || '')}" onchange="config.${p}.inputs[${ii}].hint=this.value"></div>
+        <div class="form-group"><label class="form-label">Multiplier Role?</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${isMultiplier ? 'checked' : ''} onchange="toggleCalcDDMultiplier('${key}',${ii},this.checked)"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);">${isMultiplier ? 'Yes' : 'No'}</span></div><span class="form-hint">Each option multiplies all line items</span></div>
+      </div>
+      <label class="form-label" style="margin-top:8px;">Options</label>
+      <div class="rate-row" style="grid-template-columns:${optCols};">${optHeaders}</div>
+      ${optRows}
+      <button class="btn-add" onclick="addCalcDropdownOption('${key}',${ii})" style="margin-top:8px;">+ Add Option</button>
+    </div>
+  `;
+}
+
+function renderCalcSliderCard(key, inp, ii) {
+  const p = getCalcPath(key);
+  const calc = getCalcConfig(key);
+  const hasLinked = !!inp.linkedDropdown;
+  const linkedDd = hasLinked ? calc.inputs.find(i => i.id === inp.linkedDropdown) : null;
+
+  let ratesHtml = '';
+  if (hasLinked && inp.ratesByOption) {
+    const options = linkedDd ? linkedDd.options : [];
+    ratesHtml = options.map(opt => {
+      const rates = (inp.ratesByOption[opt.id]) || {};
+      const rows = Object.entries(rates).map(([range, rate]) => `
+        <div class="rate-row">
+          <input class="logo-field" value="${range}" onchange="renameCalcSliderRate('${key}',${ii},'${opt.id}','${range}',this.value)">
+          <input type="number" class="logo-field" value="${rate}" onchange="config.${p}.inputs[${ii}].ratesByOption['${opt.id}']['${range}']=+this.value" style="width:120px;">
+          <button class="delete-btn" onclick="delete config.${p}.inputs[${ii}].ratesByOption['${opt.id}']['${range}'];renderCalcInputs('${key}');">&#10005;</button>
+        </div>
+      `).join('');
+      return `<div style="margin-top:8px;padding:12px;background:var(--surface);border-radius:6px;"><strong style="font-size:13px;color:var(--text);">${esc(opt.label)}</strong>
+        <div class="rate-row"><span class="rate-header">Range</span><span class="rate-header">Rate ($)</span><span></span></div>
+        ${rows}
+        <button class="btn-add" onclick="addCalcSliderRateTier('${key}',${ii},'${opt.id}')" style="margin-top:6px;">+ Tier</button>
+      </div>`;
+    }).join('');
+  } else {
+    const rates = inp.rates || {};
+    const rows = Object.entries(rates).map(([range, rate]) => `
+      <div class="rate-row">
+        <input class="logo-field" value="${range}" onchange="renameCalcFlatRate('${key}',${ii},'${range}',this.value)">
+        <input type="number" class="logo-field" value="${rate}" onchange="config.${p}.inputs[${ii}].rates['${range}']=+this.value" style="width:120px;">
+        <button class="delete-btn" onclick="delete config.${p}.inputs[${ii}].rates['${range}'];renderCalcInputs('${key}');">&#10005;</button>
+      </div>
+    `).join('');
+    ratesHtml = `<div class="rate-row"><span class="rate-header">Range</span><span class="rate-header">Rate ($)</span><span></span></div>${rows}<button class="btn-add" onclick="addCalcFlatRateTier('${key}',${ii})" style="margin-top:6px;">+ Tier</button>`;
+  }
+
+  const dropdowns = calc.inputs.filter(i => i.type === 'dropdown');
+  const ddOptions = dropdowns.map(d => `<option value="${d.id}" ${inp.linkedDropdown === d.id ? 'selected' : ''}>${esc(d.title)}</option>`).join('');
+
+  return `
+    <div class="card-editor" data-calc-input-key="${key}" data-calc-input-idx="${ii}" style="margin-bottom:16px;">
+      <div class="card-editor-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="calc-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
+          <span class="card-editor-badge" style="background:var(--success);color:#fff;">Slider</span>
+          <span class="card-editor-title">${esc(inp.title) || 'New Slider'}</span>
+        </div>
+        <button class="btn-danger" onclick="config.${p}.inputs.splice(${ii},1);renderCalcInputs('${key}');">Remove</button>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.${p}.inputs[${ii}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Pricing Label</label><input class="form-input" value="${esc(inp.pricingLabel || '')}" onchange="config.${p}.inputs[${ii}].pricingLabel=this.value"><span class="form-hint">Shows in pricing panel</span></div>
+        <div class="form-group"><label class="form-label">Per-Unit Label</label><input class="form-input" value="${esc(inp.perUnitLabel || '')}" onchange="config.${p}.inputs[${ii}].perUnitLabel=this.value"><span class="form-hint">e.g. /person, /portrait</span></div>
+      </div>
+      <div class="form-row cols-4">
+        <div class="form-group"><label class="form-label">Min</label><input type="number" class="form-input" value="${inp.min}" onchange="config.${p}.inputs[${ii}].min=+this.value"></div>
+        <div class="form-group"><label class="form-label">Max</label><input type="number" class="form-input" value="${inp.max}" onchange="config.${p}.inputs[${ii}].max=+this.value"></div>
+        <div class="form-group"><label class="form-label">Default</label><input type="number" class="form-input" value="${inp.default != null ? inp.default : inp.min}" onchange="config.${p}.inputs[${ii}].default=+this.value"></div>
+        <div class="form-group"><label class="form-label">Hint</label><input class="form-input" value="${esc(inp.hint || '')}" onchange="config.${p}.inputs[${ii}].hint=this.value"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Link rates to dropdown?</label><select class="form-input" onchange="linkCalcSliderToDropdown('${key}',${ii},this.value)"><option value="">No — use flat rates</option>${ddOptions}</select><span class="form-hint">Rates change based on dropdown selection</span></div>
+        <div class="form-group"><label class="form-label">Show per-unit rate?</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${inp.showPerUnitRate ? 'checked' : ''} onchange="config.${p}.inputs[${ii}].showPerUnitRate=this.checked"><span class="toggle-slider"></span></label></div></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Time Per Unit (min)</label><input type="number" class="form-input" value="${inp.timePerUnit || ''}" onchange="config.${p}.inputs[${ii}].timePerUnit=+this.value||null" placeholder="e.g. 5"><span class="form-hint">Minutes per unit for session time badge</span></div>
+        <div class="form-group"><label class="form-label">Time Minimum (min)</label><input type="number" class="form-input" value="${inp.timeMinimum || ''}" onchange="config.${p}.inputs[${ii}].timeMinimum=+this.value||null" placeholder="e.g. 60"><span class="form-hint">Floor for this slider's time contribution</span></div>
+      </div>
+      <label class="form-label" style="margin-top:12px;">Pricing Tiers</label>
+      ${ratesHtml}
+    </div>
+  `;
+}
+
+function renderCalcCBCard(key, inp, ii) {
+  const p = getCalcPath(key);
+  const calc = getCalcConfig(key);
+  const hasLinked = !!(inp.linkedHalfDay || inp.linkedFullDay);
+  const sliders = calc.inputs.filter(i => i.type === 'slider');
+  const hdOptions = sliders.map(s => `<option value="${s.id}" ${inp.linkedHalfDay === s.id ? 'selected' : ''}>${esc(s.title)}</option>`).join('');
+  const fdOptions = sliders.map(s => `<option value="${s.id}" ${inp.linkedFullDay === s.id ? 'selected' : ''}>${esc(s.title)}</option>`).join('');
+
+  let pricingHtml;
+  if (hasLinked) {
+    pricingHtml = `
+      <div class="form-row cols-4">
+        <div class="form-group"><label class="form-label">Half-Day Price ($)</label><input type="number" class="form-input" value="${inp.halfDayPrice || 0}" onchange="config.${p}.inputs[${ii}].halfDayPrice=+this.value"></div>
+        <div class="form-group"><label class="form-label">Full-Day Price ($)</label><input type="number" class="form-input" value="${inp.fullDayPrice || 0}" onchange="config.${p}.inputs[${ii}].fullDayPrice=+this.value"></div>
+        <div class="form-group"><label class="form-label">Link Half-Day Slider</label><select class="form-input" onchange="config.${p}.inputs[${ii}].linkedHalfDay=this.value||null"><option value="">None</option>${hdOptions}</select></div>
+        <div class="form-group"><label class="form-label">Link Full-Day Slider</label><select class="form-input" onchange="config.${p}.inputs[${ii}].linkedFullDay=this.value||null"><option value="">None</option>${fdOptions}</select></div>
+      </div>`;
+  } else {
+    pricingHtml = `
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Flat Fee ($)</label><input type="number" class="form-input" value="${inp.fee || 0}" onchange="config.${p}.inputs[${ii}].fee=+this.value"></div>
+        <div class="form-group"></div>
+      </div>`;
+  }
+
+  return `
+    <div class="card-editor" data-calc-input-key="${key}" data-calc-input-idx="${ii}" style="margin-bottom:16px;">
+      <div class="card-editor-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="calc-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
+          <span class="card-editor-badge" style="background:#8b5cf6;color:#fff;">Checkbox</span>
+          <span class="card-editor-title">${esc(inp.title) || 'New Checkbox'}</span>
+        </div>
+        <button class="btn-danger" onclick="config.${p}.inputs.splice(${ii},1);renderCalcInputs('${key}');">Remove</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.${p}.inputs[${ii}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Pricing Label</label><input class="form-input" value="${esc(inp.pricingLabel || '')}" onchange="config.${p}.inputs[${ii}].pricingLabel=this.value"><span class="form-hint">Shows in pricing panel</span></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Description</label><textarea class="form-input" onchange="config.${p}.inputs[${ii}].description=this.value">${esc(inp.description || '')}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Pricing Mode</label><select class="form-input" onchange="toggleCalcCBPricingMode('${key}',${ii},this.value)"><option value="flat" ${!hasLinked ? 'selected' : ''}>Flat fee</option><option value="linked" ${hasLinked ? 'selected' : ''}>Linked to half/full-day sliders</option></select></div>
+        <div class="form-group"></div>
+      </div>
+      ${pricingHtml}
+    </div>
+  `;
+}
+
+// ==================== SHARED CALC ACTIONS ====================
+function addCalcInput(key, type) {
+  const calc = getCalcConfig(key);
+  if (!calc.inputs) calc.inputs = [];
+  if (type === 'dropdown') {
+    calc.inputs.push({ id: 'dropdown-' + Date.now(), type: 'dropdown', title: '', hint: '', options: [{ id: 'opt-1', label: 'Option 1', fee: 0, feeLabel: '' }] });
+  } else if (type === 'slider') {
+    calc.inputs.push({ id: 'slider-' + Date.now(), type: 'slider', title: '', hint: '', min: 0, max: 10, default: 0, pricingMode: 'perUnit', pricingLabel: '', perUnitLabel: '', showPerUnitRate: true, linkedDropdown: null, rates: { '0-10': 100 } });
+  } else if (type === 'checkbox') {
+    calc.inputs.push({ id: 'checkbox-' + Date.now(), type: 'checkbox', title: '', description: '', pricingLabel: '', fee: 0 });
+  }
+  renderCalcInputs(key);
+  toast(type + ' added', 'success');
+}
+
+function addCalcDropdownOption(key, ii) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
+  const newId = 'opt-' + Date.now();
+  const isMultiplier = inp.role === 'multiplier';
+  const newOpt = { id: newId, label: '', fee: 0, feeLabel: '' };
+  if (isMultiplier) newOpt.multiplier = 1;
+  inp.options.push(newOpt);
+  // Add rate entry for linked sliders
+  calc.inputs.forEach(s => {
+    if (s.linkedDropdown === inp.id && s.ratesByOption) {
+      s.ratesByOption[newId] = { '0-10': 100 };
+    }
+  });
+  renderCalcInputs(key);
+}
+
+function toggleCalcDDMultiplier(key, ii, checked) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
+  if (checked) {
+    inp.role = 'multiplier';
+    inp.options.forEach(o => { if (o.multiplier == null) o.multiplier = 1; });
+  } else {
+    delete inp.role;
+    inp.options.forEach(o => { delete o.multiplier; });
+  }
+  renderCalcInputs(key);
+}
+
+function linkCalcSliderToDropdown(key, ii, ddId) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
+  if (!ddId) {
+    inp.linkedDropdown = null;
+    if (!inp.rates) inp.rates = { '0-10': 100 };
+    delete inp.ratesByOption;
+  } else {
+    inp.linkedDropdown = ddId;
+    const dd = calc.inputs.find(i => i.id === ddId);
+    if (dd && dd.options) {
+      inp.ratesByOption = {};
+      dd.options.forEach(opt => {
+        inp.ratesByOption[opt.id] = inp.rates ? JSON.parse(JSON.stringify(inp.rates)) : { '0-10': 100 };
+      });
+    }
+    delete inp.rates;
+  }
+  renderCalcInputs(key);
+}
+
+function renameCalcSliderRate(key, ii, optId, oldKey, newKey) {
+  if (oldKey === newKey) return;
+  const p = getCalcPath(key);
+  const rates = getCalcConfig(key).inputs[ii].ratesByOption[optId];
+  const ordered = {};
+  Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = v; });
+  getCalcConfig(key).inputs[ii].ratesByOption[optId] = ordered;
+  renderCalcInputs(key);
+}
+
+function renameCalcFlatRate(key, ii, oldKey, newKey) {
+  if (oldKey === newKey) return;
+  const rates = getCalcConfig(key).inputs[ii].rates;
+  const ordered = {};
+  Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = v; });
+  getCalcConfig(key).inputs[ii].rates = ordered;
+  renderCalcInputs(key);
+}
+
+function addCalcSliderRateTier(key, ii, optId) {
+  const rates = getCalcConfig(key).inputs[ii].ratesByOption[optId];
+  const keys = Object.keys(rates);
+  const last = keys[keys.length - 1] || '0-0';
+  const max = parseInt(last.split('-')[1]) || 0;
+  rates[(max + 1) + '-' + (max + 50)] = 100;
+  renderCalcInputs(key);
+}
+
+function addCalcFlatRateTier(key, ii) {
+  const rates = getCalcConfig(key).inputs[ii].rates;
+  const keys = Object.keys(rates);
+  const last = keys[keys.length - 1] || '0-0';
+  const max = parseInt(last.split('-')[1]) || 0;
+  rates[(max + 1) + '-' + (max + 50)] = 100;
+  renderCalcInputs(key);
+}
+
+function toggleCalcCBPricingMode(key, ii, mode) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
+  if (mode === 'linked') {
+    if (!inp.halfDayPrice) inp.halfDayPrice = 0;
+    if (!inp.fullDayPrice) inp.fullDayPrice = 0;
+    // Try to auto-link to existing half/full day sliders
+    const sliders = calc.inputs.filter(i => i.type === 'slider');
+    const halfSlider = sliders.find(s => s.id.includes('half'));
+    const fullSlider = sliders.find(s => s.id.includes('full'));
+    inp.linkedHalfDay = halfSlider ? halfSlider.id : (sliders[0] ? sliders[0].id : null);
+    inp.linkedFullDay = fullSlider ? fullSlider.id : (sliders[1] ? sliders[1].id : null);
+    delete inp.fee;
+  } else {
+    inp.fee = inp.fee || 0;
+    delete inp.halfDayPrice;
+    delete inp.fullDayPrice;
+    delete inp.linkedHalfDay;
+    delete inp.linkedFullDay;
+  }
+  renderCalcInputs(key);
+}
+
+function initCalcInputDragDrop(key) {
+  let dragIdx = null;
+  const items = () => document.querySelectorAll(`[data-calc-input-key="${key}"]`);
+  function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
+  items().forEach(item => {
+    const handle = item.querySelector('.calc-input-handle');
+    if (!handle) return;
+    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.calcInputIdx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
+    handle.addEventListener('dragend', () => { item.classList.remove('dragging'); clear(); });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.calcInputIdx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
+    item.addEventListener('dragleave', () => { item.classList.remove('drop-above', 'drop-below'); });
+    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.calcInputIdx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const arr = getCalcConfig(key).inputs; const [m] = arr.splice(dragIdx, 1); arr.splice(di > dragIdx ? di - 1 : di, 0, m); renderCalcInputs(key); });
+  });
+}
+
+function renderCalcBadges(key) {
+  const calc = getCalcConfig(key);
+  const p = getCalcPath(key);
+  const st = calc.sessionTime || {};
+  const vd = calc.volumeDiscount || {};
+  document.getElementById(key + '-badges').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card-editor" style="margin-bottom:0;">
+        <div class="card-editor-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="card-editor-badge" style="background:var(--blue);color:#fff;">Session Time</span>
+            <span class="card-editor-title">Session Time Badge</span>
+          </div>
+          <div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${st.enabled ? 'checked' : ''} onchange="config.${p}.sessionTime.enabled=this.checked"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);">${st.enabled ? 'On' : 'Off'}</span></div>
+        </div>
+        <div class="section-desc" style="margin-bottom:12px;">Sums all slider (qty &times; timePerUnit) values. Uses the largest timeMinimum across all sliders as a floor.</div>
+        <div class="form-group"><label class="form-label">Label Template</label><input class="form-input" value="${esc(st.label || 'Estimated Session Time: {time}')}" onchange="config.${p}.sessionTime.label=this.value"><span class="form-hint">Use <code>{time}</code> for the computed time value</span></div>
+      </div>
+      <div class="card-editor" style="margin-bottom:0;">
+        <div class="card-editor-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="card-editor-badge" style="background:var(--success);color:#fff;">Volume Discount</span>
+            <span class="card-editor-title">Volume Discount Badge</span>
+          </div>
+          <div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${vd.enabled ? 'checked' : ''} onchange="config.${p}.volumeDiscount.enabled=this.checked"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);">${vd.enabled ? 'On' : 'Off'}</span></div>
+        </div>
+        <div class="section-desc" style="margin-bottom:12px;">Computes savings across all sliders with tiered pricing by comparing current rate to the first tier rate.</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Display Format</label><select class="form-input" onchange="config.${p}.volumeDiscount.format=this.value"><option value="dollars" ${vd.format==='dollars'?'selected':''}>Dollars ($X saved)</option><option value="percent" ${vd.format==='percent'?'selected':''}>Percent (X% off)</option><option value="both" ${vd.format==='both'?'selected':''}>Both ($X / X%)</option></select></div>
+          <div class="form-group"><label class="form-label">Label Template</label><input class="form-input" value="${esc(vd.label || 'Volume Savings: {amount}')}" onchange="config.${p}.volumeDiscount.label=this.value"><span class="form-hint">Use <code>{amount}</code> for the computed savings</span></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderCalcColors(key) {
+  const colors = getCalcConfig(key).colors || {};
+  document.getElementById(key + '-color-banner').value = colors.banner || '#1e3a52';
+  document.getElementById(key + '-color-button').value = colors.button || '#1e3a52';
+}
+
+function renderCalcOther(key) {
+  const calc = getCalcConfig(key);
+  document.getElementById(key + '-retainer').value = calc.retainer || 0;
+  const minEl = document.getElementById(key + '-min');
+  if (minEl) minEl.value = calc.minPeople || 0;
+  document.getElementById(key + '-disclaimer').value = calc.disclaimer || '';
+}
+
+function renderCalcIncludes(key) {
+  const calc = getCalcConfig(key);
+  const items = calc.includes || [];
+  const p = getCalcPath(key);
+  document.getElementById(key + '-includes').innerHTML = items.map((item, i) => `
+    <div class="editable-list-item">
+      <input value="${esc(item)}" onchange="config.${p}.includes[${i}]=this.value">
+      <button class="delete-btn" onclick="config.${p}.includes.splice(${i},1);renderCalcIncludes('${key}');">&#10005;</button>
+    </div>
+  `).join('');
+}
+
+function addCalcInclude(key) {
+  const calc = getCalcConfig(key);
+  if (!calc.includes) calc.includes = [];
+  calc.includes.push('');
+  renderCalcIncludes(key);
+  const items = document.querySelectorAll('#' + key + '-includes input');
+  if (items.length) items[items.length - 1].focus();
+}
+
+// ==================== SETTINGS ====================
+function renderSettings() {
+  document.getElementById('gh-token').value = localStorage.getItem('sdph-gh-token') || '';
+  document.getElementById('cfg-notes').value = config.notes || '';
+}
+
+// ==================== READ ALL FORMS ====================
+function readAllForms() {
+  // Carousel
+  const s = config.carousel.settings;
+  s.speed = +document.getElementById('c-speed').value;
+  s.gap = +document.getElementById('c-gap').value;
+  s.clipInset = +document.getElementById('c-clip').value;
+  s.defaultLogoWidth = 'auto';
+  s.defaultLogoMaxWidth = document.getElementById('c-maxwidth').value + 'px';
+  s.mobile.cellWidth = +document.getElementById('c-mob-w').value;
+  s.mobile.cellHeight = +document.getElementById('c-mob-h').value;
+  s.tablet.cellWidth = +document.getElementById('c-tab-w').value;
+  s.tablet.cellHeight = +document.getElementById('c-tab-h').value;
+  s.grayscale = document.getElementById('c-grayscale').checked;
+
+  // Pricing
+  config.pricing.settings.accentColor = document.getElementById('p-accent').value;
+  config.pricing.settings.buttonColor = document.getElementById('p-button').value;
+  config.pricing.settings.popularBadgeText = document.getElementById('p-badge').value;
+
+  // Team calculator
+  config.teamCalculator.retainer = +document.getElementById('team-retainer').value;
+  config.teamCalculator.minPeople = +document.getElementById('team-min').value;
+  config.teamCalculator.disclaimer = document.getElementById('team-disclaimer').value;
+  if (!config.teamCalculator.colors) config.teamCalculator.colors = {};
+  config.teamCalculator.colors.banner = document.getElementById('team-color-banner').value;
+  config.teamCalculator.colors.button = document.getElementById('team-color-button').value;
+
+  // Event calculator
+  config.eventCalculator.retainer = +document.getElementById('event-retainer').value;
+  config.eventCalculator.disclaimer = document.getElementById('event-disclaimer').value;
+  if (!config.eventCalculator.colors) config.eventCalculator.colors = {};
+  config.eventCalculator.colors.banner = document.getElementById('event-color-banner').value;
+  config.eventCalculator.colors.button = document.getElementById('event-color-button').value;
+
+  // Badge settings are written directly to config via onchange handlers, no extra read needed
+
+  // Notes & timestamp
+  config.notes = document.getElementById('cfg-notes').value;
+  config.lastUpdated = new Date().toISOString();
+}
+
+// ==================== SAVE ====================
+async function saveConfig() {
+  readAllForms();
+  localStorage.setItem('sdph-config', JSON.stringify(config));
+  const token = document.getElementById('gh-token').value.trim();
+  localStorage.setItem('sdph-gh-token', token);
+  if (!token) return toast('Set your GitHub token in Settings to publish.', 'error');
+  const repo = document.getElementById('gh-repo').value.trim();
+  const path = document.getElementById('gh-path').value.trim();
+  setStatus('Saving...', 'saving');
+  try {
+    const getR = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } });
+    let sha = null;
+    if (getR.ok) sha = (await getR.json()).sha;
+    const body = { message: 'Update config \u2014 ' + new Date().toLocaleString(), content: btoa(unescape(encodeURIComponent(JSON.stringify(config, null, 2)))), branch: 'main' };
+    if (sha) body.sha = sha;
+    const putR = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, { method: 'PUT', headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (putR.ok) { setStatus('Published \u2713', 'saved'); toast('Saved! Changes go live in 1-2 minutes.', 'success'); }
+    else { throw new Error((await putR.json()).message); }
+  } catch(e) { setStatus('Save failed', 'error'); toast('GitHub error: ' + e.message, 'error'); }
+}
+
+async function testGitHub() {
+  const token = document.getElementById('gh-token').value.trim();
+  localStorage.setItem('sdph-gh-token', token);
+  if (!token) return toast('Enter a token first', 'error');
+  try { const r = await fetch('https://api.github.com/user', { headers: { Authorization: `token ${token}` } }); if (r.ok) toast('Connected as ' + (await r.json()).login, 'success'); else toast('Invalid token', 'error'); }
+  catch(e) { toast('Connection failed', 'error'); }
+}
+
+function exportConfig() {
+  readAllForms();
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sdph-config.json'; a.click();
+}
+function importConfig(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { try { config = JSON.parse(e.target.result); renderAll(); toast('Config imported', 'success'); } catch(err) { toast('Invalid JSON', 'error'); } };
+  reader.readAsText(file); event.target.value = '';
+}
+
+// ==================== THEME ====================
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next); localStorage.setItem('sdph-dash-theme', next);
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').textContent = theme === 'dark' ? '\u2606' : '\u263E';
+  document.getElementById('theme-toggle').title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+}
+applyTheme(localStorage.getItem('sdph-dash-theme') || 'dark');
+
+// ==================== TABS ====================
+document.querySelectorAll('.dash-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+loadConfig();
+</script>
+</body>
+</html>
