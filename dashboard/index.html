@@ -206,58 +206,76 @@ textarea.form-input { min-height: 80px; resize: vertical; }
     </div>
   </div>
 
-  
   <!-- ====== TEAM CALCULATOR ====== -->
   <div class="dash-panel" id="panel-team">
     <div class="section">
-      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Calculator Inputs</div><div style="display:flex;gap:8px;"><button class="btn-add" onclick="addTeamInput('dropdown')">+ Dropdown</button><button class="btn-add" onclick="addTeamInput('slider')">+ Slider</button></div></div>
-      <div class="section-desc">Each input appears in the calculator. Dropdowns let users pick an option (with optional fees). Sliders let users set a quantity (with tiered pricing). Drag to reorder.</div>
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0;">Calculator Inputs</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-add" onclick="addCalcInput('team','dropdown')">+ Dropdown</button>
+          <button class="btn-add" onclick="addCalcInput('team','slider')">+ Slider</button>
+          <button class="btn-add" onclick="addCalcInput('team','checkbox')">+ Checkbox</button>
+        </div>
+      </div>
+      <div class="section-desc">Each input appears in the calculator. Dropdowns let users pick an option (with optional fees). Sliders set a quantity (with tiered pricing). Checkboxes are optional add-ons. Drag &#8286;&#8286; to reorder.</div>
       <div id="team-inputs"></div>
     </div>
     <div class="section">
+      <div class="section-title">Colors</div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Retainer ($)</label><input type="number" class="form-input" id="t-retainer"></div>
-        <div class="form-group"><label class="form-label">Minimum People</label><input type="number" class="form-input" id="t-min"></div>
+        <div class="form-group"><label class="form-label">Banner Color</label><input type="color" class="form-input" id="team-color-banner" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Button Color</label><input type="color" class="form-input" id="team-color-button" style="height:40px;padding:4px;"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Retainer ($)</label><input type="number" class="form-input" id="team-retainer"></div>
+        <div class="form-group"><label class="form-label">Minimum People</label><input type="number" class="form-input" id="team-min"></div>
       </div>
     </div>
     <div class="section">
       <div class="section-title">Disclaimer Text</div>
-      <textarea class="form-input" id="t-disclaimer" rows="4"></textarea>
+      <textarea class="form-input" id="team-disclaimer" rows="4"></textarea>
     </div>
     <div class="section">
-      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Sessions Include</div><button class="btn-add" onclick="addTeamInclude()">+ Add Item</button></div>
+      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Sessions Include</div><button class="btn-add" onclick="addCalcInclude('team')">+ Add Item</button></div>
       <div class="editable-list" id="team-includes"></div>
     </div>
   </div>
 
-
   <!-- ====== EVENT CALCULATOR ====== -->
   <div class="dash-panel" id="panel-event">
     <div class="section">
-      <div class="section-title">Booth &amp; Slider Settings</div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label class="form-label">Max Booths</label><input type="number" class="form-input" id="e-maxbooths" min="1" max="20"></div>
-        <div class="form-group"><label class="form-label">Half-Day Slider Min</label><input type="number" class="form-input" id="e-hd-min"></div>
-        <div class="form-group"><label class="form-label">Half-Day Slider Max</label><input type="number" class="form-input" id="e-hd-max"></div>
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0;">Calculator Inputs</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-add" onclick="addCalcInput('event','dropdown')">+ Dropdown</button>
+          <button class="btn-add" onclick="addCalcInput('event','slider')">+ Slider</button>
+          <button class="btn-add" onclick="addCalcInput('event','checkbox')">+ Checkbox</button>
+        </div>
       </div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label class="form-label">Full-Day Slider Min</label><input type="number" class="form-input" id="e-fd-min"></div>
-        <div class="form-group"><label class="form-label">Full-Day Slider Max</label><input type="number" class="form-input" id="e-fd-max"></div>
-        <div class="form-group"></div>
+      <div class="section-desc">Each input appears in the calculator. Dropdowns let users pick an option (with optional fees). Sliders set a quantity (with tiered pricing). Checkboxes are optional add-ons. Drag &#8286;&#8286; to reorder.</div>
+      <div id="event-inputs"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Colors</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Banner Color</label><input type="color" class="form-input" id="event-color-banner" style="height:40px;padding:4px;"></div>
+        <div class="form-group"><label class="form-label">Button Color</label><input type="color" class="form-input" id="event-color-button" style="height:40px;padding:4px;"></div>
       </div>
     </div>
     <div class="section">
-      <div class="section-title">Booth Rates</div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label class="form-label">Half-Day Rate</label><input type="number" class="form-input" id="e-half"></div>
-        <div class="form-group"><label class="form-label">Full-Day Rate</label><input type="number" class="form-input" id="e-full"></div>
-        <div class="form-group"><label class="form-label">Retainer</label><input type="number" class="form-input" id="e-retainer"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Retainer ($)</label><input type="number" class="form-input" id="event-retainer"></div>
       </div>
     </div>
     <div class="section">
-      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Headshot Booth Upgrades</div><button class="btn-add" onclick="addEventUpgrade()">+ Add Upgrade</button></div>
-      <div class="section-desc">Drag to reorder. These appear as optional add-ons in the event calculator.</div>
-      <div id="event-upgrades-list"></div>
+      <div class="section-title">Disclaimer Text</div>
+      <textarea class="form-input" id="event-disclaimer" rows="4"></textarea>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-title" style="margin-bottom:0;">Sessions Include</div><button class="btn-add" onclick="addCalcInclude('event')">+ Add Item</button></div>
+      <div class="editable-list" id="event-includes"></div>
     </div>
   </div>
 
@@ -323,186 +341,36 @@ const DEFAULT_CONFIG = {
       "grayscale": true
     },
     "logos": [
-      {
-        "name": "Dell",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png",
-        "height": "114px",
-        "width": "90%"
-      },
-      {
-        "name": "Union Bank",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e07c71d6-dead-46b1-b884-862d2dbf1f31/Union+Bank+Logo.png",
-        "height": "46px",
-        "width": null
-      },
-      {
-        "name": "J.P. Morgan",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/566c5692-7528-4eff-8f62-b7ef01cdf560/JP+Morgan+Logo.png",
-        "height": "44px",
-        "width": null
-      },
-      {
-        "name": "PwC",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/db9922a2-e0b5-450e-b715-76cc19031f3f/PwC+Logo.png",
-        "height": "80px",
-        "width": "100%"
-      },
-      {
-        "name": "Qualcomm",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ad3ef100-5dc9-4b2d-b14c-46a35459c73a/Qualcomm+Logo.png",
-        "height": "42px",
-        "width": null
-      },
-      {
-        "name": "Petco",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/79f6122b-69c6-4e4e-9f4b-d198fdf7c142/Petco+Logo.png",
-        "height": "46px",
-        "width": null
-      },
-      {
-        "name": "Merrill Lynch",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c067d27f-a421-4d7c-a493-8093ac88d8db/Merrill+Lynch+Logo.png",
-        "height": "60px",
-        "width": null
-      },
-      {
-        "name": "Sony",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7e7ad105-901f-4fb4-ad5d-2ab3ebe1e3c7/Sony+Logo.png",
-        "height": "30px",
-        "width": "100%"
-      },
-      {
-        "name": "Illumina",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/894db8e4-f8b5-4ccc-95f4-6a97ac70ea50/Illumina+Logo.png",
-        "height": "48px",
-        "width": "100%"
-      },
-      {
-        "name": "Wells Fargo Advisors",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/596e69d8-45ef-4daf-8a44-642abb2d0ab3/Wells+Fargo+Advisors+Logo.png",
-        "height": "70px",
-        "width": "100%"
-      },
-      {
-        "name": "Raytheon",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/de30bd6b-3ba5-4503-9b0e-0a1bf1e0cfc5/Raytheon+Logo.png",
-        "height": "42px",
-        "width": null
-      },
-      {
-        "name": "Cushman & Wakefield",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e578de96-7361-4632-9c39-ba6147826624/Cushman+%26+Wakefield+Logo.png",
-        "height": "46px",
-        "width": null
-      },
-      {
-        "name": "ServiceNow",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9a2c61a6-b2f5-4b39-acf3-fc7a33973c3e/Service+Now+Logo.png",
-        "height": "42px",
-        "width": null
-      },
-      {
-        "name": "Morgan Stanley",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8ecfe521-dbcd-4db6-a674-63242083cf41/Morgan+Stanley+Logo.png",
-        "height": "42px",
-        "width": null
-      },
-      {
-        "name": "Ameriprise Financial",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/19a2e277-9c0b-43c9-89ea-70ea521b6401/Ameriprise+Logo.png",
-        "height": "65px",
-        "width": null
-      },
-      {
-        "name": "LPL Financial",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66e9ff45-3d23-41d8-853d-2b6e20ea990f/LPL+Financial+Logo.png",
-        "height": "72px",
-        "width": null
-      },
-      {
-        "name": "Intuit",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c97cbf79-7575-491e-853d-f9604f74b015/Intuit+Logo.png",
-        "height": "46px",
-        "width": "100%"
-      },
-      {
-        "name": "Solar Turbines",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png",
-        "height": "50px",
-        "width": "100%"
-      },
-      {
-        "name": "Swinerton",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png",
-        "height": "100px",
-        "width": "100%"
-      },
-      {
-        "name": "University of San Diego",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png",
-        "height": "110px",
-        "width": "100%"
-      },
-      {
-        "name": "Berkshire Hathaway HomeServices",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/cd4a0b43-3902-4788-af40-6a4aeb71d4bc/Berkshire+Hathaway+Home+Services+Logo.png",
-        "height": "100px",
-        "width": "100%"
-      },
-      {
-        "name": "Pacific Sotheby's International Realty",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/179ddf7a-0758-4065-8f1a-7fcb1a10cc32/Pacific+Sothebys+Logo.png",
-        "height": "85px",
-        "width": "100%"
-      },
-      {
-        "name": "UC San Diego",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9c89df39-b210-4563-9bfb-61205e9a0457/UCSD+Logo.png",
-        "height": "80px",
-        "width": "100%"
-      },
-      {
-        "name": "Keller Williams",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/2b4cd925-2698-4680-be35-1fa0242c7b8a/Keller+Williams+Logo.png",
-        "height": "75px",
-        "width": "100%"
-      },
-      {
-        "name": "Dentons",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7eb7e801-3735-40de-a220-5c29683b2b85/Dentons+Logo.png",
-        "height": "53px",
-        "width": null
-      },
-      {
-        "name": "Dinsmore",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/167ab3b6-8f4d-4af1-b516-2dcbd3557f33/Dinsmore+Logo.png",
-        "height": "42px",
-        "width": null
-      },
-      {
-        "name": "AFP",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66de24e8-e0d9-4747-8b58-a97fa9ca193b/AFP+Logo.png",
-        "height": "80px",
-        "width": null
-      },
-      {
-        "name": "Crinetics Pharmaceuticals",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/f42d98b3-44f0-4557-9d36-1166c902c196/Crinetics+Logo.png",
-        "height": "65px",
-        "width": null
-      },
-      {
-        "name": "Commonwealth Financial Network",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ddaebde5-5fde-48bb-8cc2-f87bc3760dd3/Commonwealth+Financial+Logo.png",
-        "height": "55px",
-        "width": null
-      },
-      {
-        "name": "Duane Morris",
-        "url": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/53147907-9a8e-41d8-b4e8-769275ba22cd/Duane+Morris+Logo.png",
-        "height": "42px",
-        "width": null
-      }
+      {"name":"Dell","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/d572d2fa-0295-443e-a4d9-88ed847c063a/Dell+Logo.png","height":"114px","width":"90%"},
+      {"name":"Union Bank","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e07c71d6-dead-46b1-b884-862d2dbf1f31/Union+Bank+Logo.png","height":"46px","width":null},
+      {"name":"J.P. Morgan","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/566c5692-7528-4eff-8f62-b7ef01cdf560/JP+Morgan+Logo.png","height":"44px","width":null},
+      {"name":"PwC","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/db9922a2-e0b5-450e-b715-76cc19031f3f/PwC+Logo.png","height":"80px","width":"100%"},
+      {"name":"Qualcomm","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ad3ef100-5dc9-4b2d-b14c-46a35459c73a/Qualcomm+Logo.png","height":"42px","width":null},
+      {"name":"Petco","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/79f6122b-69c6-4e4e-9f4b-d198fdf7c142/Petco+Logo.png","height":"46px","width":null},
+      {"name":"Merrill Lynch","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c067d27f-a421-4d7c-a493-8093ac88d8db/Merrill+Lynch+Logo.png","height":"60px","width":null},
+      {"name":"Sony","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7e7ad105-901f-4fb4-ad5d-2ab3ebe1e3c7/Sony+Logo.png","height":"30px","width":"100%"},
+      {"name":"Illumina","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/894db8e4-f8b5-4ccc-95f4-6a97ac70ea50/Illumina+Logo.png","height":"48px","width":"100%"},
+      {"name":"Wells Fargo Advisors","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/596e69d8-45ef-4daf-8a44-642abb2d0ab3/Wells+Fargo+Advisors+Logo.png","height":"70px","width":"100%"},
+      {"name":"Raytheon","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/de30bd6b-3ba5-4503-9b0e-0a1bf1e0cfc5/Raytheon+Logo.png","height":"42px","width":null},
+      {"name":"Cushman & Wakefield","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/e578de96-7361-4632-9c39-ba6147826624/Cushman+%26+Wakefield+Logo.png","height":"46px","width":null},
+      {"name":"ServiceNow","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9a2c61a6-b2f5-4b39-acf3-fc7a33973c3e/Service+Now+Logo.png","height":"42px","width":null},
+      {"name":"Morgan Stanley","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8ecfe521-dbcd-4db6-a674-63242083cf41/Morgan+Stanley+Logo.png","height":"42px","width":null},
+      {"name":"Ameriprise Financial","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/19a2e277-9c0b-43c9-89ea-70ea521b6401/Ameriprise+Logo.png","height":"65px","width":null},
+      {"name":"LPL Financial","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66e9ff45-3d23-41d8-853d-2b6e20ea990f/LPL+Financial+Logo.png","height":"72px","width":null},
+      {"name":"Intuit","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c97cbf79-7575-491e-853d-f9604f74b015/Intuit+Logo.png","height":"46px","width":"100%"},
+      {"name":"Solar Turbines","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/180185f9-d973-41a3-9fdb-7b3152e8b5dd/Solar+Turbines+Logo.png","height":"50px","width":"100%"},
+      {"name":"Swinerton","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/62ceed16-beee-4aaa-a0fe-d7ceeb583bf7/Sinerton+Logo.png","height":"100px","width":"100%"},
+      {"name":"University of San Diego","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a17de8d7-cb33-4779-93da-f7aa492c0486/USD+Logo.png","height":"110px","width":"100%"},
+      {"name":"Berkshire Hathaway HomeServices","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/cd4a0b43-3902-4788-af40-6a4aeb71d4bc/Berkshire+Hathaway+Home+Services+Logo.png","height":"100px","width":"100%"},
+      {"name":"Pacific Sotheby's International Realty","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/179ddf7a-0758-4065-8f1a-7fcb1a10cc32/Pacific+Sothebys+Logo.png","height":"85px","width":"100%"},
+      {"name":"UC San Diego","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9c89df39-b210-4563-9bfb-61205e9a0457/UCSD+Logo.png","height":"80px","width":"100%"},
+      {"name":"Keller Williams","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/2b4cd925-2698-4680-be35-1fa0242c7b8a/Keller+Williams+Logo.png","height":"75px","width":"100%"},
+      {"name":"Dentons","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/7eb7e801-3735-40de-a220-5c29683b2b85/Dentons+Logo.png","height":"53px","width":null},
+      {"name":"Dinsmore","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/167ab3b6-8f4d-4af1-b516-2dcbd3557f33/Dinsmore+Logo.png","height":"42px","width":null},
+      {"name":"AFP","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/66de24e8-e0d9-4747-8b58-a97fa9ca193b/AFP+Logo.png","height":"80px","width":null},
+      {"name":"Crinetics Pharmaceuticals","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/f42d98b3-44f0-4557-9d36-1166c902c196/Crinetics+Logo.png","height":"65px","width":null},
+      {"name":"Commonwealth Financial Network","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/ddaebde5-5fde-48bb-8cc2-f87bc3760dd3/Commonwealth+Financial+Logo.png","height":"55px","width":null},
+      {"name":"Duane Morris","url":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/53147907-9a8e-41d8-b4e8-769275ba22cd/Duane+Morris+Logo.png","height":"42px","width":null}
     ]
   },
   "pricing": {
@@ -517,394 +385,9 @@ const DEFAULT_CONFIG = {
         "label": "Individual Studio Sessions",
         "cols": 3,
         "cards": [
-          {
-            "title": "Express Studio Session",
-            "description": "A quick, efficient session designed to produce one strong headshot. Ideal for professionals who need a single, polished image and prefer a streamlined session.",
-            "price": 199,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/express-studio-session",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c4fce6dd-e028-454e-b625-4fb3ff0d85d9/Headshots_San_Diego-56.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "75% 20%",
-            "popular": false,
-            "features": [
-              {
-                "text": "20 minute studio session",
-                "bold": false,
-                "tooltip": null
-              },
-              {
-                "text": "1 look",
-                "bold": false,
-                "tooltip": "No wardrobe or background changes."
-              },
-              {
-                "text": "Standard retouching for 1 image",
-                "bold": true,
-                "tooltip": "Includes light hair, skin, and clothing cleanup for a polished, natural final image.\n\nRetouching for additional images may be purchased in the gallery."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Live image review during session",
-                "bold": false,
-                "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          },
-          {
-            "title": "Professional Studio Session",
-            "description": "A flexible session that allows for multiple looks within an efficient time window. Well suited for professionals who want options while keeping the process simple.",
-            "price": 295,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/professional-studio-session",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9fa5bd22-59ab-44cd-a707-3710191d092c/Headshots_San_Diego-37.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "70% 20%",
-            "popular": true,
-            "features": [
-              {
-                "text": "30 minute studio session",
-                "bold": false,
-                "tooltip": null
-              },
-              {
-                "text": "2 looks",
-                "bold": false,
-                "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing."
-              },
-              {
-                "text": "Premium retouching for 2 images",
-                "bold": true,
-                "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Live image review during session",
-                "bold": false,
-                "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          },
-          {
-            "title": "Executive Studio Session",
-            "description": "A more relaxed, extended session for clients who want additional time and attention. This option allows room to refine details and explore more variety.",
-            "price": 495,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/executive-studio-session",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/73ff252a-14f1-4c18-8d6a-30ef9ddf6dee/Headshots_San_Diego-60.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "65% 20%",
-            "popular": false,
-            "features": [
-              {
-                "text": "60 minute studio session",
-                "bold": false,
-                "tooltip": null
-              },
-              {
-                "text": "3 looks",
-                "bold": false,
-                "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing."
-              },
-              {
-                "text": "Premium retouching for 3 images",
-                "bold": true,
-                "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Live image review during session",
-                "bold": false,
-                "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "location",
-        "label": "Individual Location Sessions",
-        "cols": 2,
-        "cards": [
-          {
-            "title": "Mobile Studio Location Session",
-            "description": "We bring our studio to your office or residence, setting up professional lighting and a backdrop to create studio-quality headshots without disrupting your schedule.",
-            "price": 495,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/mobile-studio-session",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/982c0415-cca6-4ef1-b6ca-bab73321da46/Headshots_San_Diego-31.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "40% 20%",
-            "popular": false,
-            "features": [
-              {
-                "text": "Mobile studio setup with professional lighting and backdrop",
-                "bold": true,
-                "tooltip": "Requires at least a 10\u00d710 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
-              },
-              {
-                "text": "Up to 30 minute session (not including setup)",
-                "bold": false,
-                "tooltip": "Includes active shooting time. We arrive approximately 30 minutes prior to your appointment time to set up."
-              },
-              {
-                "text": "Up to 2 looks",
-                "bold": false,
-                "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing."
-              },
-              {
-                "text": "Premium retouching for 2 images",
-                "bold": true,
-                "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Live image review during session",
-                "bold": false,
-                "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          },
-          {
-            "title": "Environmental Headshot Session",
-            "description": "For clients who want their real environment reflected in the image. Sessions take place indoors or outdoors at your office, residence, or a chosen public space.",
-            "price": 695,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/environmental-headshot-session",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/df56a20d-a80c-4b2b-9eb7-1746f5f8f3d5/Headshots_San_Diego-57.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "40% 20%",
-            "popular": false,
-            "features": [
-              {
-                "text": "Up to 60 minute session",
-                "bold": false,
-                "tooltip": null
-              },
-              {
-                "text": "Pre-shoot consultation",
-                "bold": false,
-                "tooltip": "We'll connect ahead of your session to talk through goals, usage, wardrobe, location, and any preferences so everything feels dialed in before you arrive."
-              },
-              {
-                "text": "Up to 3 looks",
-                "bold": false,
-                "tooltip": "A look may include a wardrobe change, backdrop change, or a distinct framing."
-              },
-              {
-                "text": "Premium retouching for 3 images",
-                "bold": true,
-                "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Live image review during session",
-                "bold": false,
-                "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "specialty",
-        "label": "ERAS Residency & Military",
-        "cols": 2,
-        "cards": [
-          {
-            "title": "ERAS Residency Headshot Studio Session",
-            "description": "Meets ERAS residency application requirements. Your headshots are photographed, formatted, and delivered according to current ERAS specifications so you can submit with confidence.",
-            "price": 249,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/residency-headshots",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/8397e891-dc45-4c22-902c-994b6ebe5356/Headshots_San_Diego-15.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "70% 20%",
-            "popular": false,
-            "features": [
-              {
-                "text": "20 minute studio session",
-                "bold": false,
-                "tooltip": null
-              },
-              {
-                "text": "1 look",
-                "bold": false,
-                "tooltip": "No wardrobe or background changes."
-              },
-              {
-                "text": "Premium retouching for 1 image",
-                "bold": true,
-                "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery."
-              },
-              {
-                "text": "ERAS formatted images",
-                "bold": true,
-                "tooltip": "Final images are formatted and delivered according to current ERAS residency application specifications."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Live image review during session",
-                "bold": false,
-                "tooltip": "We'll review images with you during the session to make adjustments and ensure you walk away with strong, usable shots."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          },
-          {
-            "title": "Military & Civil Service Studio Session",
-            "description": "For military or civil service professionals, with headshots photographed in front of an American flag. Images are retouched and delivered to meet common standards for official applications.",
-            "price": 249,
-            "ctaText": "Book Online",
-            "ctaUrl": "https://www.sandiegoprofessionalheadshots.com/military-civil-service",
-            "image": "https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/a9abf89a-1bdf-4c80-9145-c58073171e2e/Headshots_San_Diego-42.jpg?content-type=image%2Fjpeg",
-            "imagePosition": "center 15%",
-            "popular": false,
-            "features": [
-              {
-                "text": "20 minute studio session",
-                "bold": false,
-                "tooltip": null
-              },
-              {
-                "text": "1 look",
-                "bold": false,
-                "tooltip": "No wardrobe or background changes."
-              },
-              {
-                "text": "Premium retouching for 1 image",
-                "bold": true,
-                "tooltip": "Includes advanced hair, skin, and clothing cleanup, with subtle refinements such as acne and under-eye cleanup and minor face or body shaping (including double-chin cleanup), applied conservatively at the photographer's discretion.\n\nRetouching for additional images may be purchased separately in the gallery."
-              },
-              {
-                "text": "Same-day online gallery",
-                "bold": false,
-                "tooltip": "Your private proof gallery is delivered the same day so you can review and select your image without waiting."
-              },
-              {
-                "text": "Images optimized for all platforms",
-                "bold": false,
-                "tooltip": "Receive high-resolution and web-optimized final images ready for print, websites, and social media."
-              },
-              {
-                "text": "Headshot preparation & style guide",
-                "bold": false,
-                "tooltip": "Receive our complimentary prep guide with tips on what to wear and how to prepare ahead of your session."
-              },
-              {
-                "text": "Professional coaching and direction",
-                "bold": false,
-                "tooltip": "Clear guidance throughout the session to help you look natural and confident on camera."
-              }
-            ]
-          }
+          {"title":"Express Studio Session","description":"A quick, efficient session designed to produce one strong headshot.","price":199,"ctaText":"Book Online","ctaUrl":"https://www.sandiegoprofessionalheadshots.com/express-studio-session","image":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/c4fce6dd-e028-454e-b625-4fb3ff0d85d9/Headshots_San_Diego-56.jpg?content-type=image%2Fjpeg","imagePosition":"75% 20%","popular":false,"features":[{"text":"20 minute studio session","bold":false,"tooltip":null},{"text":"1 look","bold":false,"tooltip":"No wardrobe or background changes."},{"text":"Standard retouching for 1 image","bold":true,"tooltip":"Includes light hair, skin, and clothing cleanup."},{"text":"Same-day online gallery","bold":false,"tooltip":null},{"text":"Professional coaching and direction","bold":false,"tooltip":null}]},
+          {"title":"Professional Studio Session","description":"A flexible session that allows for multiple looks.","price":295,"ctaText":"Book Online","ctaUrl":"https://www.sandiegoprofessionalheadshots.com/professional-studio-session","image":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/9fa5bd22-59ab-44cd-a707-3710191d092c/Headshots_San_Diego-37.jpg?content-type=image%2Fjpeg","imagePosition":"70% 20%","popular":true,"features":[{"text":"30 minute studio session","bold":false,"tooltip":null},{"text":"2 looks","bold":false,"tooltip":null},{"text":"Premium retouching for 2 images","bold":true,"tooltip":null},{"text":"Same-day online gallery","bold":false,"tooltip":null},{"text":"Professional coaching and direction","bold":false,"tooltip":null}]},
+          {"title":"Executive Studio Session","description":"Extended session for clients who want additional time and attention.","price":495,"ctaText":"Book Online","ctaUrl":"https://www.sandiegoprofessionalheadshots.com/executive-studio-session","image":"https://images.squarespace-cdn.com/content/54c6eb0ce4b0f6cdd67c1196/73ff252a-14f1-4c18-8d6a-30ef9ddf6dee/Headshots_San_Diego-60.jpg?content-type=image%2Fjpeg","imagePosition":"65% 20%","popular":false,"features":[{"text":"60 minute studio session","bold":false,"tooltip":null},{"text":"3 looks","bold":false,"tooltip":null},{"text":"Premium retouching for 3 images","bold":true,"tooltip":null},{"text":"Same-day online gallery","bold":false,"tooltip":null},{"text":"Professional coaching and direction","bold":false,"tooltip":null}]}
         ]
       }
     ]
@@ -913,74 +396,11 @@ const DEFAULT_CONFIG = {
     "retainer": 500,
     "minPeople": 3,
     "disclaimer": "Pricing shown is an estimate based on the information provided. Per-person rates reflect projected volume and may adjust if the final headcount changes. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
+    "colors": {"banner":"#1e3a52","button":"#1e3a52"},
     "inputs": [
-      {
-        "id": "location",
-        "type": "dropdown",
-        "title": "Session Location",
-        "hint": "Choose a venue for the session.",
-        "options": [
-          {
-            "id": "onsite",
-            "label": "On-Site (Office, Hotel, Etc.)",
-            "fee": 299,
-            "feeLabel": "On-Site Setup Fee"
-          },
-          {
-            "id": "studio",
-            "label": "Studio",
-            "fee": 0,
-            "feeLabel": ""
-          }
-        ]
-      },
-      {
-        "id": "team-members",
-        "type": "slider",
-        "title": "Number of Team Members",
-        "hint": "Adjust slider for the number of people who need headshots.",
-        "min": 3,
-        "max": 200,
-        "default": 3,
-        "pricingMode": "perUnit",
-        "pricingLabel": "Headshot Sessions",
-        "showPerUnitRate": true,
-        "perUnitLabel": "/person",
-        "linkedDropdown": "location",
-        "ratesByOption": {
-          "onsite": {
-            "3-9": 225,
-            "10-24": 195,
-            "25-49": 175,
-            "50-99": 155,
-            "100-200": 135
-          },
-          "studio": {
-            "3-9": 195,
-            "10-24": 175,
-            "25-49": 155,
-            "50-99": 135,
-            "100-200": 115
-          }
-        }
-      },
-      {
-        "id": "group-portraits",
-        "type": "slider",
-        "title": "Number of Group Portraits",
-        "hint": "Enter number of group portraits needed.",
-        "min": 0,
-        "max": 10,
-        "default": 0,
-        "pricingMode": "perUnit",
-        "pricingLabel": "Group Portraits",
-        "showPerUnitRate": true,
-        "perUnitLabel": "/portrait",
-        "linkedDropdown": null,
-        "rates": {
-          "0-10": 250
-        }
-      }
+      {"id":"location","type":"dropdown","title":"Session Location","hint":"Choose a venue for the session.","options":[{"id":"onsite","label":"On-Site (Office, Hotel, Etc.)","fee":299,"feeLabel":"On-Site Setup Fee"},{"id":"studio","label":"Studio","fee":0,"feeLabel":""}]},
+      {"id":"team-members","type":"slider","title":"Number of Team Members","hint":"Adjust slider for the number of people who need headshots.","min":3,"max":200,"default":3,"pricingMode":"perUnit","pricingLabel":"Headshots Total","showPerUnitRate":true,"perUnitLabel":"/person","linkedDropdown":"location","ratesByOption":{"onsite":{"3-9":225,"10-24":195,"25-49":175,"50-99":155,"100-200":135},"studio":{"3-9":195,"10-24":175,"25-49":155,"50-99":135,"100-200":115}}},
+      {"id":"group-portraits","type":"slider","title":"Number of Group Portraits","hint":"Enter number of group portraits needed.","min":0,"max":10,"default":0,"pricingMode":"perUnit","pricingLabel":"Group Portraits","showPerUnitRate":true,"perUnitLabel":"/portrait","linkedDropdown":null,"rates":{"0-10":250}}
     ],
     "includes": [
       "Mobile studio setup with professional lighting and backdrop",
@@ -994,42 +414,32 @@ const DEFAULT_CONFIG = {
     ]
   },
   "eventCalculator": {
-    "settings": {
-      "maxBooths": 3,
-      "halfDayMin": 0,
-      "halfDayMax": 10,
-      "fullDayMin": 0,
-      "fullDayMax": 10
-    },
-    "rates": {
-      "halfDay": 2500,
-      "fullDay": 4500,
-      "retainer": 500
-    },
-    "upgrades": [
-      {
-        "id": "retouching",
-        "title": "Retouching Package",
-        "description": "Add light retouching for all participants' headshots. Retouching covers skin, hair, and clothing refinements for polished, professional headshots ready for immediate use.",
-        "halfDayPrice": 1000,
-        "fullDayPrice": 2000
-      },
-      {
-        "id": "hair-makeup",
-        "title": "Professional Hair & Makeup Artist",
-        "description": "On-site professional hair and makeup touch-ups to ensure participants are camera-ready for their headshots.",
-        "halfDayPrice": 600,
-        "fullDayPrice": 1000
-      }
-    ]
+    "retainer": 500,
+    "disclaimer": "Pricing shown is an estimate based on the information provided. Final invoicing reflects actual services rendered. A $500 non-refundable retainer and signed photography agreement are required to secure your booking.",
+    "colors": {"banner":"#1e3a52","button":"#1e3a52"},
+    "inputs": [
+      {"id":"booths","type":"dropdown","role":"multiplier","title":"How Many Booths Do You Need?","hint":"Each headshot booth is fully equipped with professional lighting and backdrop and is staffed with one photographer and one assistant.","options":[{"id":"1","label":"1","fee":0,"feeLabel":"","multiplier":1},{"id":"2","label":"2","fee":0,"feeLabel":"","multiplier":2},{"id":"3","label":"3","fee":0,"feeLabel":"","multiplier":3}]},
+      {"id":"half-days","type":"slider","title":"How Many Half-Days?","hint":"Up to 4 hours per day","min":0,"max":10,"default":1,"pricingMode":"perUnit","pricingLabel":"Half-Day Sessions","showPerUnitRate":true,"perUnitLabel":"/half-day","linkedDropdown":null,"rates":{"0-10":2500}},
+      {"id":"full-days","type":"slider","title":"How Many Full-Days?","hint":"Up to 8 hours per day","min":0,"max":10,"default":0,"pricingMode":"perUnit","pricingLabel":"Full-Day Sessions","showPerUnitRate":true,"perUnitLabel":"/full-day","linkedDropdown":null,"rates":{"0-10":4500}},
+      {"id":"retouching","type":"checkbox","title":"Retouching Package","description":"Add light retouching for all participants' headshots.","pricingLabel":"Retouching Package","halfDayPrice":1000,"fullDayPrice":2000,"linkedHalfDay":"half-days","linkedFullDay":"full-days"},
+      {"id":"hair-makeup","type":"checkbox","title":"Professional Hair & Makeup Artist","description":"On-site professional hair and makeup touch-ups.","pricingLabel":"Hair & Makeup","halfDayPrice":600,"fullDayPrice":1000,"linkedHalfDay":"half-days","linkedFullDay":"full-days"}
+    ],
+    "includes": []
   },
   "notes": ""
 };
 
-
 let config = null;
 let activePricingTab = 0;
 const CONFIG_URL = 'https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json';
+
+// ==================== HELPERS ====================
+function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function setStatus(t, c) { const el = document.getElementById('status'); el.textContent = t; el.className = 'dash-status ' + (c || ''); }
+function toast(msg, type) { const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
+
+function getCalcConfig(key) { return key === 'team' ? config.teamCalculator : config.eventCalculator; }
+function getCalcPath(key) { return key === 'team' ? 'teamCalculator' : 'eventCalculator'; }
 
 // ==================== LOAD ====================
 async function loadConfig() {
@@ -1044,23 +454,55 @@ async function loadConfig() {
     if (cached) { config = JSON.parse(cached); setStatus('Loaded from cache', 'saved'); }
     else { config = JSON.parse(JSON.stringify(DEFAULT_CONFIG)); setStatus('Using defaults', 'saving'); }
   }
-  // Migrate old config structure if needed
+  // Migrate old team calculator structure
   if (config.teamCalculator.rates && !config.teamCalculator.inputs) {
     const old = config.teamCalculator;
     config.teamCalculator = {
       retainer: old.rates?.retainer || old.retainer || 500,
       minPeople: old.rates?.minPeople || old.minPeople || 3,
       disclaimer: old.disclaimer || '',
+      colors: old.colors || {banner:'#1e3a52',button:'#1e3a52'},
       inputs: [
         {id:'location', type:'dropdown', title:'Session Location', hint:'Choose a venue for the session.', options:[{id:'onsite',label:'On-Site',fee:old.rates?.onsiteSetupFee||299,feeLabel:'On-Site Setup Fee'},{id:'studio',label:'Studio',fee:0,feeLabel:''}]},
-        {id:'team-members', type:'slider', title:'Number of Team Members', hint:'Adjust for headcount.', min:3, max:200, default:3, pricingMode:'perUnit', pricingLabel:'Headshot Sessions', showPerUnitRate:true, perUnitLabel:'/person', linkedDropdown:'location', ratesByOption:{onsite:old.rates?.onsite||old.perPersonRates?.onsite||{}, studio:old.rates?.studio||old.perPersonRates?.studio||{}}},
+        {id:'team-members', type:'slider', title:'Number of Team Members', hint:'Adjust for headcount.', min:3, max:200, default:3, pricingMode:'perUnit', pricingLabel:'Headshots Total', showPerUnitRate:true, perUnitLabel:'/person', linkedDropdown:'location', ratesByOption:{onsite:old.rates?.onsite||{}, studio:old.rates?.studio||{}}},
         {id:'group-portraits', type:'slider', title:'Number of Group Portraits', hint:'Enter group portraits needed.', min:0, max:10, default:0, pricingMode:'perUnit', pricingLabel:'Group Portraits', showPerUnitRate:true, perUnitLabel:'/portrait', linkedDropdown:null, rates:{'0-10': old.rates?.groupPortrait || 250}}
       ],
       includes: old.includes || []
     };
   }
+  // Migrate old event calculator structure (settings/rates/upgrades -> inputs)
+  if (config.eventCalculator.settings && !config.eventCalculator.inputs) {
+    const old = config.eventCalculator;
+    const s = old.settings || {};
+    const r = old.rates || {};
+    const upgrades = old.upgrades || [];
+    const boothOpts = [];
+    for (let i = 1; i <= (s.maxBooths || 3); i++) {
+      boothOpts.push({id: String(i), label: String(i), fee: 0, feeLabel: '', multiplier: i});
+    }
+    const inputs = [
+      {id:'booths', type:'dropdown', role:'multiplier', title:'How Many Booths Do You Need?', hint:'Each booth is fully equipped.', options: boothOpts},
+      {id:'half-days', type:'slider', title:'How Many Half-Days?', hint:'Up to 4 hours per day', min: s.halfDayMin||0, max: s.halfDayMax||10, default:1, pricingMode:'perUnit', pricingLabel:'Half-Day Sessions', showPerUnitRate:true, perUnitLabel:'/half-day', linkedDropdown:null, rates:{['0-'+(s.halfDayMax||10)]: r.halfDay||2500}},
+      {id:'full-days', type:'slider', title:'How Many Full-Days?', hint:'Up to 8 hours per day', min: s.fullDayMin||0, max: s.fullDayMax||10, default:0, pricingMode:'perUnit', pricingLabel:'Full-Day Sessions', showPerUnitRate:true, perUnitLabel:'/full-day', linkedDropdown:null, rates:{['0-'+(s.fullDayMax||10)]: r.fullDay||4500}}
+    ];
+    upgrades.forEach(u => {
+      inputs.push({id: u.id, type:'checkbox', title: u.title, description: u.description, pricingLabel: u.title, halfDayPrice: u.halfDayPrice, fullDayPrice: u.fullDayPrice, linkedHalfDay:'half-days', linkedFullDay:'full-days'});
+    });
+    config.eventCalculator = {
+      retainer: r.retainer || old.retainer || 500,
+      disclaimer: old.disclaimer || '',
+      colors: old.colors || {banner:'#1e3a52',button:'#1e3a52'},
+      inputs: inputs,
+      includes: old.includes || []
+    };
+  }
+  // Ensure required fields exist
   if (!config.notes) config.notes = '';
   if (!config.carousel.settings.grayscale && config.carousel.settings.grayscale !== false) config.carousel.settings.grayscale = true;
+  if (!config.teamCalculator.colors) config.teamCalculator.colors = {banner:'#1e3a52',button:'#1e3a52'};
+  if (!config.eventCalculator.colors) config.eventCalculator.colors = {banner:'#1e3a52',button:'#1e3a52'};
+  if (!config.teamCalculator.includes) config.teamCalculator.includes = [];
+  if (!config.eventCalculator.includes) config.eventCalculator.includes = [];
   renderAll();
 }
 
@@ -1071,11 +513,8 @@ function renderAll() {
   renderPricingSettings();
   renderPricingTabs();
   renderPricingCards();
-  renderTeamInputs();
-  renderTeamOther();
-  renderTeamIncludes();
-  renderEventSettings();
-  renderEventUpgrades();
+  renderCalcTab('team');
+  renderCalcTab('event');
   renderSettings();
 }
 
@@ -1108,7 +547,7 @@ function renderLogoList() {
       <button class="delete-btn" onclick="config.carousel.logos.splice(${i},1);renderLogoList();" title="Remove">&#10005;</button>
     </div>
   `).join('');
-  initDragDrop();
+  initLogoDragDrop();
 }
 
 function addLogo() {
@@ -1124,7 +563,7 @@ function addLogo() {
   toast('Logo added', 'success');
 }
 
-function initDragDrop() {
+function initLogoDragDrop() {
   let dragIdx = null;
   const items = () => document.querySelectorAll('.logo-item');
   function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
@@ -1157,9 +596,12 @@ function renderPricingCards() {
   if (!tab) { document.getElementById('pricing-cards').innerHTML = '<p style="color:var(--text2)">No tabs. Click + Add Tab.</p>'; return; }
   const el = document.getElementById('pricing-cards');
   el.innerHTML = tab.cards.map((card, ci) => `
-    <div class="card-editor">
+    <div class="card-editor" data-pricing-card-idx="${ci}">
       <div class="card-editor-header">
-        <span class="card-editor-title">${esc(card.title) || 'New Package'}</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="pricing-card-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;" title="Drag to reorder">&#8286;&#8286;</span>
+          <span class="card-editor-title">${esc(card.title) || 'New Package'}</span>
+        </div>
         <div style="display:flex;gap:8px;align-items:center;">
           <label style="font-size:12px;color:var(--text2);cursor:pointer;"><input type="checkbox" ${card.popular ? 'checked' : ''} onchange="config.pricing.tabs[${activePricingTab}].cards[${ci}].popular=this.checked;renderPricingCards();"> Popular</label>
           ${card.popular ? '<span class="card-editor-badge">&#9733; Popular</span>' : ''}
@@ -1194,12 +636,13 @@ function renderPricingCards() {
       <button class="btn-add" onclick="config.pricing.tabs[${activePricingTab}].cards[${ci}].features.push({text:'',bold:false,tooltip:null});renderPricingCards();" style="margin-top:8px;">+ Add Feature</button>
     </div>
   `).join('') + `<button class="btn-add" onclick="addPricingCard()" style="width:100%;padding:14px;">+ Add Package Card</button>`;
+  initPricingCardDragDrop();
 }
 
 function addPricingTab() {
   const name = prompt('Tab name (e.g. "Group Mini Sessions"):');
   if (!name) return;
-  config.pricing.tabs.push({ id: name.toLowerCase().replace(/\\s+/g,'-'), label: name, cols: 2, cards: [] });
+  config.pricing.tabs.push({ id: name.toLowerCase().replace(/\s+/g,'-'), label: name, cols: 2, cards: [] });
   activePricingTab = config.pricing.tabs.length - 1;
   renderPricingTabs(); renderPricingCards();
   toast('Tab added', 'success');
@@ -1222,113 +665,148 @@ function addPricingCard() {
   toast('Card added', 'success');
 }
 
-// ==================== TEAM CALCULATOR ====================
-function renderTeamInputs() {
-  const inputs = config.teamCalculator.inputs || [];
-  const el = document.getElementById('team-inputs');
-  el.innerHTML = inputs.map((inp, ii) => {
-    if (inp.type === 'dropdown') return renderDropdownInput(inp, ii);
-    if (inp.type === 'slider') return renderSliderInput(inp, ii);
-    return '';
-  }).join('');
-  initTeamInputDragDrop();
+function initPricingCardDragDrop() {
+  let dragIdx = null;
+  const items = () => document.querySelectorAll('[data-pricing-card-idx]');
+  function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
+  items().forEach(item => {
+    const handle = item.querySelector('.pricing-card-handle');
+    if (!handle) return;
+    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.pricingCardIdx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
+    handle.addEventListener('dragend', () => { item.classList.remove('dragging'); clear(); });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.pricingCardIdx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
+    item.addEventListener('dragleave', () => { item.classList.remove('drop-above', 'drop-below'); });
+    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.pricingCardIdx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const cards = config.pricing.tabs[activePricingTab].cards; const [m] = cards.splice(dragIdx, 1); cards.splice(di > dragIdx ? di - 1 : di, 0, m); renderPricingCards(); });
+  });
 }
 
-function renderDropdownInput(inp, ii) {
-  const optRows = (inp.options || []).map((opt, oi) => `
-    <div class="rate-row" style="grid-template-columns:1fr 1fr 150px 30px;">
-      <input class="logo-field" value="${esc(opt.label)}" onchange="config.teamCalculator.inputs[${ii}].options[${oi}].label=this.value" placeholder="Label">
-      <input class="logo-field" value="${esc(opt.feeLabel || '')}" onchange="config.teamCalculator.inputs[${ii}].options[${oi}].feeLabel=this.value" placeholder="Fee label (pricing panel)">
-      <input type="number" class="logo-field" value="${opt.fee}" onchange="config.teamCalculator.inputs[${ii}].options[${oi}].fee=+this.value" style="width:100%;" placeholder="Fee">
-      <button class="delete-btn" onclick="config.teamCalculator.inputs[${ii}].options.splice(${oi},1);renderTeamInputs();">&#10005;</button>
-    </div>
-  `).join('');
+// ==================== SHARED CALCULATOR ====================
+function renderCalcTab(key) {
+  renderCalcInputs(key);
+  renderCalcColors(key);
+  renderCalcOther(key);
+  renderCalcIncludes(key);
+}
+
+function renderCalcInputs(key) {
+  const calc = getCalcConfig(key);
+  const inputs = calc.inputs || [];
+  const p = getCalcPath(key);
+  const el = document.getElementById(key + '-inputs');
+  el.innerHTML = inputs.map((inp, ii) => {
+    if (inp.type === 'dropdown') return renderCalcDDCard(key, inp, ii);
+    if (inp.type === 'slider') return renderCalcSliderCard(key, inp, ii);
+    if (inp.type === 'checkbox') return renderCalcCBCard(key, inp, ii);
+    return '';
+  }).join('');
+  initCalcInputDragDrop(key);
+}
+
+function renderCalcDDCard(key, inp, ii) {
+  const p = getCalcPath(key);
+  const isMultiplier = inp.role === 'multiplier';
+  const optCols = isMultiplier ? '1fr 1fr 120px 80px 30px' : '1fr 1fr 150px 30px';
+  const optHeaders = isMultiplier
+    ? '<span class="rate-header">Label</span><span class="rate-header">Fee Label</span><span class="rate-header">Fee ($)</span><span class="rate-header">Mult.</span><span></span>'
+    : '<span class="rate-header">Label</span><span class="rate-header">Fee Label</span><span class="rate-header">Fee ($)</span><span></span>';
+  const optRows = (inp.options || []).map((opt, oi) => {
+    const multField = isMultiplier ? `<input type="number" class="logo-field" value="${opt.multiplier || 1}" onchange="config.${p}.inputs[${ii}].options[${oi}].multiplier=+this.value" style="width:100%;" step="1">` : '';
+    return `
+    <div class="rate-row" style="grid-template-columns:${optCols};">
+      <input class="logo-field" value="${esc(opt.label)}" onchange="config.${p}.inputs[${ii}].options[${oi}].label=this.value" placeholder="Label">
+      <input class="logo-field" value="${esc(opt.feeLabel || '')}" onchange="config.${p}.inputs[${ii}].options[${oi}].feeLabel=this.value" placeholder="Fee label">
+      <input type="number" class="logo-field" value="${opt.fee}" onchange="config.${p}.inputs[${ii}].options[${oi}].fee=+this.value" style="width:100%;" placeholder="Fee">
+      ${multField}
+      <button class="delete-btn" onclick="config.${p}.inputs[${ii}].options.splice(${oi},1);renderCalcInputs('${key}');">&#10005;</button>
+    </div>`;
+  }).join('');
+
   return `
-    <div class="card-editor" data-team-input-idx="${ii}">
+    <div class="card-editor" data-calc-input-key="${key}" data-calc-input-idx="${ii}">
       <div class="card-editor-header">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span class="team-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
+          <span class="calc-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
           <span class="card-editor-badge" style="background:var(--blue);color:#fff;">Dropdown</span>
           <span class="card-editor-title">${esc(inp.title) || 'New Dropdown'}</span>
         </div>
-        <button class="btn-danger" onclick="config.teamCalculator.inputs.splice(${ii},1);renderTeamInputs();">Remove</button>
+        <button class="btn-danger" onclick="config.${p}.inputs.splice(${ii},1);renderCalcInputs('${key}');">Remove</button>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.teamCalculator.inputs[${ii}].title=this.value"></div>
-        <div class="form-group"><label class="form-label">Hint</label><input class="form-input" value="${esc(inp.hint || '')}" onchange="config.teamCalculator.inputs[${ii}].hint=this.value"></div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.${p}.inputs[${ii}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Hint</label><input class="form-input" value="${esc(inp.hint || '')}" onchange="config.${p}.inputs[${ii}].hint=this.value"></div>
+        <div class="form-group"><label class="form-label">Multiplier Role?</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${isMultiplier ? 'checked' : ''} onchange="toggleCalcDDMultiplier('${key}',${ii},this.checked)"><span class="toggle-slider"></span></label><span style="font-size:13px;color:var(--text2);">${isMultiplier ? 'Yes' : 'No'}</span></div><span class="form-hint">Each option multiplies all line items</span></div>
       </div>
       <label class="form-label" style="margin-top:8px;">Options</label>
-      <div class="rate-row" style="grid-template-columns:1fr 1fr 150px 30px;"><span class="rate-header">Label</span><span class="rate-header">Fee Label</span><span class="rate-header">Fee ($)</span><span></span></div>
+      <div class="rate-row" style="grid-template-columns:${optCols};">${optHeaders}</div>
       ${optRows}
-      <button class="btn-add" onclick="addDropdownOption(${ii})" style="margin-top:8px;">+ Add Option</button>
+      <button class="btn-add" onclick="addCalcDropdownOption('${key}',${ii})" style="margin-top:8px;">+ Add Option</button>
     </div>
   `;
 }
 
-function renderSliderInput(inp, ii) {
+function renderCalcSliderCard(key, inp, ii) {
+  const p = getCalcPath(key);
+  const calc = getCalcConfig(key);
   const hasLinked = !!inp.linkedDropdown;
-  const linkedDd = hasLinked ? config.teamCalculator.inputs.find(i => i.id === inp.linkedDropdown) : null;
-  
+  const linkedDd = hasLinked ? calc.inputs.find(i => i.id === inp.linkedDropdown) : null;
+
   let ratesHtml = '';
   if (hasLinked && inp.ratesByOption) {
-    // Show rate tables per dropdown option
     const options = linkedDd ? linkedDd.options : [];
     ratesHtml = options.map(opt => {
       const rates = (inp.ratesByOption[opt.id]) || {};
       const rows = Object.entries(rates).map(([range, rate]) => `
         <div class="rate-row">
-          <input class="logo-field" value="${range}" onchange="renameSliderRate(${ii},'${opt.id}','${range}',this.value)">
-          <input type="number" class="logo-field" value="${rate}" onchange="config.teamCalculator.inputs[${ii}].ratesByOption['${opt.id}']['${range}']=+this.value" style="width:120px;">
-          <button class="delete-btn" onclick="delete config.teamCalculator.inputs[${ii}].ratesByOption['${opt.id}']['${range}'];renderTeamInputs();">&#10005;</button>
+          <input class="logo-field" value="${range}" onchange="renameCalcSliderRate('${key}',${ii},'${opt.id}','${range}',this.value)">
+          <input type="number" class="logo-field" value="${rate}" onchange="config.${p}.inputs[${ii}].ratesByOption['${opt.id}']['${range}']=+this.value" style="width:120px;">
+          <button class="delete-btn" onclick="delete config.${p}.inputs[${ii}].ratesByOption['${opt.id}']['${range}'];renderCalcInputs('${key}');">&#10005;</button>
         </div>
       `).join('');
       return `<div style="margin-top:8px;padding:12px;background:var(--surface);border-radius:6px;"><strong style="font-size:13px;color:var(--text);">${esc(opt.label)}</strong>
         <div class="rate-row"><span class="rate-header">Range</span><span class="rate-header">Rate ($)</span><span></span></div>
         ${rows}
-        <button class="btn-add" onclick="addSliderRateTier(${ii},'${opt.id}')" style="margin-top:6px;">+ Tier</button>
+        <button class="btn-add" onclick="addCalcSliderRateTier('${key}',${ii},'${opt.id}')" style="margin-top:6px;">+ Tier</button>
       </div>`;
     }).join('');
   } else {
-    // Flat rates
     const rates = inp.rates || {};
     const rows = Object.entries(rates).map(([range, rate]) => `
       <div class="rate-row">
-        <input class="logo-field" value="${range}" onchange="renameFlatRate(${ii},'${range}',this.value)">
-        <input type="number" class="logo-field" value="${rate}" onchange="config.teamCalculator.inputs[${ii}].rates['${range}']=+this.value" style="width:120px;">
-        <button class="delete-btn" onclick="delete config.teamCalculator.inputs[${ii}].rates['${range}'];renderTeamInputs();">&#10005;</button>
+        <input class="logo-field" value="${range}" onchange="renameCalcFlatRate('${key}',${ii},'${range}',this.value)">
+        <input type="number" class="logo-field" value="${rate}" onchange="config.${p}.inputs[${ii}].rates['${range}']=+this.value" style="width:120px;">
+        <button class="delete-btn" onclick="delete config.${p}.inputs[${ii}].rates['${range}'];renderCalcInputs('${key}');">&#10005;</button>
       </div>
     `).join('');
-    ratesHtml = `<div class="rate-row"><span class="rate-header">Range</span><span class="rate-header">Rate ($)</span><span></span></div>${rows}<button class="btn-add" onclick="addFlatRateTier(${ii})" style="margin-top:6px;">+ Tier</button>`;
+    ratesHtml = `<div class="rate-row"><span class="rate-header">Range</span><span class="rate-header">Rate ($)</span><span></span></div>${rows}<button class="btn-add" onclick="addCalcFlatRateTier('${key}',${ii})" style="margin-top:6px;">+ Tier</button>`;
   }
 
-  // Build dropdown link selector
-  const dropdowns = config.teamCalculator.inputs.filter(i => i.type === 'dropdown');
+  const dropdowns = calc.inputs.filter(i => i.type === 'dropdown');
   const ddOptions = dropdowns.map(d => `<option value="${d.id}" ${inp.linkedDropdown === d.id ? 'selected' : ''}>${esc(d.title)}</option>`).join('');
 
   return `
-    <div class="card-editor" data-team-input-idx="${ii}" style="margin-bottom:16px;">
+    <div class="card-editor" data-calc-input-key="${key}" data-calc-input-idx="${ii}" style="margin-bottom:16px;">
       <div class="card-editor-header">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span class="team-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
+          <span class="calc-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
           <span class="card-editor-badge" style="background:var(--success);color:#fff;">Slider</span>
           <span class="card-editor-title">${esc(inp.title) || 'New Slider'}</span>
         </div>
-        <button class="btn-danger" onclick="config.teamCalculator.inputs.splice(${ii},1);renderTeamInputs();">Remove</button>
+        <button class="btn-danger" onclick="config.${p}.inputs.splice(${ii},1);renderCalcInputs('${key}');">Remove</button>
       </div>
       <div class="form-row cols-3">
-        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.teamCalculator.inputs[${ii}].title=this.value"></div>
-        <div class="form-group"><label class="form-label">Pricing Label</label><input class="form-input" value="${esc(inp.pricingLabel || '')}" onchange="config.teamCalculator.inputs[${ii}].pricingLabel=this.value"><span class="form-hint">Shows in pricing panel</span></div>
-        <div class="form-group"><label class="form-label">Per-Unit Label</label><input class="form-input" value="${esc(inp.perUnitLabel || '')}" onchange="config.teamCalculator.inputs[${ii}].perUnitLabel=this.value"><span class="form-hint">e.g. /person, /portrait</span></div>
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.${p}.inputs[${ii}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Pricing Label</label><input class="form-input" value="${esc(inp.pricingLabel || '')}" onchange="config.${p}.inputs[${ii}].pricingLabel=this.value"><span class="form-hint">Shows in pricing panel</span></div>
+        <div class="form-group"><label class="form-label">Per-Unit Label</label><input class="form-input" value="${esc(inp.perUnitLabel || '')}" onchange="config.${p}.inputs[${ii}].perUnitLabel=this.value"><span class="form-hint">e.g. /person, /portrait</span></div>
       </div>
       <div class="form-row cols-4">
-        <div class="form-group"><label class="form-label">Min</label><input type="number" class="form-input" value="${inp.min}" onchange="config.teamCalculator.inputs[${ii}].min=+this.value"></div>
-        <div class="form-group"><label class="form-label">Max</label><input type="number" class="form-input" value="${inp.max}" onchange="config.teamCalculator.inputs[${ii}].max=+this.value"></div>
-        <div class="form-group"><label class="form-label">Default</label><input type="number" class="form-input" value="${inp.default || inp.min}" onchange="config.teamCalculator.inputs[${ii}].default=+this.value"></div>
-        <div class="form-group"><label class="form-label">Hint</label><input class="form-input" value="${esc(inp.hint || '')}" onchange="config.teamCalculator.inputs[${ii}].hint=this.value"></div>
+        <div class="form-group"><label class="form-label">Min</label><input type="number" class="form-input" value="${inp.min}" onchange="config.${p}.inputs[${ii}].min=+this.value"></div>
+        <div class="form-group"><label class="form-label">Max</label><input type="number" class="form-input" value="${inp.max}" onchange="config.${p}.inputs[${ii}].max=+this.value"></div>
+        <div class="form-group"><label class="form-label">Default</label><input type="number" class="form-input" value="${inp.default != null ? inp.default : inp.min}" onchange="config.${p}.inputs[${ii}].default=+this.value"></div>
+        <div class="form-group"><label class="form-label">Hint</label><input class="form-input" value="${esc(inp.hint || '')}" onchange="config.${p}.inputs[${ii}].hint=this.value"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Link rates to dropdown?</label><select class="form-input" onchange="linkSliderToDropdown(${ii},this.value)"><option value="">No — use flat rates</option>${ddOptions}</select><span class="form-hint">Rates change based on dropdown selection</span></div>
-        <div class="form-group"><label class="form-label">Show per-unit rate?</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${inp.showPerUnitRate ? 'checked' : ''} onchange="config.teamCalculator.inputs[${ii}].showPerUnitRate=this.checked"><span class="toggle-slider"></span></label></div></div>
+        <div class="form-group"><label class="form-label">Link rates to dropdown?</label><select class="form-input" onchange="linkCalcSliderToDropdown('${key}',${ii},this.value)"><option value="">No — use flat rates</option>${ddOptions}</select><span class="form-hint">Rates change based on dropdown selection</span></div>
+        <div class="form-group"><label class="form-label">Show per-unit rate?</label><div class="toggle-row"><label class="toggle-switch"><input type="checkbox" ${inp.showPerUnitRate ? 'checked' : ''} onchange="config.${p}.inputs[${ii}].showPerUnitRate=this.checked"><span class="toggle-slider"></span></label></div></div>
       </div>
       <label class="form-label" style="margin-top:12px;">Pricing Tiers</label>
       ${ratesHtml}
@@ -1336,39 +814,110 @@ function renderSliderInput(inp, ii) {
   `;
 }
 
-function addTeamInput(type) {
-  const inputs = config.teamCalculator.inputs;
-  if (type === 'dropdown') {
-    inputs.push({ id: 'dropdown-' + Date.now(), type: 'dropdown', title: '', hint: '', options: [{ id: 'opt-1', label: 'Option 1', fee: 0, feeLabel: '' }] });
+function renderCalcCBCard(key, inp, ii) {
+  const p = getCalcPath(key);
+  const calc = getCalcConfig(key);
+  const hasLinked = !!(inp.linkedHalfDay || inp.linkedFullDay);
+  const sliders = calc.inputs.filter(i => i.type === 'slider');
+  const hdOptions = sliders.map(s => `<option value="${s.id}" ${inp.linkedHalfDay === s.id ? 'selected' : ''}>${esc(s.title)}</option>`).join('');
+  const fdOptions = sliders.map(s => `<option value="${s.id}" ${inp.linkedFullDay === s.id ? 'selected' : ''}>${esc(s.title)}</option>`).join('');
+
+  let pricingHtml;
+  if (hasLinked) {
+    pricingHtml = `
+      <div class="form-row cols-4">
+        <div class="form-group"><label class="form-label">Half-Day Price ($)</label><input type="number" class="form-input" value="${inp.halfDayPrice || 0}" onchange="config.${p}.inputs[${ii}].halfDayPrice=+this.value"></div>
+        <div class="form-group"><label class="form-label">Full-Day Price ($)</label><input type="number" class="form-input" value="${inp.fullDayPrice || 0}" onchange="config.${p}.inputs[${ii}].fullDayPrice=+this.value"></div>
+        <div class="form-group"><label class="form-label">Link Half-Day Slider</label><select class="form-input" onchange="config.${p}.inputs[${ii}].linkedHalfDay=this.value||null"><option value="">None</option>${hdOptions}</select></div>
+        <div class="form-group"><label class="form-label">Link Full-Day Slider</label><select class="form-input" onchange="config.${p}.inputs[${ii}].linkedFullDay=this.value||null"><option value="">None</option>${fdOptions}</select></div>
+      </div>`;
   } else {
-    inputs.push({ id: 'slider-' + Date.now(), type: 'slider', title: '', hint: '', min: 0, max: 10, default: 0, pricingMode: 'perUnit', pricingLabel: '', perUnitLabel: '', showPerUnitRate: true, linkedDropdown: null, rates: { '0-10': 100 } });
+    pricingHtml = `
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Flat Fee ($)</label><input type="number" class="form-input" value="${inp.fee || 0}" onchange="config.${p}.inputs[${ii}].fee=+this.value"></div>
+        <div class="form-group"></div>
+      </div>`;
   }
-  renderTeamInputs();
+
+  return `
+    <div class="card-editor" data-calc-input-key="${key}" data-calc-input-idx="${ii}" style="margin-bottom:16px;">
+      <div class="card-editor-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="calc-input-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;">&#8286;&#8286;</span>
+          <span class="card-editor-badge" style="background:#8b5cf6;color:#fff;">Checkbox</span>
+          <span class="card-editor-title">${esc(inp.title) || 'New Checkbox'}</span>
+        </div>
+        <button class="btn-danger" onclick="config.${p}.inputs.splice(${ii},1);renderCalcInputs('${key}');">Remove</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${esc(inp.title)}" onchange="config.${p}.inputs[${ii}].title=this.value"></div>
+        <div class="form-group"><label class="form-label">Pricing Label</label><input class="form-input" value="${esc(inp.pricingLabel || '')}" onchange="config.${p}.inputs[${ii}].pricingLabel=this.value"><span class="form-hint">Shows in pricing panel</span></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Description</label><textarea class="form-input" onchange="config.${p}.inputs[${ii}].description=this.value">${esc(inp.description || '')}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Pricing Mode</label><select class="form-input" onchange="toggleCalcCBPricingMode('${key}',${ii},this.value)"><option value="flat" ${!hasLinked ? 'selected' : ''}>Flat fee</option><option value="linked" ${hasLinked ? 'selected' : ''}>Linked to half/full-day sliders</option></select></div>
+        <div class="form-group"></div>
+      </div>
+      ${pricingHtml}
+    </div>
+  `;
+}
+
+// ==================== SHARED CALC ACTIONS ====================
+function addCalcInput(key, type) {
+  const calc = getCalcConfig(key);
+  if (!calc.inputs) calc.inputs = [];
+  if (type === 'dropdown') {
+    calc.inputs.push({ id: 'dropdown-' + Date.now(), type: 'dropdown', title: '', hint: '', options: [{ id: 'opt-1', label: 'Option 1', fee: 0, feeLabel: '' }] });
+  } else if (type === 'slider') {
+    calc.inputs.push({ id: 'slider-' + Date.now(), type: 'slider', title: '', hint: '', min: 0, max: 10, default: 0, pricingMode: 'perUnit', pricingLabel: '', perUnitLabel: '', showPerUnitRate: true, linkedDropdown: null, rates: { '0-10': 100 } });
+  } else if (type === 'checkbox') {
+    calc.inputs.push({ id: 'checkbox-' + Date.now(), type: 'checkbox', title: '', description: '', pricingLabel: '', fee: 0 });
+  }
+  renderCalcInputs(key);
   toast(type + ' added', 'success');
 }
 
-function addDropdownOption(ii) {
-  const opts = config.teamCalculator.inputs[ii].options;
+function addCalcDropdownOption(key, ii) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
   const newId = 'opt-' + Date.now();
-  opts.push({ id: newId, label: '', fee: 0, feeLabel: '' });
-  // If any sliders are linked to this dropdown, add a rate entry for the new option
-  config.teamCalculator.inputs.forEach(inp => {
-    if (inp.linkedDropdown === config.teamCalculator.inputs[ii].id && inp.ratesByOption) {
-      inp.ratesByOption[newId] = { '0-10': 100 };
+  const isMultiplier = inp.role === 'multiplier';
+  const newOpt = { id: newId, label: '', fee: 0, feeLabel: '' };
+  if (isMultiplier) newOpt.multiplier = 1;
+  inp.options.push(newOpt);
+  // Add rate entry for linked sliders
+  calc.inputs.forEach(s => {
+    if (s.linkedDropdown === inp.id && s.ratesByOption) {
+      s.ratesByOption[newId] = { '0-10': 100 };
     }
   });
-  renderTeamInputs();
+  renderCalcInputs(key);
 }
 
-function linkSliderToDropdown(ii, ddId) {
-  const inp = config.teamCalculator.inputs[ii];
+function toggleCalcDDMultiplier(key, ii, checked) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
+  if (checked) {
+    inp.role = 'multiplier';
+    inp.options.forEach(o => { if (o.multiplier == null) o.multiplier = 1; });
+  } else {
+    delete inp.role;
+    inp.options.forEach(o => { delete o.multiplier; });
+  }
+  renderCalcInputs(key);
+}
+
+function linkCalcSliderToDropdown(key, ii, ddId) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
   if (!ddId) {
     inp.linkedDropdown = null;
     if (!inp.rates) inp.rates = { '0-10': 100 };
     delete inp.ratesByOption;
   } else {
     inp.linkedDropdown = ddId;
-    const dd = config.teamCalculator.inputs.find(i => i.id === ddId);
+    const dd = calc.inputs.find(i => i.id === ddId);
     if (dd && dd.options) {
       inp.ratesByOption = {};
       dd.options.forEach(opt => {
@@ -1377,139 +926,115 @@ function linkSliderToDropdown(ii, ddId) {
     }
     delete inp.rates;
   }
-  renderTeamInputs();
+  renderCalcInputs(key);
 }
 
-function renameSliderRate(ii, optId, oldKey, newKey) {
+function renameCalcSliderRate(key, ii, optId, oldKey, newKey) {
   if (oldKey === newKey) return;
-  const rates = config.teamCalculator.inputs[ii].ratesByOption[optId];
-  const val = rates[oldKey]; const ordered = {};
-  Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = k === oldKey ? val : v; });
-  config.teamCalculator.inputs[ii].ratesByOption[optId] = ordered;
+  const p = getCalcPath(key);
+  const rates = getCalcConfig(key).inputs[ii].ratesByOption[optId];
+  const ordered = {};
+  Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = v; });
+  getCalcConfig(key).inputs[ii].ratesByOption[optId] = ordered;
 }
 
-function renameFlatRate(ii, oldKey, newKey) {
+function renameCalcFlatRate(key, ii, oldKey, newKey) {
   if (oldKey === newKey) return;
-  const rates = config.teamCalculator.inputs[ii].rates;
-  const val = rates[oldKey]; const ordered = {};
-  Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = k === oldKey ? val : v; });
-  config.teamCalculator.inputs[ii].rates = ordered;
+  const rates = getCalcConfig(key).inputs[ii].rates;
+  const ordered = {};
+  Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = v; });
+  getCalcConfig(key).inputs[ii].rates = ordered;
 }
 
-function addSliderRateTier(ii, optId) {
-  const rates = config.teamCalculator.inputs[ii].ratesByOption[optId];
+function addCalcSliderRateTier(key, ii, optId) {
+  const rates = getCalcConfig(key).inputs[ii].ratesByOption[optId];
   const keys = Object.keys(rates);
   const last = keys[keys.length - 1] || '0-0';
   const max = parseInt(last.split('-')[1]) || 0;
   rates[(max + 1) + '-' + (max + 50)] = 100;
-  renderTeamInputs();
+  renderCalcInputs(key);
 }
 
-function addFlatRateTier(ii) {
-  const rates = config.teamCalculator.inputs[ii].rates;
+function addCalcFlatRateTier(key, ii) {
+  const rates = getCalcConfig(key).inputs[ii].rates;
   const keys = Object.keys(rates);
   const last = keys[keys.length - 1] || '0-0';
   const max = parseInt(last.split('-')[1]) || 0;
   rates[(max + 1) + '-' + (max + 50)] = 100;
-  renderTeamInputs();
+  renderCalcInputs(key);
 }
 
-function initTeamInputDragDrop() {
+function toggleCalcCBPricingMode(key, ii, mode) {
+  const calc = getCalcConfig(key);
+  const inp = calc.inputs[ii];
+  if (mode === 'linked') {
+    if (!inp.halfDayPrice) inp.halfDayPrice = 0;
+    if (!inp.fullDayPrice) inp.fullDayPrice = 0;
+    // Try to auto-link to existing half/full day sliders
+    const sliders = calc.inputs.filter(i => i.type === 'slider');
+    const halfSlider = sliders.find(s => s.id.includes('half'));
+    const fullSlider = sliders.find(s => s.id.includes('full'));
+    inp.linkedHalfDay = halfSlider ? halfSlider.id : (sliders[0] ? sliders[0].id : null);
+    inp.linkedFullDay = fullSlider ? fullSlider.id : (sliders[1] ? sliders[1].id : null);
+    delete inp.fee;
+  } else {
+    inp.fee = inp.fee || 0;
+    delete inp.halfDayPrice;
+    delete inp.fullDayPrice;
+    delete inp.linkedHalfDay;
+    delete inp.linkedFullDay;
+  }
+  renderCalcInputs(key);
+}
+
+function initCalcInputDragDrop(key) {
   let dragIdx = null;
-  const items = () => document.querySelectorAll('[data-team-input-idx]');
+  const items = () => document.querySelectorAll(`[data-calc-input-key="${key}"]`);
   function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
   items().forEach(item => {
-    const handle = item.querySelector('.team-input-handle');
+    const handle = item.querySelector('.calc-input-handle');
     if (!handle) return;
-    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.teamInputIdx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
+    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.calcInputIdx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
     handle.addEventListener('dragend', () => { item.classList.remove('dragging'); clear(); });
-    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.teamInputIdx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.calcInputIdx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
     item.addEventListener('dragleave', () => { item.classList.remove('drop-above', 'drop-below'); });
-    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.teamInputIdx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const [m] = config.teamCalculator.inputs.splice(dragIdx, 1); config.teamCalculator.inputs.splice(di > dragIdx ? di - 1 : di, 0, m); renderTeamInputs(); });
+    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.calcInputIdx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const arr = getCalcConfig(key).inputs; const [m] = arr.splice(dragIdx, 1); arr.splice(di > dragIdx ? di - 1 : di, 0, m); renderCalcInputs(key); });
   });
 }
 
-function renderTeamOther() {
-  document.getElementById('t-retainer').value = config.teamCalculator.retainer;
-  document.getElementById('t-min').value = config.teamCalculator.minPeople;
-  document.getElementById('t-disclaimer').value = config.teamCalculator.disclaimer || '';
+function renderCalcColors(key) {
+  const colors = getCalcConfig(key).colors || {};
+  document.getElementById(key + '-color-banner').value = colors.banner || '#1e3a52';
+  document.getElementById(key + '-color-button').value = colors.button || '#1e3a52';
 }
 
-function renderTeamIncludes() {
-  const items = config.teamCalculator.includes || [];
-  document.getElementById('team-includes').innerHTML = items.map((item, i) => `
+function renderCalcOther(key) {
+  const calc = getCalcConfig(key);
+  document.getElementById(key + '-retainer').value = calc.retainer || 0;
+  const minEl = document.getElementById(key + '-min');
+  if (minEl) minEl.value = calc.minPeople || 0;
+  document.getElementById(key + '-disclaimer').value = calc.disclaimer || '';
+}
+
+function renderCalcIncludes(key) {
+  const calc = getCalcConfig(key);
+  const items = calc.includes || [];
+  const p = getCalcPath(key);
+  document.getElementById(key + '-includes').innerHTML = items.map((item, i) => `
     <div class="editable-list-item">
-      <input value="${esc(item)}" onchange="config.teamCalculator.includes[${i}]=this.value">
-      <button class="delete-btn" onclick="config.teamCalculator.includes.splice(${i},1);renderTeamIncludes();">&#10005;</button>
+      <input value="${esc(item)}" onchange="config.${p}.includes[${i}]=this.value">
+      <button class="delete-btn" onclick="config.${p}.includes.splice(${i},1);renderCalcIncludes('${key}');">&#10005;</button>
     </div>
   `).join('');
 }
 
-function addTeamInclude() {
-  config.teamCalculator.includes.push('');
-  renderTeamIncludes();
-  const items = document.querySelectorAll('#team-includes input');
-  items[items.length - 1].focus();
-}
-
-
-// ==================== EVENT CALCULATOR ====================
-function renderEventSettings() {
-  const s = config.eventCalculator.settings || {};
-  const r = config.eventCalculator.rates;
-  document.getElementById('e-maxbooths').value = s.maxBooths || 3;
-  document.getElementById('e-hd-min').value = s.halfDayMin || 0;
-  document.getElementById('e-hd-max').value = s.halfDayMax || 10;
-  document.getElementById('e-fd-min').value = s.fullDayMin || 0;
-  document.getElementById('e-fd-max').value = s.fullDayMax || 10;
-  document.getElementById('e-half').value = r.halfDay;
-  document.getElementById('e-full').value = r.fullDay;
-  document.getElementById('e-retainer').value = r.retainer;
-}
-
-function renderEventUpgrades() {
-  const upgrades = config.eventCalculator.upgrades || [];
-  const el = document.getElementById('event-upgrades-list');
-  el.innerHTML = upgrades.map((u, i) => `
-    <div class="card-editor" data-upgrade-idx="${i}">
-      <div class="card-editor-header">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="upgrade-drag-handle" draggable="true" style="color:var(--text2);font-size:18px;cursor:grab;user-select:none;" title="Drag to reorder">&#8286;&#8286;</span>
-          <span class="card-editor-title">${esc(u.title) || 'New Upgrade'}</span>
-        </div>
-        <button class="btn-danger" onclick="config.eventCalculator.upgrades.splice(${i},1);renderEventUpgrades();">Remove</button>
-      </div>
-      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Title</label><input class="form-input" value="${esc(u.title)}" onchange="config.eventCalculator.upgrades[${i}].title=this.value;this.closest('.card-editor').querySelector('.card-editor-title').textContent=this.value;"></div>
-      <div class="form-group" style="margin-bottom:12px;"><label class="form-label">Description</label><textarea class="form-input" onchange="config.eventCalculator.upgrades[${i}].description=this.value">${esc(u.description)}</textarea></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Half-Day Price ($)</label><input type="number" class="form-input" value="${u.halfDayPrice}" onchange="config.eventCalculator.upgrades[${i}].halfDayPrice=+this.value"></div>
-        <div class="form-group"><label class="form-label">Full-Day Price ($)</label><input type="number" class="form-input" value="${u.fullDayPrice}" onchange="config.eventCalculator.upgrades[${i}].fullDayPrice=+this.value"></div>
-      </div>
-    </div>
-  `).join('');
-  initUpgradeDragDrop();
-}
-
-function addEventUpgrade() {
-  if (!config.eventCalculator.upgrades) config.eventCalculator.upgrades = [];
-  config.eventCalculator.upgrades.push({ id: 'upgrade-' + Date.now(), title: '', description: '', halfDayPrice: 0, fullDayPrice: 0 });
-  renderEventUpgrades();
-  toast('Upgrade added', 'success');
-}
-
-function initUpgradeDragDrop() {
-  let dragIdx = null;
-  const items = () => document.querySelectorAll('[data-upgrade-idx]');
-  function clear() { items().forEach(el => el.classList.remove('drop-above', 'drop-below')); }
-  items().forEach(item => {
-    const handle = item.querySelector('.upgrade-drag-handle');
-    if (!handle) return;
-    handle.addEventListener('dragstart', e => { dragIdx = +item.dataset.upgradeIdx; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(item, 0, 0); requestAnimationFrame(() => item.classList.add('dragging')); });
-    handle.addEventListener('dragend', () => { item.classList.remove('dragging'); clear(); });
-    item.addEventListener('dragover', e => { e.preventDefault(); if (+item.dataset.upgradeIdx === dragIdx) return; clear(); const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; item.classList.add(e.clientY < mid ? 'drop-above' : 'drop-below'); });
-    item.addEventListener('dragleave', () => { item.classList.remove('drop-above', 'drop-below'); });
-    item.addEventListener('drop', e => { e.preventDefault(); clear(); const ti = +item.dataset.upgradeIdx; if (dragIdx === null || dragIdx === ti) return; const mid = item.getBoundingClientRect().top + item.getBoundingClientRect().height / 2; let di = e.clientY < mid ? ti : ti + (ti > dragIdx ? 0 : 1); const [m] = config.eventCalculator.upgrades.splice(dragIdx, 1); config.eventCalculator.upgrades.splice(di > dragIdx ? di - 1 : di, 0, m); renderEventUpgrades(); });
-  });
+function addCalcInclude(key) {
+  const calc = getCalcConfig(key);
+  if (!calc.includes) calc.includes = [];
+  calc.includes.push('');
+  renderCalcIncludes(key);
+  const items = document.querySelectorAll('#' + key + '-includes input');
+  if (items.length) items[items.length - 1].focus();
 }
 
 // ==================== SETTINGS ====================
@@ -1520,6 +1045,7 @@ function renderSettings() {
 
 // ==================== READ ALL FORMS ====================
 function readAllForms() {
+  // Carousel
   const s = config.carousel.settings;
   s.speed = +document.getElementById('c-speed').value;
   s.gap = +document.getElementById('c-gap').value;
@@ -1532,25 +1058,27 @@ function readAllForms() {
   s.tablet.cellHeight = +document.getElementById('c-tab-h').value;
   s.grayscale = document.getElementById('c-grayscale').checked;
 
+  // Pricing
   config.pricing.settings.accentColor = document.getElementById('p-accent').value;
   config.pricing.settings.buttonColor = document.getElementById('p-button').value;
   config.pricing.settings.popularBadgeText = document.getElementById('p-badge').value;
 
-  config.teamCalculator.retainer = +document.getElementById('t-retainer').value;
-  config.teamCalculator.minPeople = +document.getElementById('t-min').value;
-  config.teamCalculator.disclaimer = document.getElementById('t-disclaimer').value;
+  // Team calculator
+  config.teamCalculator.retainer = +document.getElementById('team-retainer').value;
+  config.teamCalculator.minPeople = +document.getElementById('team-min').value;
+  config.teamCalculator.disclaimer = document.getElementById('team-disclaimer').value;
+  if (!config.teamCalculator.colors) config.teamCalculator.colors = {};
+  config.teamCalculator.colors.banner = document.getElementById('team-color-banner').value;
+  config.teamCalculator.colors.button = document.getElementById('team-color-button').value;
 
-  const es = config.eventCalculator.settings;
-  es.maxBooths = +document.getElementById('e-maxbooths').value;
-  es.halfDayMin = +document.getElementById('e-hd-min').value;
-  es.halfDayMax = +document.getElementById('e-hd-max').value;
-  es.fullDayMin = +document.getElementById('e-fd-min').value;
-  es.fullDayMax = +document.getElementById('e-fd-max').value;
-  const er = config.eventCalculator.rates;
-  er.halfDay = +document.getElementById('e-half').value;
-  er.fullDay = +document.getElementById('e-full').value;
-  er.retainer = +document.getElementById('e-retainer').value;
+  // Event calculator
+  config.eventCalculator.retainer = +document.getElementById('event-retainer').value;
+  config.eventCalculator.disclaimer = document.getElementById('event-disclaimer').value;
+  if (!config.eventCalculator.colors) config.eventCalculator.colors = {};
+  config.eventCalculator.colors.banner = document.getElementById('event-color-banner').value;
+  config.eventCalculator.colors.button = document.getElementById('event-color-button').value;
 
+  // Notes & timestamp
   config.notes = document.getElementById('cfg-notes').value;
   config.lastUpdated = new Date().toISOString();
 }
@@ -1597,11 +1125,7 @@ function importConfig(event) {
   reader.readAsText(file); event.target.value = '';
 }
 
-// ==================== HELPERS ====================
-function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
-function setStatus(t, c) { const el = document.getElementById('status'); el.textContent = t; el.className = 'dash-status ' + (c || ''); }
-function toast(msg, type) { const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
-
+// ==================== THEME ====================
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme') || 'dark';
   const next = current === 'dark' ? 'light' : 'dark';
@@ -1614,6 +1138,7 @@ function applyTheme(theme) {
 }
 applyTheme(localStorage.getItem('sdph-dash-theme') || 'dark');
 
+// ==================== TABS ====================
 document.querySelectorAll('.dash-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
