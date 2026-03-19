@@ -12,24 +12,29 @@ var SDPH_CONFIG = {
 
 (function() {
 
-  var badgeCfgLoaded = false;
   var badgeCfg = { sessionTime: { enabled: true, label: "Estimated Session Time: {time}" }, volumeDiscount: { enabled: true, format: "percent", label: "Volume Savings: {amount}" } };
+  var configURL = "https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json";
 
-  // Load badge config from sdph-config.json
-  fetch("https://donaldcarlton.github.io/sdph-web-apps/sdph-config.json?t=" + Date.now())
-    .then(function(r) { return r.json(); })
-    .then(function(cfg) {
-      if (cfg.teamCalculator) {
-        if (cfg.teamCalculator.sessionTime) badgeCfg.sessionTime = cfg.teamCalculator.sessionTime;
-        if (cfg.teamCalculator.volumeDiscount) badgeCfg.volumeDiscount = cfg.teamCalculator.volumeDiscount;
+  function loadBadgeConfig(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", configURL + "?t=" + Date.now(), true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          var cfg = JSON.parse(xhr.responseText);
+          if (cfg.teamCalculator) {
+            if (cfg.teamCalculator.sessionTime) badgeCfg.sessionTime = cfg.teamCalculator.sessionTime;
+            if (cfg.teamCalculator.volumeDiscount) badgeCfg.volumeDiscount = cfg.teamCalculator.volumeDiscount;
+          }
+        } catch(e) {}
       }
-      badgeCfgLoaded = true;
-      calc();
-    })
-    .catch(function() { badgeCfgLoaded = true; calc(); });
+      callback();
+    };
+    xhr.onerror = function() { callback(); };
+    xhr.send();
+  }
 
   function fmtVolumeBadge(d) {
-    if (!badgeCfgLoaded) return "";
     var vd = badgeCfg.volumeDiscount;
     if (!vd.enabled || d.pct <= 0) return "";
     var amount;
@@ -45,7 +50,6 @@ var SDPH_CONFIG = {
   }
 
   function fmtTimeBadge(d) {
-    if (!badgeCfgLoaded) return "";
     var st = badgeCfg.sessionTime;
     if (!st.enabled) return "";
     var label = (st.label || "Estimated Session Time: {time}").replace("{time}", d.ts);
@@ -174,7 +178,7 @@ var SDPH_CONFIG = {
     locEl.addEventListener("input", calc);
   }
 
-  calc();
+  loadBadgeConfig(calc);
 
 
   /* CONDITIONAL SOURCE DETAIL FIELD */
