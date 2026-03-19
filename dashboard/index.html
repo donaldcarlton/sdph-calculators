@@ -936,6 +936,7 @@ function renameCalcSliderRate(key, ii, optId, oldKey, newKey) {
   const ordered = {};
   Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = v; });
   getCalcConfig(key).inputs[ii].ratesByOption[optId] = ordered;
+  renderCalcInputs(key);
 }
 
 function renameCalcFlatRate(key, ii, oldKey, newKey) {
@@ -944,6 +945,7 @@ function renameCalcFlatRate(key, ii, oldKey, newKey) {
   const ordered = {};
   Object.entries(rates).forEach(([k, v]) => { ordered[k === oldKey ? newKey : k] = v; });
   getCalcConfig(key).inputs[ii].rates = ordered;
+  renderCalcInputs(key);
 }
 
 function addCalcSliderRateTier(key, ii, optId) {
