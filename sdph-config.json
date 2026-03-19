@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-03-18T00:00:00Z",
+  "lastUpdated": "2026-03-19T00:23:53.285Z",
   "carousel": {
     "settings": {
       "speed": 100,
@@ -402,7 +402,7 @@
               {
                 "text": "Mobile studio setup with professional lighting and backdrop",
                 "bold": true,
-                "tooltip": "Requires at least a 10\u00d710 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
+                "tooltip": "Requires at least a 10×10 ft cleared area with no obstructions.\n\nWe arrive approximately 30 minutes prior to your appointment time to set up."
               },
               {
                 "text": "Up to 30 minute session (not including setup)",
@@ -689,6 +689,26 @@
         "rates": {
           "0-10": 250
         }
+      },
+      {
+        "id": "dropdown-1773879769305",
+        "type": "dropdown",
+        "title": "Retouching",
+        "hint": "Would you like retouching",
+        "options": [
+          {
+            "id": "opt-1",
+            "label": "No",
+            "fee": 0,
+            "feeLabel": ""
+          },
+          {
+            "id": "opt-1773879801492",
+            "label": "Yes",
+            "fee": 200,
+            "feeLabel": "Retouching Package"
+          }
+        ]
       }
     ],
     "includes": [
