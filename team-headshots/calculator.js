@@ -131,6 +131,34 @@ var SDPH_CONFIG = {
 
   calc();
 
+  /* CONDITIONAL START TIMES BASED ON TEAM SIZE */
+  var timeSelect = document.getElementById("sf-tm");
+  var ALL_TIMES = [
+    "9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
+    "12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM",
+    "3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM"
+  ];
+
+  function updateTimeOptions() {
+    if (!timeSelect) return;
+    var members = parseInt(mN.value) || 3;
+    var earliestIdx = members > 30 ? 0 : 2; // 0 = 9:00 AM, 2 = 10:00 AM
+    var currentVal = timeSelect.value;
+    var html = '<option value="">Select a time</option>';
+    for (var i = earliestIdx; i < ALL_TIMES.length; i++) {
+      html += '<option value="' + ALL_TIMES[i] + '">' + ALL_TIMES[i] + '</option>';
+    }
+    timeSelect.innerHTML = html;
+    // Restore previous selection if it's still valid
+    if (currentVal && ALL_TIMES.indexOf(currentVal) >= earliestIdx) {
+      timeSelect.value = currentVal;
+    }
+  }
+
+  updateTimeOptions();
+  mN.addEventListener("input", updateTimeOptions);
+  mS.addEventListener("input", updateTimeOptions);
+  mN.addEventListener("blur", updateTimeOptions);
 
   /* CONDITIONAL SOURCE DETAIL FIELD */
   var srcSelect = document.getElementById("sf-src");
