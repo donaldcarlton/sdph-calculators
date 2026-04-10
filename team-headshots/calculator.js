@@ -1,6 +1,6 @@
 /**
  * San Diego Professional Headshots - Team Headshot Pricing Calculator
- * Version 2.1
+ * Version 2.2
  */
 var SDPH_CONFIG = {
   webhookURL: "https://hooks.zapier.com/hooks/catch/26507972/uxj26ex/",
@@ -116,27 +116,12 @@ var SDPH_CONFIG = {
     pricingBody.innerHTML = buildPricingHTML(d);
   }
 
-  mS.addEventListener("input", function() { mN.value = sliderToMembers(mS.value); calc(); });
-  mN.addEventListener("input", function() { mS.value = membersToSlider(mN.value); calc(); });
-  mN.addEventListener("blur", function() { mS.value = membersToSlider(mN.value); calc(); });
-  gS.addEventListener("input", function() { gN.value = gS.value; calc(); });
-  gN.addEventListener("input", calc);
-  gN.addEventListener("blur", calc);
-
-  var locEl = document.getElementById("sdph-location");
-  if (locEl) {
-    locEl.addEventListener("change", calc);
-    locEl.addEventListener("input", calc);
-  }
-
-  calc();
-
   /* CONDITIONAL START TIMES BASED ON TEAM SIZE */
   var timeSelect = document.getElementById("sf-tm");
   var ALL_TIMES = [
     "9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
     "12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM",
-    "3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM"
+    "3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM"
   ];
 
   function updateTimeOptions() {
@@ -149,16 +134,28 @@ var SDPH_CONFIG = {
       html += '<option value="' + ALL_TIMES[i] + '">' + ALL_TIMES[i] + '</option>';
     }
     timeSelect.innerHTML = html;
-    // Restore previous selection if it's still valid
     if (currentVal && ALL_TIMES.indexOf(currentVal) >= earliestIdx) {
       timeSelect.value = currentVal;
     }
   }
 
+  /* INPUT LISTENERS */
+  mS.addEventListener("input", function() { mN.value = sliderToMembers(mS.value); calc(); updateTimeOptions(); });
+  mN.addEventListener("input", function() { mS.value = membersToSlider(mN.value); calc(); updateTimeOptions(); });
+  mN.addEventListener("blur", function() { mS.value = membersToSlider(mN.value); calc(); updateTimeOptions(); });
+  gS.addEventListener("input", function() { gN.value = gS.value; calc(); });
+  gN.addEventListener("input", calc);
+  gN.addEventListener("blur", calc);
+
+  var locEl = document.getElementById("sdph-location");
+  if (locEl) {
+    locEl.addEventListener("change", calc);
+    locEl.addEventListener("input", calc);
+  }
+
+  calc();
   updateTimeOptions();
-  mN.addEventListener("input", updateTimeOptions);
-  mS.addEventListener("input", updateTimeOptions);
-  mN.addEventListener("blur", updateTimeOptions);
+
 
   /* CONDITIONAL SOURCE DETAIL FIELD */
   var srcSelect = document.getElementById("sf-src");
